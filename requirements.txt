@@ -1,0 +1,8 @@
+requests~=2.31.0
+PyJWT~=2.8.0
+
+cachetools~=4.2.2
+pytest~=7.1.1
+httpx~=0.23.0
+pydantic~=2.4.2
+setuptools~=68.2.2
