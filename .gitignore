@@ -1,0 +1,15 @@
+.vscode
+.idea
+*.pyc
+__pycache__/
+.pytest_cache/
+.DS_Store/
+
+*.swp
+*~
+
+build/
+dist/
+eggs/
+.eggs/
+*.egg-info/
