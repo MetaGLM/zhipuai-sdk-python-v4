@@ -7,7 +7,7 @@ from zhipuai.core._base_type import NotGiven, NOT_GIVEN, Headers, ResponseT
 from zhipuai.core._http_client import make_user_request_input
 from zhipuai.core._sse_client import StreamResponse
 from zhipuai.core._utils import to_json_response_wrapper
-from zhipuai.types.chat.async_chat_completion import AsyncCompletion
+from zhipuai.types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
 from zhipuai.types.chat.chat_completion import Completion
 from zhipuai.types.chat.chat_completion_chunk import ChatCompletionChunk
 from zhipuai.types.chat import chat_completions_create_param
@@ -44,8 +44,8 @@ class AsyncCompletions(BaseAPI):
             # extra_query: Query | None = None,
             # extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AsyncCompletion:
-        _cast_type = AsyncCompletion
+    ) -> AsyncTaskStatus:
+        _cast_type = AsyncTaskStatus
 
         if return_json:
             _cast_type = object
@@ -78,8 +78,8 @@ class AsyncCompletions(BaseAPI):
         extra_headers: Headers | None = None,
         return_json: Optional[bool] | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> Completion:
-        _cast_type = Completion
+    ) -> Union[AsyncCompletion, AsyncTaskStatus]:
+        _cast_type = Union[AsyncCompletion,AsyncTaskStatus]
         if return_json:
             _cast_type = object
         return self._get(

@@ -1,8 +1,16 @@
 from typing import List, Optional
 from typing_extensions import Literal
+from .chat_completion import CompletionChoice,CompletionUsage
 from pydantic import BaseModel
 
-__all__ = ["AsyncCompletion"]
+__all__ = ["AsyncTaskStatus"]
+
+
+class AsyncTaskStatus(BaseModel):
+    id: str
+    request_id: str
+    model: Optional[str] = None
+    task_status: str
 
 
 class AsyncCompletion(BaseModel):
@@ -10,3 +18,5 @@ class AsyncCompletion(BaseModel):
     request_id: str
     model: str
     task_status: str
+    choices: List[CompletionChoice]
+    usage: CompletionUsage
