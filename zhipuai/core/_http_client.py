@@ -99,6 +99,8 @@ class HttpClient:
                 "Accept": "application/json",
                 "Content-Type": "application/json; charset=UTF-8",
                 "ZhipuAI-SDK-Ver": self._version,
+                "source_type": "zhipu-sdk-python",
+                "x-request-sdk": "zhipu-sdk-python",
                 **self._auth_headers,
                 **self._custom_headers,
             }
