@@ -1,31 +1,25 @@
 # -*- coding:utf-8 -*-
+from __future__ import annotations
+
 import inspect
-import json
-import logging
+from typing import (
+    Any,
+    Type,
+    Union,
+    cast,
+    Mapping,
+)
 
 import httpx
 import pydantic
 from httpx import URL, Timeout
 
-from typing import (
-    Any,
-    Dict,
-    Type,
-    Union,
-    cast,
-    TYPE_CHECKING, Mapping,
-)
-
-import requests
-
-from zhipuai.core._errors import APIResponseValidationError, APIStatusError, APITimeoutError
 from zhipuai.core import _errors
-from zhipuai.core._sse_client import StreamResponse
-from zhipuai.core._base_type import NotGiven, ResponseT, Body, AnyMapping, Headers, NOT_GIVEN
-
+from zhipuai.core._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN
+from zhipuai.core._errors import APIResponseValidationError, APIStatusError, APITimeoutError
 from zhipuai.core._request_opt import ClientRequestParam, UserRequestInput
-
 from zhipuai.core._response import HttpResponse
+from zhipuai.core._sse_client import StreamResponse
 
 headers = {
     "Accept": "application/json",

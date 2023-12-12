@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Union, Mapping
 
 from typing_extensions import override

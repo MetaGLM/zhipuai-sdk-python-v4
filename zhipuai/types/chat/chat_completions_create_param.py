@@ -1,6 +1,6 @@
-from typing import List, Optional, TypedDict
-from typing_extensions import Literal
-from pydantic import BaseModel
+from typing import Optional
+
+from typing_extensions import TypedDict
 
 
 class Reference(TypedDict, total=False):

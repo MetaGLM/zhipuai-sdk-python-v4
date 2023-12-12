@@ -1,15 +1,16 @@
 from __future__ import annotations
-from typing import TypedDict, Union, Any, cast
 
+from typing import Union, Any, cast
+
+import pydantic.generics
 from httpx import Timeout
 from pydantic import ConfigDict
 from typing_extensions import (
-    Required, final, Unpack, ClassVar,
+    final, Unpack, ClassVar, TypedDict
 
 )
-import pydantic.generics
 
-from zhipuai.core._base_type import Body, AnyMapping, NotGiven, Headers
+from zhipuai.core._base_type import Body, NotGiven, Headers
 from zhipuai.core._utils import remove_notgiven_indict
 
 

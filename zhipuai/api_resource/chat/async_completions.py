@@ -1,16 +1,15 @@
-from typing import overload, Union, Literal, List, Optional, Dict, TYPE_CHECKING, Type, Any
+from __future__ import annotations
+
+from typing import Union, List, Optional, TYPE_CHECKING
 
 import httpx
+from typing_extensions import Literal
 
 from zhipuai.core._base_api import BaseAPI
-from zhipuai.core._base_type import NotGiven, NOT_GIVEN, Headers, ResponseT
+from zhipuai.core._base_type import NotGiven, NOT_GIVEN, Headers
 from zhipuai.core._http_client import make_user_request_input
-from zhipuai.core._sse_client import StreamResponse
-from zhipuai.core._utils import to_json_response_wrapper
-from zhipuai.types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
-from zhipuai.types.chat.chat_completion import Completion
-from zhipuai.types.chat.chat_completion_chunk import ChatCompletionChunk
 from zhipuai.types.chat import chat_completions_create_param
+from zhipuai.types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
 
 if TYPE_CHECKING:
     from zhipuai._client import ZhipuAI

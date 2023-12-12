@@ -1,7 +1,8 @@
 from typing import List, Optional
-from typing_extensions import Literal
-from .chat_completion import CompletionChoice,CompletionUsage
+
 from pydantic import BaseModel
+
+from .chat_completion import CompletionChoice, CompletionUsage
 
 __all__ = ["AsyncTaskStatus"]
 

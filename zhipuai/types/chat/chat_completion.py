@@ -1,5 +1,5 @@
 from typing import List, Optional
-from typing_extensions import Literal
+
 from pydantic import BaseModel
 
 __all__ = ["Completion"]

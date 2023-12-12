@@ -1,11 +1,13 @@
+from __future__ import annotations
+
 import datetime
-from types import NoneType
 from typing import TypeVar, Generic, cast, Any, TYPE_CHECKING
 
 import httpx
 import pydantic
 from typing_extensions import ParamSpec, get_origin, get_args
 
+from zhipuai.core._base_type import NoneType
 from zhipuai.core._sse_client import StreamResponse
 
 if TYPE_CHECKING:
