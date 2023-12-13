@@ -24,3 +24,5 @@ from .core._errors import (
     APIResponseValidationError,
     APITimeoutError,
 )
+
+from .__version__ import __version__

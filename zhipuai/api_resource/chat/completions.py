@@ -35,7 +35,7 @@ class Completions(BaseAPI):
             max_tokens: int | NotGiven = NOT_GIVEN,
             seed: int | NotGiven = NOT_GIVEN,
             ref: Optional[chat_completions_create_param.Reference] | NotGiven = NOT_GIVEN,
-            messages: Union[str, List[str], List[int], List[List[int]], None],
+            messages: Union[str, List[str], List[int], object, None],
             stop: Optional[Union[str, List[str], None]] | NotGiven = NOT_GIVEN,
             tools: Optional[str] | NotGiven = NOT_GIVEN,
             tool_choice: str | NotGiven = NOT_GIVEN,

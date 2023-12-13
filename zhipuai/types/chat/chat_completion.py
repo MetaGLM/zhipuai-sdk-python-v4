@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-__all__ = ["Completion"]
+__all__ = ["Completion","CompletionUsage"]
 
 
 class Function(BaseModel):
