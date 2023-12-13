@@ -48,6 +48,7 @@ class ZhipuAI(HttpClient):
             custom_headers=custom_headers,
         )
         self.chat = api_resource.chat.Chat(self)
+        self.images = api_resource.images.Images(self)
 
     @property
     @override
