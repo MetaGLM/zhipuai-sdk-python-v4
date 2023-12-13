@@ -8,7 +8,7 @@ with open("requirements.txt") as requirements_file:
 
 setup(
     name="zhipuai",
-    version="v1.0.8",
+    version="v2.1.0",
     description="A SDK library for accessing big model apis from ZhipuAI",
     long_description=readme,
     long_description_content_type="text/markdown",
@@ -17,7 +17,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
     install_requires=requirements,
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
