@@ -5,16 +5,16 @@ from typing import Union, List, Optional, TYPE_CHECKING
 import httpx
 from typing_extensions import Literal
 
-from zhipuai.core._base_api import BaseAPI
-from zhipuai.core._base_type import NotGiven, NOT_GIVEN, Headers
-from zhipuai.core._http_client import make_user_request_input
-from zhipuai.core._sse_client import StreamResponse
-from zhipuai.types.chat import chat_completions_create_param
-from zhipuai.types.chat.chat_completion import Completion
-from zhipuai.types.chat.chat_completion_chunk import ChatCompletionChunk
+from ...core._base_api import BaseAPI
+from ...core._base_type import NotGiven, NOT_GIVEN, Headers
+from ...core._http_client import make_user_request_input
+from ...core._sse_client import StreamResponse
+from ...types.chat import chat_completions_create_param
+from ...types.chat.chat_completion import Completion
+from ...types.chat.chat_completion_chunk import ChatCompletionChunk
 
 if TYPE_CHECKING:
-    from zhipuai._client import ZhipuAI
+    from ..._client import ZhipuAI
 
 
 class Completions(BaseAPI):

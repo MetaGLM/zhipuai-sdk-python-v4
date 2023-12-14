@@ -6,13 +6,13 @@ from typing import Generic, Iterator, TYPE_CHECKING, Mapping
 
 import httpx
 
-from zhipuai.core._base_type import ResponseT
-from zhipuai.core._errors import APIResponseError
+from ._base_type import ResponseT
+from ._errors import APIResponseError
 
 _FIELD_SEPARATOR = ":"
 
 if TYPE_CHECKING:
-    from zhipuai.core._http_client import HttpClient
+    from ._http_client import HttpClient
 
 
 class StreamResponse(Generic[ResponseT]):

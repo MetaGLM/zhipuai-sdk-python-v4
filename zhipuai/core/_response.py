@@ -7,11 +7,11 @@ import httpx
 import pydantic
 from typing_extensions import ParamSpec, get_origin, get_args
 
-from zhipuai.core._base_type import NoneType
-from zhipuai.core._sse_client import StreamResponse
+from ._base_type import NoneType
+from ._sse_client import StreamResponse
 
 if TYPE_CHECKING:
-    from zhipuai.core._http_client import HttpClient
+    from ._http_client import HttpClient
 
 
 

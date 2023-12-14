@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 from .completions import Completions
 from .async_completions import AsyncCompletions
-from zhipuai.core._base_api import BaseAPI
+from ...core._base_api import BaseAPI
 
 if TYPE_CHECKING:
     from zhipuai._client import ZhipuAI

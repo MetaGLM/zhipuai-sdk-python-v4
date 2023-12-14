@@ -3,8 +3,8 @@ from __future__ import annotations
 import functools
 from typing import Mapping
 
-from zhipuai.core._base_type import NotGiven
-from zhipuai.core._sse_client import StreamResponse
+from ._base_type import NotGiven
+from ._sse_client import StreamResponse
 
 
 def remove_notgiven_indict(obj):

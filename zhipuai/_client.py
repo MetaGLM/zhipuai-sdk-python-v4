@@ -8,7 +8,7 @@ from .core import _jwt_token
 from .core._errors import ZhipuAIError
 from .core._http_client import HttpClient, ZHIPUAI_DEFAULT_MAX_RETRIES
 from .core._base_type import NotGiven, NOT_GIVEN
-from zhipuai import api_resource
+from . import api_resource
 import os
 import httpx
 from httpx import Timeout

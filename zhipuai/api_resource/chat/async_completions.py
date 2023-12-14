@@ -5,14 +5,14 @@ from typing import Union, List, Optional, TYPE_CHECKING
 import httpx
 from typing_extensions import Literal
 
-from zhipuai.core._base_api import BaseAPI
-from zhipuai.core._base_type import NotGiven, NOT_GIVEN, Headers
-from zhipuai.core._http_client import make_user_request_input
-from zhipuai.types.chat import chat_completions_create_param
-from zhipuai.types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
+from ...core._base_api import BaseAPI
+from ...core._base_type import NotGiven, NOT_GIVEN, Headers
+from ...core._http_client import make_user_request_input
+from ...types.chat import chat_completions_create_param
+from ...types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
 
 if TYPE_CHECKING:
-    from zhipuai._client import ZhipuAI
+    from ..._client import ZhipuAI
 
 
 class AsyncCompletions(BaseAPI):

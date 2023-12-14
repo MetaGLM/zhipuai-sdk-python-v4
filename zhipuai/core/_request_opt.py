@@ -10,8 +10,8 @@ from typing_extensions import (
 
 )
 
-from zhipuai.core._base_type import Body, NotGiven, Headers
-from zhipuai.core._utils import remove_notgiven_indict
+from ._base_type import Body, NotGiven, Headers
+from ._utils import remove_notgiven_indict
 
 
 class UserRequestInput(TypedDict, total=False):

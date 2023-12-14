@@ -14,12 +14,12 @@ import httpx
 import pydantic
 from httpx import URL, Timeout
 
-from zhipuai.core import _errors
-from zhipuai.core._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN
-from zhipuai.core._errors import APIResponseValidationError, APIStatusError, APITimeoutError
-from zhipuai.core._request_opt import ClientRequestParam, UserRequestInput
-from zhipuai.core._response import HttpResponse
-from zhipuai.core._sse_client import StreamResponse
+from . import _errors
+from ._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN
+from ._errors import APIResponseValidationError, APIStatusError, APITimeoutError
+from ._request_opt import ClientRequestParam, UserRequestInput
+from ._response import HttpResponse
+from ._sse_client import StreamResponse
 
 headers = {
     "Accept": "application/json",
