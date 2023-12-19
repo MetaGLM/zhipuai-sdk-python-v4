@@ -38,9 +38,9 @@ class ZhipuAI(HttpClient):
             base_url = os.environ.get("ZHIPUAI_BASE_URL")
         if base_url is None:
             base_url = f"https://open.bigmodel.cn/api/paas/v4"
-
+        from .__version__ import __version__
         super().__init__(
-            version="0.0.1",
+            version=__version__,
             base_url=base_url,
             # max_retries=max_retries,
             timeout=timeout,
