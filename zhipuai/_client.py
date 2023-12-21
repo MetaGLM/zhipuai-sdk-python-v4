@@ -42,7 +42,6 @@ class ZhipuAI(HttpClient):
         super().__init__(
             version=__version__,
             base_url=base_url,
-            # max_retries=max_retries,
             timeout=timeout,
             custom_httpx_client=http_client,
             custom_headers=custom_headers,
@@ -59,7 +58,7 @@ class ZhipuAI(HttpClient):
 
     def __del__(self) -> None:
         if not hasattr(self, "_has_custom_http_client") or not hasattr(self, "close"):
-            # this can happen if the '__init__' method raised an error
+            # if the '__init__' method raised an error, self would not have client attr
             return
 
         if self._has_custom_http_client:

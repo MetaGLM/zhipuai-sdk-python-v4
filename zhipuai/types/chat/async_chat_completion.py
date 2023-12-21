@@ -16,7 +16,7 @@ class AsyncTaskStatus(BaseModel):
 
 class AsyncCompletion(BaseModel):
     id: str
-    request_id: str
+    request_id: Optional[str] = None
     model: str
     task_status: str
     choices: List[CompletionChoice]

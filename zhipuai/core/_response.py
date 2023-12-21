@@ -13,8 +13,6 @@ from ._sse_client import StreamResponse
 if TYPE_CHECKING:
     from ._http_client import HttpClient
 
-
-
 P = ParamSpec("P")
 R = TypeVar("R")
 
@@ -119,5 +117,4 @@ class HttpResponse(Generic[R]):
 
     @property
     def elapsed(self) -> datetime.timedelta:
-        """The time taken for the complete request/response cycle to complete."""
         return self.http_response.elapsed

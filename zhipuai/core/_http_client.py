@@ -302,10 +302,11 @@ class HttpClient:
             return _errors.APIServerFlowExceedError(message=error_msg, response=response)
         return APIStatusError(message=error_msg, response=response)
 
+
 def make_user_request_input(
-    max_retries: int | None = None,
-    timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
-    extra_headers: Headers = None,
+        max_retries: int | None = None,
+        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
+        extra_headers: Headers = None,
 ) -> UserRequestInput:
     options: UserRequestInput = {}
 
@@ -313,7 +314,7 @@ def make_user_request_input(
         options["headers"] = extra_headers
     if max_retries is not None:
         options["max_retries"] = max_retries
-    if not isinstance(timeout,NotGiven):
+    if not isinstance(timeout, NotGiven):
         options['timeout'] = timeout
 
     return options

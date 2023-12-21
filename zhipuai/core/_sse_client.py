@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 
 
 class StreamResponse(Generic[ResponseT]):
-    """Provides the core interface to iterate over a synchronous stream response."""
 
     response: httpx.Response
     _cast_type: type[ResponseT]

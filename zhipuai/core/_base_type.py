@@ -14,9 +14,6 @@ from typing_extensions import (
     override,
 )
 
-# if TYPE_CHECKING:
-#     from ._models import BaseModel
-
 
 Query = Mapping[str, object]
 Body = object
@@ -28,11 +25,6 @@ if TYPE_CHECKING:
     NoneType: Type[None]
 else:
     NoneType = type(None)
-
-
-# Sentinel class used when the response type is an object with an unknown schema
-class UnknownResponse:
-    ...
 
 
 # Sentinel class used until PEP 0661 is accepted

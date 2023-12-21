@@ -38,7 +38,7 @@ class Completion(BaseModel):
     model: str
     created: int
     choices: List[CompletionChoice]
-    request_id: str
+    request_id: Optional[str] = None
     id: str
     usage: CompletionUsage
 
