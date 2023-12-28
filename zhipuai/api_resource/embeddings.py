@@ -25,11 +25,11 @@ class Embeddings(BaseAPI):
             encoding_format: str | NotGiven = NOT_GIVEN,
             user: str | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
-            return_json: Optional[bool] | None = None,
+            disable_strict_validation: Optional[bool] | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EmbeddingsResponded:
         _cast_type = EmbeddingsResponded
-        if return_json:
+        if disable_strict_validation:
             _cast_type = object
         return self._post(
             "/embeddings",

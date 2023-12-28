@@ -38,12 +38,12 @@ class Completions(BaseAPI):
             tools: Optional[str] | NotGiven = NOT_GIVEN,
             tool_choice: str | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
-            return_json: Optional[bool] | None = None,
+            disable_strict_validation: Optional[bool] | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Completion | StreamResponse[ChatCompletionChunk]:
         _cast_type = Completion
         _stream_cls = StreamResponse[ChatCompletionChunk]
-        if return_json:
+        if disable_strict_validation:
             _cast_type = object
             _stream_cls = StreamResponse[object]
         return self._post(

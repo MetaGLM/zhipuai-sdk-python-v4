@@ -36,12 +36,12 @@ class AsyncCompletions(BaseAPI):
             tools: Optional[str] | NotGiven = NOT_GIVEN,
             tool_choice: str | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
-            return_json: Optional[bool] | None = None,
+            disable_strict_validation: Optional[bool] | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> AsyncTaskStatus:
         _cast_type = AsyncTaskStatus
 
-        if return_json:
+        if disable_strict_validation:
             _cast_type = object
         return self._post(
             "/async/chat/completions",
@@ -70,11 +70,11 @@ class AsyncCompletions(BaseAPI):
         self,
         id: str,
         extra_headers: Headers | None = None,
-        return_json: Optional[bool] | None = None,
+        disable_strict_validation: Optional[bool] | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Union[AsyncCompletion, AsyncTaskStatus]:
         _cast_type = Union[AsyncCompletion,AsyncTaskStatus]
-        if return_json:
+        if disable_strict_validation:
             _cast_type = object
         return self._get(
             path=f"/async-result/{id}",
