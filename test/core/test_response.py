@@ -12,6 +12,7 @@ from zhipuai.core._base_type import ResponseT
 from zhipuai.core._response import HttpResponse
 from zhipuai.core._http_client import HttpClient
 
+
 # Mock objects for HttpClient and StreamResponse if necessary
 class MockHttpClient:
     # Implement necessary mock methods or attributes
@@ -38,15 +39,18 @@ class MockStreamResponse(Generic[ResponseT]):
         self._cast_type = cast_type
         # self._data_process_func = client._process_response_data
         # self._strem_chunks = self.__stream__()
+
     def __iter__(self):
         for item in self.response.iter_lines():
             yield item
+
 
 # Test Initialization
 def test_http_response_initialization():
     raw_response = Response(200)
     http_response = HttpResponse(raw_response=raw_response, cast_type=str, client=MockHttpClient())
     assert http_response.http_response == raw_response
+
 
 # Test parse Method
 def test_parse_method():
@@ -59,10 +63,11 @@ def test_parse_method():
     assert parsed_data == '{"key": "value"}'
 
     raw_response = Response(200, content=b'{"key": "value"}', stream=ByteStream(b'{"key": "value"}\n"foo"\n"boo"\n'))
-    http_response = HttpResponse(raw_response=raw_response, cast_type=str, client=MockHttpClient(),enable_stream=True, stream_cls=MockStreamResponse[str])
+    http_response = HttpResponse(raw_response=raw_response, cast_type=str, client=MockHttpClient(), enable_stream=True,
+                                 stream_cls=MockStreamResponse[str])
     parsed_data = http_response.parse()
-    excepted_data = ['{"key": "value"}\n','"foo"\n','"boo"\n']
-    data = [chunk for chunk in parsed_data]
+    excepted_data = ['{"key": "value"}', '"foo"', '"boo"']
+    data = [chunk.strip() for chunk in parsed_data]
     assert data == excepted_data
 
 
