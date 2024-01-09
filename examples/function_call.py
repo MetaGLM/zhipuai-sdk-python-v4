@@ -25,23 +25,12 @@ tools = [
 ]
 messages = [{"role": "user", "content": "今天北京天气如何？"}]
 completion = client.chat.completions.create(
-    model="chatglm3-6b-latest",
+    model="", #填写需要调用的模型名称
     messages=messages,
     tools=tools,
     tool_choice="auto",
-    # stream=True,
+    stream=True
 )
-# completion = client.chat.completions.create(
-#     model="gpt-4",
-#     messages=[
-#         {
-#             "role": "user",
-#             "content": "Say this is a test",
-#         },
-#     ],
-# )
-print(completion.choices)
-# for chunk in completion:
-#     # if not chunk.choices:
-#     #     continue
-#     print(chunk)
+
+for chunk in completion:
+    print(chunk)
