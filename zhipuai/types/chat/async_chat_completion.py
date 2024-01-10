@@ -8,16 +8,16 @@ __all__ = ["AsyncTaskStatus"]
 
 
 class AsyncTaskStatus(BaseModel):
-    id: str
-    request_id: str
+    id: Optional[str] = None
+    request_id: Optional[str] = None
     model: Optional[str] = None
-    task_status: str
+    task_status: Optional[str] = None
 
 
 class AsyncCompletion(BaseModel):
-    id: str
+    id: Optional[str] = None
     request_id: Optional[str] = None
-    model: str
+    model: Optional[str] = None
     task_status: str
     choices: List[CompletionChoice]
     usage: CompletionUsage

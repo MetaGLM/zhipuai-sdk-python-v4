@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-__all__ = ["Completion","CompletionUsage"]
+__all__ = ["Completion", "CompletionUsage"]
 
 
 class Function(BaseModel):
@@ -35,11 +35,11 @@ class CompletionChoice(BaseModel):
 
 
 class Completion(BaseModel):
-    model: str
-    created: int
+    model: Optional[str] = None
+    created: Optional[int] = None
     choices: List[CompletionChoice]
     request_id: Optional[str] = None
-    id: str
+    id: Optional[str] = None
     usage: CompletionUsage
 
 

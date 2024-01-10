@@ -48,8 +48,8 @@ class CompletionUsage(BaseModel):
 
 
 class ChatCompletionChunk(BaseModel):
-    id: str
+    id: Optional[str] = None
     choices: List[Choice]
-    created: int
-    model: str
+    created: Optional[int] = None
+    model: Optional[str] = None
     usage: Optional[CompletionUsage] = None

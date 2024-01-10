@@ -10,7 +10,7 @@ from ..core._http_client import make_user_request_input
 from ..types.image import ImagesResponded
 
 if TYPE_CHECKING:
-    from zhipuai._client import ZhipuAI
+    from .._client import ZhipuAI
 
 
 class Images(BaseAPI):

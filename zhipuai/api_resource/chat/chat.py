@@ -4,7 +4,7 @@ from .async_completions import AsyncCompletions
 from ...core._base_api import BaseAPI
 
 if TYPE_CHECKING:
-    from zhipuai._client import ZhipuAI
+    from ..._client import ZhipuAI
 
 
 class Chat(BaseAPI):
