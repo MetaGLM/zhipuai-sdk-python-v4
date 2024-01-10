@@ -122,7 +122,7 @@ class HttpClient:
 
         return self._client.build_request(
             headers=headers,
-            timeout=self.timeout,
+            timeout=self.timeout if isinstance(request_param.timeout, NotGiven) else request_param.timeout,
             method=request_param.method,
             url=url,
             json=json_data

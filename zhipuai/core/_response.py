@@ -64,8 +64,9 @@ class HttpResponse(Generic[R]):
             return cast(R, http_response.text)
 
         content_type, *_ = http_response.headers.get("content-type", "application/json").split(";")
+        origin = get_origin(cast_type) or cast_type
         if content_type != "application/json":
-            if issubclass(get_origin(cast_type), pydantic.BaseModel):
+            if issubclass(origin, pydantic.BaseModel):
                 data = http_response.json()
                 return self._client._process_response_data(
                     data=data,
