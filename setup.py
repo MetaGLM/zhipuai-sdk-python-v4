@@ -8,7 +8,7 @@ with open("requirements.txt") as requirements_file:
 
 setup(
     name="zhipuai",
-    version="v2.1.0",
+    version="v2.0.0-beta",
     description="A SDK library for accessing big model apis from ZhipuAI",
     long_description=readme,
     long_description_content_type="text/markdown",
