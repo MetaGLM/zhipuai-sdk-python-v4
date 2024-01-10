@@ -253,7 +253,7 @@ class TestZhipuAI:
 
         respx_mock.post("/foo").mock(return_value=httpx.Response(200, json={"foo": "bar"}))
 
-        response = self.client.post("/foo", cast_type=Model, enbale_stream=True,stream_cls=StreamResponse[Model])
+        response = self.client.post("/foo", cast_type=Model, enable_stream=True, stream_cls=StreamResponse[Model])
         assert isinstance(response, StreamResponse)
 
     @pytest.mark.respx(base_url=base_url)
@@ -273,7 +273,7 @@ class TestZhipuAI:
                     model="gpt-3.5-turbo",
                 ),
                 cast_type=httpx.Response,
-                options={"headers": {"X-Stainless-Streamed-Raw-Response": "true"}},
+                options={"headers": {"x-Streamed-Raw-Response": "true"}},
             )
 
         assert len(self.client._client._transport._pool._requests) == 0

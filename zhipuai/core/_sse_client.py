@@ -30,13 +30,13 @@ class StreamResponse(Generic[ResponseT]):
         self.response = response
         self._cast_type = cast_type
         self._data_process_func = client._process_response_data
-        self._strem_chunks = self.__stream__()
+        self._stream_chunks = self.__stream__()
 
     def __next__(self) -> ResponseT:
-        return self._strem_chunks.__next__()
+        return self._stream_chunks.__next__()
 
     def __iter__(self) -> Iterator[ResponseT]:
-        for item in self._strem_chunks:
+        for item in self._stream_chunks:
             yield item
 
     def __stream__(self) -> Iterator[ResponseT]:
@@ -52,7 +52,7 @@ class StreamResponse(Generic[ResponseT]):
                 data = sse.json_data()
                 if isinstance(data, Mapping) and data.get("error"):
                     raise APIResponseError(
-                        message="An error ocurred during streaming",
+                        message="An error occurred during streaming",
                         request=self.response.request,
                         json_data=data["error"],
                     )
@@ -77,7 +77,7 @@ class Event(object):
 
     def __repr__(self):
         data_len = len(self._data) if self._data else 0
-        return f"Event(event={self._event}, data={self._data} ,data_lenth={data_len}, id={self._id}, retry={self._retry}"
+        return f"Event(event={self._event}, data={self._data} ,data_length={data_len}, id={self._id}, retry={self._retry}"
 
     @property
     def event(self): return self._event

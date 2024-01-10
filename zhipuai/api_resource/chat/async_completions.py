@@ -8,7 +8,6 @@ from typing_extensions import Literal
 from ...core._base_api import BaseAPI
 from ...core._base_type import NotGiven, NOT_GIVEN, Headers
 from ...core._http_client import make_user_request_input
-from ...types.chat import chat_completions_create_param
 from ...types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
 
 if TYPE_CHECKING:
@@ -61,7 +60,7 @@ class AsyncCompletions(BaseAPI):
                 extra_headers=extra_headers, timeout=timeout
             ),
             cast_type=_cast_type,
-            enbale_stream=False,
+            enable_stream=False,
         )
 
     def retrieve_completion_result(

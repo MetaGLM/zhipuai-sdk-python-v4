@@ -38,7 +38,7 @@ class MockStreamResponse(Generic[ResponseT]):
         self.response = response
         self._cast_type = cast_type
         # self._data_process_func = client._process_response_data
-        # self._strem_chunks = self.__stream__()
+        # self._stream_chunks = self.__stream__()
 
     def __iter__(self):
         for item in self.response.iter_lines():

@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-import functools
 from typing import Mapping
 
 from ._base_type import NotGiven
-from ._sse_client import StreamResponse
 
 
 def remove_notgiven_indict(obj):

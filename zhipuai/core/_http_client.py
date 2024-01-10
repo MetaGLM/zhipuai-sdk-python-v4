@@ -217,12 +217,12 @@ class HttpClient:
             *,
             cast_type: Type[ResponseT],
             options: UserRequestInput = {},
-            enbale_stream: bool = False,
+            enable_stream: bool = False,
     ) -> ResponseT | StreamResponse:
         opts = ClientRequestParam.construct(method="get", url=path, **options)
         return self.request(
             cast_type=cast_type, params=opts,
-            enable_stream=enbale_stream
+            enable_stream=enable_stream
         )
 
     def post(
@@ -233,13 +233,14 @@ class HttpClient:
             cast_type: Type[ResponseT],
             options: UserRequestInput = {},
             enbale_stream: bool = False,
+            enable_stream: bool = False,
             stream_cls: type[StreamResponse[Any]] | None = None,
     ) -> ResponseT | StreamResponse:
         opts = ClientRequestParam.construct(method="post", json_data=body, url=path, **options)
 
         return self.request(
             cast_type=cast_type, params=opts,
-            enable_stream=enbale_stream,
+            enable_stream=enable_stream,
             stream_cls=stream_cls
         )
 
