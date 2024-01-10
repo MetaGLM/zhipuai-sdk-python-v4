@@ -49,6 +49,8 @@ class ZhipuAI(HttpClient):
         self.chat = api_resource.chat.Chat(self)
         self.images = api_resource.images.Images(self)
         self.embeddings = api_resource.embeddings.Embeddings(self)
+        self.files = api_resource.files.Files(self)
+        self.fine_tuning = api_resource.fine_tuning.FineTuning(self)
 
     @property
     @override

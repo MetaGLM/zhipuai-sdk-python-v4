@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from os import PathLike
 from typing import (
     TYPE_CHECKING,
     Type,
     Union,
     Mapping,
-    TypeVar,
+    TypeVar, IO, Tuple, Sequence,
 )
 
 import pydantic
@@ -83,3 +84,30 @@ ResponseT = TypeVar(
     "ResponseT",
     bound="Union[str, None, BaseModel, List[Any], Dict[str, Any], Response, UnknownResponse, ModelBuilderProtocol, BinaryResponseContent]",
 )
+
+# for user input files
+if TYPE_CHECKING:
+    FileContent = Union[IO[bytes], bytes, PathLike[str]]
+else:
+    FileContent = Union[IO[bytes], bytes, PathLike]
+
+FileTypes = Union[
+    FileContent,  # file content
+    Tuple[str, FileContent],  # (filename, file)
+    Tuple[str, FileContent, str],  # (filename, file , content_type)
+    Tuple[str, FileContent, str, Mapping[str, str]],  # (filename, file , content_type, headers)
+]
+
+RequestFiles = Union[Mapping[str, FileTypes], Sequence[Tuple[str, FileTypes]]]
+
+# for httpx client supported files
+
+HttpxFileContent = Union[bytes, IO[bytes]]
+HttpxFileTypes = Union[
+    FileContent,  # file content
+    Tuple[str, HttpxFileContent],  # (filename, file)
+    Tuple[str, HttpxFileContent, str],  # (filename, file , content_type)
+    Tuple[str, HttpxFileContent, str, Mapping[str, str]],  # (filename, file , content_type, headers)
+]
+
+HttpxRequestFiles = Union[Mapping[str, HttpxFileTypes], Sequence[Tuple[str, HttpxFileTypes]]]

@@ -15,8 +15,9 @@ import pydantic
 from httpx import URL, Timeout
 
 from . import _errors
-from ._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN
+from ._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN, RequestFiles
 from ._errors import APIResponseValidationError, APIStatusError, APITimeoutError
+from ._files import make_httpx_files
 from ._request_opt import ClientRequestParam, UserRequestInput
 from ._response import HttpResponse
 from ._sse_client import StreamResponse
@@ -125,7 +126,8 @@ class HttpClient:
             timeout=self.timeout if isinstance(request_param.timeout, NotGiven) else request_param.timeout,
             method=request_param.method,
             url=url,
-            json=json_data
+            json=json_data,
+            files=request_param.files,
         )
 
     def _parse_response(
@@ -232,11 +234,11 @@ class HttpClient:
             body: Body | None = None,
             cast_type: Type[ResponseT],
             options: UserRequestInput = {},
-            enbale_stream: bool = False,
+            files: RequestFiles | None = None,
             enable_stream: bool = False,
             stream_cls: type[StreamResponse[Any]] | None = None,
     ) -> ResponseT | StreamResponse:
-        opts = ClientRequestParam.construct(method="post", json_data=body, url=path, **options)
+        opts = ClientRequestParam.construct(method="post", json_data=body, files=make_httpx_files(files), url=path, **options)
 
         return self.request(
             cast_type=cast_type, params=opts,
@@ -265,8 +267,9 @@ class HttpClient:
             body: Body | None = None,
             cast_type: Type[ResponseT],
             options: UserRequestInput = {},
+            files: RequestFiles | None = None,
     ) -> ResponseT | StreamResponse:
-        opts = ClientRequestParam.construct(method="put", url=path, json_data=body, **options)
+        opts = ClientRequestParam.construct(method="put", url=path, json_data=body, files=make_httpx_files(files), **options)
 
         return self.request(
             cast_type=cast_type, params=opts,
