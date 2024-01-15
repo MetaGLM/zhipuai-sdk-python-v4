@@ -24,6 +24,7 @@ class Embeddings(BaseAPI):
             model: Union[str],
             encoding_format: str | NotGiven = NOT_GIVEN,
             user: str | NotGiven = NOT_GIVEN,
+            sensitive_word_check: Optional[object] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             disable_strict_validation: Optional[bool] | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
@@ -38,6 +39,7 @@ class Embeddings(BaseAPI):
                 "model": model,
                 "encoding_format": encoding_format,
                 "user": user,
+                "sensitive_word_check": sensitive_word_check,
             },
             options=make_user_request_input(
                 extra_headers=extra_headers, timeout=timeout
