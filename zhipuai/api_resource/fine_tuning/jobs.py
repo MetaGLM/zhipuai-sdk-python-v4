@@ -12,6 +12,8 @@ from ...core._http_client import (
 from ...types.fine_tuning import (
     FineTuningJob,
     job_create_params,
+    ListOfFineTuningJob,
+    FineTuningJobEvent,
 )
 
 if TYPE_CHECKING:
@@ -64,4 +66,48 @@ class Jobs(BaseAPI):
                 extra_headers=extra_headers, timeout=timeout
             ),
             cast_type=FineTuningJob,
+        )
+
+    def list(
+            self,
+            *,
+            after: str | NotGiven = NOT_GIVEN,
+            limit: int | NotGiven = NOT_GIVEN,
+            extra_headers: Headers | None = None,
+            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> ListOfFineTuningJob:
+        return self._get(
+            "/fine_tuning/jobs",
+            cast_type=ListOfFineTuningJob,
+            options=make_user_request_input(
+                extra_headers=extra_headers,
+                timeout=timeout,
+                query={
+                    "after": after,
+                    "limit": limit,
+                },
+            ),
+        )
+
+    def list_events(
+        self,
+        fine_tuning_job_id: str,
+        *,
+        after: str | NotGiven = NOT_GIVEN,
+        limit: int | NotGiven = NOT_GIVEN,
+        extra_headers: Headers | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> FineTuningJobEvent:
+
+        return self._get(
+            f"/fine_tuning/jobs/{fine_tuning_job_id}/events",
+            cast_type=FineTuningJobEvent,
+            options=make_user_request_input(
+                extra_headers=extra_headers,
+                timeout=timeout,
+                query={
+                    "after": after,
+                    "limit": limit,
+                },
+            ),
         )

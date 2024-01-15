@@ -3,7 +3,7 @@ from typing_extensions import Literal
 
 from pydantic import BaseModel
 
-__all__ = ["FineTuningJob", "Error", "Hyperparameters"]
+__all__ = ["FineTuningJob", "Error", "Hyperparameters", "ListOfFineTuningJob" ]
 
 
 class Error(BaseModel):
@@ -13,13 +13,15 @@ class Error(BaseModel):
 
 
 class Hyperparameters(BaseModel):
-    n_epochs: Union[Literal["auto"], int]
+    n_epochs: Union[str, int, None] = None
 
 
 class FineTuningJob(BaseModel):
-    id: str
+    id: Optional[str] = None
 
-    created_at: int
+    request_id: Optional[str] = None
+
+    created_at: Optional[int] = None
 
     error: Optional[Error] = None
 
@@ -27,13 +29,11 @@ class FineTuningJob(BaseModel):
 
     finished_at: Optional[int] = None
 
-    hyperparameters: Hyperparameters
+    hyperparameters: Optional[Hyperparameters] = None
 
-    model: str
+    model: Optional[str] = None
 
-    object: str
-
-    organization_id: str
+    object: Optional[str] = None
 
     result_files: List[str]
 
@@ -44,3 +44,9 @@ class FineTuningJob(BaseModel):
     training_file: str
 
     validation_file: Optional[str] = None
+
+
+class ListOfFineTuningJob(BaseModel):
+    object: Optional[str] = None
+    data: list[FineTuningJob]
+    has_more: Optional[bool] = None

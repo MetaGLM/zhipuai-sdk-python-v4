@@ -15,12 +15,13 @@ import pydantic
 from httpx import URL, Timeout
 
 from . import _errors
-from ._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN, RequestFiles
+from ._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN, RequestFiles, Query, Data
 from ._errors import APIResponseValidationError, APIStatusError, APITimeoutError
 from ._files import make_httpx_files
 from ._request_opt import ClientRequestParam, UserRequestInput
 from ._response import HttpResponse
 from ._sse_client import StreamResponse
+from ._utils import flatten
 
 headers = {
     "Accept": "application/json",
@@ -116,10 +117,16 @@ class HttpClient:
             self,
             request_param: ClientRequestParam
     ) -> httpx.Request:
-
+        kwargs: dict[str, Any] = {}
         json_data = request_param.json_data
         headers = self._prepare_headers(request_param)
         url = self._prepare_url(request_param.url)
+        json_data = request_param.json_data
+        if headers.get("Content-Type") == "multipart/form-data":
+            headers.pop("Content-Type")
+
+            if json_data:
+                kwargs["data"] = self._make_multipartform(json_data)
 
         return self._client.build_request(
             headers=headers,
@@ -128,7 +135,48 @@ class HttpClient:
             url=url,
             json=json_data,
             files=request_param.files,
+            params=request_param.params,
+            **kwargs,
         )
+
+    def _object_to_formfata(self, key: str, value: Data | Mapping[object, object]) -> list[tuple[str, str]]:
+        items = []
+
+        if isinstance(value, Mapping):
+            for k, v in value.items():
+                items.extend(self._object_to_formfata(f"{key}[{k}]", v))
+            return items
+        if isinstance(value, (list, tuple)):
+            for v in value:
+                items.extend(self._object_to_formfata(key + "[]", v))
+            return items
+
+        def _primitive_value_to_str(val) -> str:
+            # copied from httpx
+            if val is True:
+                return "true"
+            elif val is False:
+                return "false"
+            elif val is None:
+                return ""
+            return str(val)
+
+        str_data = _primitive_value_to_str(value)
+
+        if not str_data:
+            return []
+        return [(key, str_data)]
+
+    def _make_multipartform(self, data: Mapping[object, object]) -> dict[str, object]:
+
+        items = flatten([self._object_to_formfata(k, v) for k, v in data.items()])
+
+        serialized: dict[str, object] = {}
+        for key, value in items:
+            if key in serialized:
+                raise ValueError(f"存在重复的键: {key};")
+            serialized[key] = value
+        return serialized
 
     def _parse_response(
             self,
@@ -238,7 +286,8 @@ class HttpClient:
             enable_stream: bool = False,
             stream_cls: type[StreamResponse[Any]] | None = None,
     ) -> ResponseT | StreamResponse:
-        opts = ClientRequestParam.construct(method="post", json_data=body, files=make_httpx_files(files), url=path, **options)
+        opts = ClientRequestParam.construct(method="post", json_data=body, files=make_httpx_files(files), url=path,
+                                            **options)
 
         return self.request(
             cast_type=cast_type, params=opts,
@@ -269,7 +318,8 @@ class HttpClient:
             options: UserRequestInput = {},
             files: RequestFiles | None = None,
     ) -> ResponseT | StreamResponse:
-        opts = ClientRequestParam.construct(method="put", url=path, json_data=body, files=make_httpx_files(files), **options)
+        opts = ClientRequestParam.construct(method="put", url=path, json_data=body, files=make_httpx_files(files),
+                                            **options)
 
         return self.request(
             cast_type=cast_type, params=opts,
@@ -311,6 +361,7 @@ def make_user_request_input(
         max_retries: int | None = None,
         timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
         extra_headers: Headers = None,
+        query: Query | None = None,
 ) -> UserRequestInput:
     options: UserRequestInput = {}
 
@@ -320,5 +371,7 @@ def make_user_request_input(
         options["max_retries"] = max_retries
     if not isinstance(timeout, NotGiven):
         options['timeout'] = timeout
+    if query is not None:
+        options["params"] = query
 
     return options

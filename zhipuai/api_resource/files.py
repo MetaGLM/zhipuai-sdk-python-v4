@@ -10,7 +10,7 @@ from ..core._files import is_file_content
 from ..core._http_client import (
     make_user_request_input,
 )
-from ..types.file_object import FileObject
+from ..types.file_object import FileObject, ListOfFileObject
 
 if TYPE_CHECKING:
     from .._client import ZhipuAI
@@ -29,11 +29,8 @@ class Files(BaseAPI):
             file: FileTypes,
             purpose: str,
             extra_headers: Headers | None = None,
-            extra_query: Query | None = None,
-            extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> FileObject:
-
         if not is_file_content(file):
             prefix = f"Expected file input `{file!r}`"
             raise RuntimeError(
@@ -55,4 +52,27 @@ class Files(BaseAPI):
             cast_type=FileObject,
         )
 
-
+    def list(
+            self,
+            *,
+            purpose: str | NotGiven = NOT_GIVEN,
+            limit: int  | NotGiven = NOT_GIVEN,
+            after: str | NotGiven = NOT_GIVEN,
+            order: str | NotGiven = NOT_GIVEN,
+            extra_headers: Headers | None = None,
+            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> ListOfFileObject:
+        return self._get(
+            "/files",
+            cast_type=ListOfFileObject,
+            options=make_user_request_input(
+                extra_headers=extra_headers,
+                timeout=timeout,
+                query={
+                    "purpose": purpose,
+                    "limit": limit,
+                    "after": after,
+                    "order": order,
+                },
+            ),
+        )

@@ -6,7 +6,7 @@ from typing import (
     Type,
     Union,
     Mapping,
-    TypeVar, IO, Tuple, Sequence,
+    TypeVar, IO, Tuple, Sequence, Any, List,
 )
 
 import pydantic
@@ -19,6 +19,8 @@ from typing_extensions import (
 Query = Mapping[str, object]
 Body = object
 AnyMapping = Mapping[str, object]
+PrimitiveData = Union[str, int, float, bool, None]
+Data = Union[PrimitiveData, List[Any], Tuple[Any], "Mapping[str, Any]"]
 ModelT = TypeVar("ModelT", bound=pydantic.BaseModel)
 _T = TypeVar("_T")
 

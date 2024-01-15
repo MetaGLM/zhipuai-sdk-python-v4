@@ -7,12 +7,18 @@ __all__ = ["FileObject"]
 
 class FileObject(BaseModel):
 
-    id: str
-    bytes: int
-    created_at: int
-    filename: str
-    object: str
-    purpose: str
-    status: str
+    id: Optional[str] = None
+    bytes: Optional[int] = None
+    created_at: Optional[int] = None
+    filename: Optional[str] = None
+    object: Optional[str] = None
+    purpose: Optional[str] = None
+    status: Optional[str] = None
     status_details: Optional[str] = None
 
+
+class ListOfFileObject(BaseModel):
+
+    object: Optional[str] = None
+    data: list[FileObject]
+    has_more: Optional[bool] = None
