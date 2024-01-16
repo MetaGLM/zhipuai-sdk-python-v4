@@ -59,7 +59,9 @@ class ZhipuAI(HttpClient):
         return {"Authorization": f"{_jwt_token.generate_token(api_key)}"}
 
     def __del__(self) -> None:
-        if not hasattr(self, "_has_custom_http_client") or not hasattr(self, "close"):
+        if (not hasattr(self, "_has_custom_http_client")
+                or not hasattr(self, "close")
+                or not hasattr(self, "_client")):
             # if the '__init__' method raised an error, self would not have client attr
             return
 
