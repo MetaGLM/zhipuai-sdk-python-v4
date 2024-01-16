@@ -48,5 +48,5 @@ class FineTuningJob(BaseModel):
 
 class ListOfFineTuningJob(BaseModel):
     object: Optional[str] = None
-    data: list[FineTuningJob]
+    data: List[FineTuningJob]
     has_more: Optional[bool] = None

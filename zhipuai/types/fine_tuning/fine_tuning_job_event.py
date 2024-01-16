@@ -32,5 +32,5 @@ class JobEvent(BaseModel):
 
 class FineTuningJobEvent(BaseModel):
     object: Optional[str] = None
-    data: list[JobEvent]
+    data: List[JobEvent]
     has_more: Optional[bool] = None
