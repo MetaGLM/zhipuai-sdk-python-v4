@@ -73,3 +73,46 @@ for chunk in response:
     print(chunk.choices[0].delta)
 ```
 
+### 异常处理
+
+When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `openai.APIConnectionError` is raised.
+
+When the API returns a non-success status code (that is, 4xx or 5xx
+response), a subclass of `openai.APIStatusError` is raised, containing `status_code` and `response` properties.
+
+All errors inherit from `openai.APIError`.
+
+```python
+import openai
+from openai import OpenAI
+
+client = OpenAI()
+
+try:
+    client.fine_tunes.create(
+        training_file="file-XGinujblHPwGLSztz8cPS8XY",
+    )
+except openai.APIConnectionError as e:
+    print("The server could not be reached")
+    print(e.__cause__)  # an underlying Exception, likely raised within httpx.
+except openai.RateLimitError as e:
+    print("A 429 status code was received; we should back off a bit.")
+except openai.APIStatusError as e:
+    print("Another non-200-range status code was received")
+    print(e.status_code)
+    print(e.response)
+```
+
+Error codes are as followed:
+
+| Status Code | Error Type                 |
+| ----------- | -------------------------- |
+| 400         | `BadRequestError`          |
+| 401         | `AuthenticationError`      |
+| 403         | `PermissionDeniedError`    |
+| 404         | `NotFoundError`            |
+| 422         | `UnprocessableEntityError` |
+| 429         | `RateLimitError`           |
+| >=500       | `InternalServerError`      |
+| N/A         | `APIConnectionError`       |
+
