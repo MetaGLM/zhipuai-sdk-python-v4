@@ -34,6 +34,7 @@ class Jobs(BaseAPI):
             training_file: str,
             hyperparameters: job_create_params.Hyperparameters | NotGiven = NOT_GIVEN,
             suffix: Optional[str] | NotGiven = NOT_GIVEN,
+            request_id: Optional[str] | NotGiven = NOT_GIVEN,
             validation_file: Optional[str] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
@@ -46,6 +47,7 @@ class Jobs(BaseAPI):
                 "hyperparameters": hyperparameters,
                 "suffix": suffix,
                 "validation_file": validation_file,
+                "request_id": request_id,
             },
             options=make_user_request_input(
                 extra_headers=extra_headers, timeout=timeout
