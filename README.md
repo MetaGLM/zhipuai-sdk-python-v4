@@ -12,10 +12,8 @@
 
 ## 安装
 
-> [!IMPORTANT]
-> SDK 于 V2 版本进行了重写。
 
-- 运行环境： [**Python>=3.8**](https://www.python.org/)
+- 运行环境： [**Python>=3.7**](https://www.python.org/)
 
 - 使用 pip 安装 `zhipuai` 软件包及其依赖
 
