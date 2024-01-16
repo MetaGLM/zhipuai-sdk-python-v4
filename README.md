@@ -46,7 +46,7 @@ client = ZhipuAI(
 from zhipuai import ZhipuAI
 client = ZhipuAI(api_key="") # 填写您自己的APIKey
 response = client.chat.completions.create(
-    model="glm_4",  # 填写需要调用的模型名称
+    model="",  # 填写需要调用的模型名称
     messages=[
         {"role": "user", "content": "你好"},
         {"role": "assistant", "content": "我是人工智能助手"},
@@ -64,7 +64,7 @@ print(response.choices[0].message)
 from zhipuai import ZhipuAI
 client = ZhipuAI(api_key="") # 请填写您自己的APIKey
 response = client.chat.completions.create(
-    model="glm_4",  # 填写需要调用的模型名称
+    model="",  # 填写需要调用的模型名称
     messages=[
         {"role": "system", "content": "你是一个人工智能助手，你叫叫chatGLM"},
         {"role": "user", "content": "你好！你叫什么名字"},
