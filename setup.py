@@ -14,7 +14,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Zhipu AI",
     url="https://open.bigmodel.cn/",
-    packages=find_packages(exclude=['test']),
+    packages=find_packages(exclude=['test', 'examples']),
     include_package_data=True,
     install_requires=requirements,
     python_requires=">=3.7",
