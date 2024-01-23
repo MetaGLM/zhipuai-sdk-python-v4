@@ -13,3 +13,5 @@ dist/
 eggs/
 .eggs/
 *.egg-info/
+test/
+examples/
