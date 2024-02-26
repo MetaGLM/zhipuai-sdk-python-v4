@@ -15,7 +15,7 @@ from httpx import Timeout
 
 
 class ZhipuAI(HttpClient):
-    chat: api_resource.chat
+    chat: api_resource.chat.Chat
     api_key: str
 
     def __init__(
