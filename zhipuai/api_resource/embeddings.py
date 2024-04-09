@@ -20,8 +20,8 @@ class Embeddings(BaseAPI):
     def create(
             self,
             *,
-            input: Union[str, List[str], List[int], List[List[int]]],
-            model: Union[str],
+            input: str,
+            model: str,
             encoding_format: str | NotGiven = NOT_GIVEN,
             user: str | NotGiven = NOT_GIVEN,
             sensitive_word_check: Optional[object] | NotGiven = NOT_GIVEN,
