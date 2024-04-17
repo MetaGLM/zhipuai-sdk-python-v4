@@ -2,20 +2,28 @@ from __future__ import annotations
 
 from os import PathLike
 from typing import (
+    IO,
     TYPE_CHECKING,
+    Any,
+    List,
     Type,
+    Tuple,
     Union,
     Mapping,
-    TypeVar, IO, Tuple, Sequence, Any, List,
+    TypeVar,
+    Callable,
+    Sequence, Dict,
 )
 
 import pydantic
-from typing_extensions import (
-    Literal,
-    override,
-)
+from httpx import URL, Proxy, Timeout, Response, BaseTransport, AsyncBaseTransport
+from typing_extensions import Literal, Protocol, TypeAlias, override, runtime_checkable, TypedDict
 
+if TYPE_CHECKING:
+    from ._base_models import BaseModel
+    from ._response import APIResponse
 
+Transport = BaseTransport
 Query = Mapping[str, object]
 Body = object
 AnyMapping = Mapping[str, object]
@@ -28,6 +36,15 @@ if TYPE_CHECKING:
     NoneType: Type[None]
 else:
     NoneType = type(None)
+
+
+class RequestOptions(TypedDict, total=False):
+    headers: Headers
+    max_retries: int
+    timeout: float | Timeout | None
+    params: Query
+    extra_json: AnyMapping
+    idempotency_key: str
 
 
 # Sentinel class used until PEP 0661 is accepted
@@ -80,12 +97,68 @@ class Omit:
         return False
 
 
+@runtime_checkable
+class ModelBuilderProtocol(Protocol):
+    @classmethod
+    def build(
+            cls: type[_T],
+            *,
+            response: Response,
+            data: object,
+    ) -> _T:
+        ...
+
+
 Headers = Mapping[str, Union[str, Omit]]
+
+
+class HeadersLikeProtocol(Protocol):
+    def get(self, __key: str) -> str | None:
+        ...
+
+
+HeadersLike = Union[Headers, HeadersLikeProtocol]
 
 ResponseT = TypeVar(
     "ResponseT",
-    bound="Union[str, None, BaseModel, List[Any], Dict[str, Any], Response, UnknownResponse, ModelBuilderProtocol, BinaryResponseContent]",
+    bound=Union[
+        object,
+        str,
+        None,
+        "BaseModel",
+        List[Any],
+        Dict[str, Any],
+        Response,
+        ModelBuilderProtocol,
+        "APIResponse[Any]",
+        "AsyncAPIResponse[Any]",
+        "HttpxBinaryResponseContent",
+    ],
 )
+
+StrBytesIntFloat = Union[str, bytes, int, float]
+
+# Note: copied from Pydantic
+# https://github.com/pydantic/pydantic/blob/32ea570bf96e84234d2992e1ddf40ab8a565925a/pydantic/main.py#L49
+IncEx: TypeAlias = "set[int] | set[str] | dict[int, Any] | dict[str, Any] | None"
+
+PostParser = Callable[[Any], Any]
+
+
+@runtime_checkable
+class InheritsGeneric(Protocol):
+    """Represents a type that has inherited from `Generic`
+
+    The `__orig_bases__` property can be used to determine the resolved
+    type variable for a given base class.
+    """
+
+    __orig_bases__: tuple[_GenericAlias]
+
+
+class _GenericAlias(Protocol):
+    __origin__: type[object]
+
 
 # for user input files
 if TYPE_CHECKING:

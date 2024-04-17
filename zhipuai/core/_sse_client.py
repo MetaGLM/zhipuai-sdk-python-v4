@@ -2,69 +2,101 @@
 from __future__ import annotations
 
 import json
-from typing import Generic, Iterator, TYPE_CHECKING, Mapping
-
+import json
+import inspect
+from types import TracebackType
+from typing import TYPE_CHECKING, Any, Generic, TypeVar, Iterator, AsyncIterator, cast
+from typing_extensions import Self, TypeGuard, override, get_origin
 import httpx
 
-from ._base_type import ResponseT
-from ._errors import APIResponseError
+from .utils import is_mapping, extract_type_var_from_base
+from ._exceptions import APIError
 
 _FIELD_SEPARATOR = ":"
 
 if TYPE_CHECKING:
-    from ._http_client import HttpClient
+    from .._client import ZhipuAI
+
+_T = TypeVar("_T")
 
 
-class StreamResponse(Generic[ResponseT]):
+class Stream(Generic[_T]):
+    """Provides the core interface to iterate over a synchronous stream response."""
 
     response: httpx.Response
-    _cast_type: type[ResponseT]
 
     def __init__(
             self,
             *,
-            cast_type: type[ResponseT],
+            cast_to: type[_T],
             response: httpx.Response,
-            client: HttpClient,
+            client: ZhipuAI,
     ) -> None:
         self.response = response
-        self._cast_type = cast_type
-        self._data_process_func = client._process_response_data
-        self._stream_chunks = self.__stream__()
+        self._cast_to = cast_to
+        self._client = client
+        self._decoder = SSEDecoder()
+        self._iterator = self.__stream__()
 
-    def __next__(self) -> ResponseT:
-        return self._stream_chunks.__next__()
+    def __next__(self) -> _T:
+        return self._iterator.__next__()
 
-    def __iter__(self) -> Iterator[ResponseT]:
-        for item in self._stream_chunks:
+    def __iter__(self) -> Iterator[_T]:
+        for item in self._iterator:
             yield item
 
-    def __stream__(self) -> Iterator[ResponseT]:
+    def _iter_events(self) -> Iterator[Event]:
+        yield from self._decoder.iter(self.response.iter_lines())
 
-        sse_line_parser = SSELineParser()
-        iterator = sse_line_parser.iter_lines(self.response.iter_lines())
+    def __stream__(self) -> Iterator[_T]:
+        cast_to = cast(Any, self._cast_to)
+        response = self.response
+        process_data = self._client._process_response_data
+        iterator = self._iter_events()
 
         for sse in iterator:
             if sse.data.startswith("[DONE]"):
                 break
 
             if sse.event is None:
-                data = sse.json_data()
-                if isinstance(data, Mapping) and data.get("error"):
-                    raise APIResponseError(
+                data = sse.json()
+                if is_mapping(data) and data.get("error"):
+                    raise APIError(
                         message="An error occurred during streaming",
                         request=self.response.request,
-                        json_data=data["error"],
+                        body=data["error"],
                     )
 
-                yield self._data_process_func(data=data, cast_type=self._cast_type, response=self.response)
-        for sse in iterator:
-            pass
+                yield process_data(data=data, cast_to=cast_to, response=response)
+
+        # Ensure the entire stream is consumed
+        for _sse in iterator:
+            ...
+
+    def __enter__(self) -> Self:
+        return self
+
+    def __exit__(
+            self,
+            exc_type: type[BaseException] | None,
+            exc: BaseException | None,
+            exc_tb: TracebackType | None,
+    ) -> None:
+        self.close()
+
+    def close(self) -> None:
+        """
+        Close the response and release the connection.
+
+        Automatically called if the response body is read to completion.
+        """
+        self.response.close()
 
 
 class Event(object):
     def __init__(
             self,
+            *,
             event: str | None = None,
             data: str | None = None,
             id: str | None = None,
@@ -85,7 +117,8 @@ class Event(object):
     @property
     def data(self): return self._data
 
-    def json_data(self): return json.loads(self._data)
+    def json(self) -> Any:
+        return json.loads(self.data)
 
     @property
     def id(self): return self._id
@@ -94,56 +127,107 @@ class Event(object):
     def retry(self): return self._retry
 
 
-class SSELineParser:
+class SSEDecoder:
     _data: list[str]
     _event: str | None
     _retry: int | None
-    _id: str | None
+    _last_event_id: str | None
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._event = None
         self._data = []
-        self._id = None
+        self._last_event_id = None
         self._retry = None
 
-    def iter_lines(self, lines: Iterator[str]) -> Iterator[Event]:
-        for line in lines:
-            line = line.rstrip('\n')
-            if not line:
-                if self._event is None and \
-                        not self._data and \
-                        self._id is None and \
-                        self._retry is None:
-                    continue
-                sse_event = Event(
-                    event=self._event,
-                    data='\n'.join(self._data),
-                    id=self._id,
-                    retry=self._retry
-                )
-                self._event = None
-                self._data = []
-                self._id = None
-                self._retry = None
+    def iter(self, iterator: Iterator[str]) -> Iterator[Event]:
+        """Given an iterator that yields lines, iterate over it & yield every event encountered"""
+        for line in iterator:
+            line = line.rstrip("\n")
+            sse = self.decode(line)
+            if sse is not None:
+                yield sse
 
-                yield sse_event
-            self.decode_line(line)
+    async def aiter(self, iterator: AsyncIterator[str]) -> AsyncIterator[Event]:
+        """Given an async iterator that yields lines, iterate over it & yield every event encountered"""
+        async for line in iterator:
+            line = line.rstrip("\n")
+            sse = self.decode(line)
+            if sse is not None:
+                yield sse
 
-    def decode_line(self, line: str):
-        if line.startswith(":") or not line:
-            return
+    def decode(self, line: str) -> Event | None:
+        # See: https://html.spec.whatwg.org/multipage/server-sent-events.html#event-stream-interpretation  # noqa: E501
 
-        field, _p, value = line.partition(":")
+        if not line:
+            if not self._event and not self._data and not self._last_event_id and self._retry is None:
+                return None
 
-        if value.startswith(' '):
+            sse = Event(
+                event=self._event,
+                data="\n".join(self._data),
+                id=self._last_event_id,
+                retry=self._retry,
+            )
+
+            # NOTE: as per the SSE spec, do not reset last_event_id.
+            self._event = None
+            self._data = []
+            self._retry = None
+
+            return sse
+
+        if line.startswith(":"):
+            return None
+
+        fieldname, _, value = line.partition(":")
+
+        if value.startswith(" "):
             value = value[1:]
-        if field == "data":
-            self._data.append(value)
-        elif field == "event":
+
+        if fieldname == "event":
             self._event = value
-        elif field == "retry":
+        elif fieldname == "data":
+            self._data.append(value)
+        elif fieldname == "id":
+            if "\0" in value:
+                pass
+            else:
+                self._last_event_id = value
+        elif fieldname == "retry":
             try:
                 self._retry = int(value)
             except (TypeError, ValueError):
                 pass
-        return
+        else:
+            pass  # Field is ignored.
+
+        return None
+
+
+def is_stream_class_type(typ: type) -> TypeGuard[type[Stream[object]]]:
+    """TypeGuard for determining whether or not the given type is a subclass of `Stream` / `AsyncStream`"""
+    origin = get_origin(typ) or typ
+    return inspect.isclass(origin) and issubclass(origin, Stream)
+
+
+def extract_stream_chunk_type(
+        stream_cls: type,
+        *,
+        failure_message: str | None = None,
+) -> type:
+    """Given a type like `Stream[T]`, returns the generic type variable `T`.
+
+    This also handles the case where a concrete subclass is given, e.g.
+    ```py
+    class MyStream(Stream[bytes]):
+        ...
+
+    extract_stream_chunk_type(MyStream) -> bytes
+    ```
+    """
+    return extract_type_var_from_base(
+        stream_cls,
+        index=0,
+        generic_bases=cast("tuple[type, ...]", Stream),
+        failure_message=failure_message,
+    )

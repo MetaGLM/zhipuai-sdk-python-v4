@@ -11,7 +11,7 @@ from typing_extensions import (
 )
 
 from ._base_type import Body, NotGiven, Headers, HttpxRequestFiles, Query
-from ._utils import remove_notgiven_indict
+from zhipuai.core.utils._utils import remove_notgiven_indict
 
 
 class UserRequestInput(TypedDict, total=False):
