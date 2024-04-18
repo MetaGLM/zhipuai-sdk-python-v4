@@ -15,13 +15,16 @@ import pydantic
 from httpx import URL, Timeout
 
 from . import _errors
-from ._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN, RequestFiles, Query, Data, Omit, AnyMapping
+from ._base_compat import parse_obj
+from ._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN, RequestFiles, Query, Data, Omit, AnyMapping, \
+    ModelBuilderProtocol
 from ._errors import APIResponseValidationError, APIStatusError, APITimeoutError
 from ._files import make_httpx_files
 from ._request_opt import ClientRequestParam, UserRequestInput
 from ._response import HttpResponse
 from ._sse_client import StreamResponse
 from ._utils import flatten, is_mapping
+from .._base_models import construct_type
 
 _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)
@@ -215,14 +218,18 @@ class HttpClient:
             cast_type: type[ResponseT],
             response: httpx.Response,
     ) -> ResponseT:
+
         if data is None:
             return cast(ResponseT, None)
 
-        try:
-            if inspect.isclass(cast_type) and issubclass(cast_type, pydantic.BaseModel):
-                return cast(ResponseT, cast_type.model_validate(data))
+        if cast_type is object:
+            return cast(ResponseT, data)
 
-            return cast(ResponseT, pydantic.TypeAdapter(cast_type).validate_python(data))
+        try:
+            if inspect.isclass(cast_type) and issubclass(cast_type, ModelBuilderProtocol):
+                return cast(ResponseT, cast_type.build(response=response, data=data))
+
+            return cast(ResponseT, parse_obj(model=cast_type, value=data))
         except pydantic.ValidationError as err:
             raise APIResponseValidationError(response=response, json_data=data) from err
 

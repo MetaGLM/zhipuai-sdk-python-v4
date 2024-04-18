@@ -57,7 +57,7 @@ def test_completions_vis():
     client = ZhipuAI()  # 填写您自己的APIKey
     response = client.chat.completions.create(
         model="glm-4v",  # 填写需要调用的模型名称
-        extra_body={"temperature": 0.5, "max_tokens": 2},
+        extra_body={"temperature": 0.5, "max_tokens": 50},
         messages=[
             {
                 "role": "user",
@@ -74,9 +74,18 @@ def test_completions_vis():
                     }
                 ]
             }
-        ]
+        ],
+        tools=[
+            {
+                "type": "web_search",
+                "web_search": {
+                    "search_query": "帮我看看清华的升学率",
+                    "search_result": True,
+                }
+            }
+        ],
     )
-    print(response.choices[0].message)
+    print(response)
 
 
 if __name__ == "__main__":

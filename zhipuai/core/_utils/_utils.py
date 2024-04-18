@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Mapping, Iterable, TypeVar
-
 import os
 import re
 import inspect
@@ -23,6 +21,7 @@ from typing_extensions import TypeGuard
 import sniffio
 
 from .._base_type import Headers, NotGiven, FileTypes, NotGivenOr, HeadersLike
+from .._base_compat import parse_date as parse_date, parse_datetime as parse_datetime
 
 
 def remove_notgiven_indict(obj):

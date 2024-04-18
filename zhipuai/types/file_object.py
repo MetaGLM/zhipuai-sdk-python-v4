@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from pydantic import BaseModel
+from .._base_models import BaseModel
 
 __all__ = ["FileObject"]
 

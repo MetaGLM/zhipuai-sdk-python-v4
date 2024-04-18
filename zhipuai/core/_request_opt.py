@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-from typing import Union, Any, cast
+from typing import Union, Any, cast, TYPE_CHECKING
 
+from ._base_compat import ConfigDict, PYDANTIC_V2
 import pydantic.generics
 from httpx import Timeout
-from pydantic import ConfigDict
 from typing_extensions import (
     final, Unpack, ClassVar, TypedDict
 
 )
 
 from ._base_type import Body, NotGiven, Headers, HttpxRequestFiles, Query, AnyMapping
-from ._utils import remove_notgiven_indict
+from ._utils import remove_notgiven_indict, strip_not_given
 
 
 class UserRequestInput(TypedDict, total=False):
@@ -31,10 +31,16 @@ class ClientRequestParam(pydantic.BaseModel):
     headers: Union[Headers, NotGiven] = NotGiven()
     files: Union[HttpxRequestFiles, None] = None
     params: Query = {}
-    model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
 
     json_data: Union[Body, None] = None
     extra_json: Union[AnyMapping, None] = None
+
+    if PYDANTIC_V2:
+        model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+    else:
+
+        class Config(pydantic.BaseConfig):  # pyright: ignore[reportDeprecated]
+            arbitrary_types_allowed: bool = True
 
     def get_max_retries(self, max_retries) -> int:
         if isinstance(self.max_retries, NotGiven):
@@ -50,7 +56,17 @@ class ClientRequestParam(pydantic.BaseModel):
         kwargs: dict[str, Any] = {
             key: remove_notgiven_indict(value) for key, value in values.items()
         }
-        return cast(ClientRequestParam, super().model_construct(_fields_set, **kwargs))
+        kwargs: dict[str, Any] = {
+            # we unconditionally call `strip_not_given` on any value
+            # as it will just ignore any non-mapping types
+            key: strip_not_given(value)
+            for key, value in values.items()
+        }
+        if PYDANTIC_V2:
+            return cast(ClientRequestParam, super().model_construct(_fields_set, **kwargs))
 
-    model_construct = construct
+        return cast(ClientRequestParam, super().construct(_fields_set, **kwargs))  # pyright: ignore[reportDeprecated]
 
+    if not TYPE_CHECKING:
+        # type checkers incorrectly complain about this assignment
+        model_construct = construct
