@@ -10,15 +10,16 @@ from typing_extensions import (
 
 )
 
-from ._base_type import Body, NotGiven, Headers, HttpxRequestFiles, Query
+from ._base_type import Body, NotGiven, Headers, HttpxRequestFiles, Query, AnyMapping
 from ._utils import remove_notgiven_indict
 
 
 class UserRequestInput(TypedDict, total=False):
+    headers: Headers
     max_retries: int
     timeout: float | Timeout | None
-    headers: Headers
-    params: Query | None
+    params: Query
+    extra_json: AnyMapping
 
 
 @final
@@ -28,10 +29,12 @@ class ClientRequestParam(pydantic.BaseModel):
     max_retries: Union[int, NotGiven] = NotGiven()
     timeout: Union[float, Timeout, NotGiven] = NotGiven()
     headers: Union[Headers, NotGiven] = NotGiven()
-    json_data: Union[Body, None] = None
     files: Union[HttpxRequestFiles, None] = None
     params: Query = {}
     model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)
+
+    json_data: Union[Body, None] = None
+    extra_json: Union[AnyMapping, None] = None
 
     def get_max_retries(self, max_retries) -> int:
         if isinstance(self.max_retries, NotGiven):

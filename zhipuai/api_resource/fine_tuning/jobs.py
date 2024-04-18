@@ -5,9 +5,9 @@ from typing import Optional, TYPE_CHECKING
 import httpx
 
 from ...core._base_api import BaseAPI
-from ...core._base_type import NOT_GIVEN, Headers, NotGiven
+from ...core._base_type import NOT_GIVEN, Headers, NotGiven, Body
 from ...core._http_client import (
-    make_user_request_input,
+    make_request_options,
 )
 from ...types.fine_tuning import (
     FineTuningJob,
@@ -37,6 +37,7 @@ class Jobs(BaseAPI):
             request_id: Optional[str] | NotGiven = NOT_GIVEN,
             validation_file: Optional[str] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> FineTuningJob:
         return self._post(
@@ -49,8 +50,8 @@ class Jobs(BaseAPI):
                 "validation_file": validation_file,
                 "request_id": request_id,
             },
-            options=make_user_request_input(
-                extra_headers=extra_headers, timeout=timeout
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
             cast_type=FineTuningJob,
         )
@@ -60,12 +61,13 @@ class Jobs(BaseAPI):
             fine_tuning_job_id: str,
             *,
             extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> FineTuningJob:
         return self._get(
             f"/fine_tuning/jobs/{fine_tuning_job_id}",
-            options=make_user_request_input(
-                extra_headers=extra_headers, timeout=timeout
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
             cast_type=FineTuningJob,
         )
@@ -76,13 +78,15 @@ class Jobs(BaseAPI):
             after: str | NotGiven = NOT_GIVEN,
             limit: int | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListOfFineTuningJob:
         return self._get(
             "/fine_tuning/jobs",
             cast_type=ListOfFineTuningJob,
-            options=make_user_request_input(
+            options=make_request_options(
                 extra_headers=extra_headers,
+                extra_body=extra_body,
                 timeout=timeout,
                 query={
                     "after": after,
@@ -98,14 +102,16 @@ class Jobs(BaseAPI):
         after: str | NotGiven = NOT_GIVEN,
         limit: int | NotGiven = NOT_GIVEN,
         extra_headers: Headers | None = None,
+        extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> FineTuningJobEvent:
 
         return self._get(
             f"/fine_tuning/jobs/{fine_tuning_job_id}/events",
             cast_type=FineTuningJobEvent,
-            options=make_user_request_input(
+            options=make_request_options(
                 extra_headers=extra_headers,
+                extra_body=extra_body,
                 timeout=timeout,
                 query={
                     "after": after,

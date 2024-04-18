@@ -6,7 +6,7 @@ import httpx
 
 from ..core._base_api import BaseAPI
 from ..core._base_type import NotGiven, NOT_GIVEN, Headers
-from ..core._http_client import make_user_request_input
+from ..core._http_client import make_request_options
 from ..types.embeddings import EmbeddingsResponded
 
 if TYPE_CHECKING:
@@ -26,6 +26,7 @@ class Embeddings(BaseAPI):
             user: str | NotGiven = NOT_GIVEN,
             sensitive_word_check: Optional[object] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
             disable_strict_validation: Optional[bool] | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> EmbeddingsResponded:
@@ -41,8 +42,8 @@ class Embeddings(BaseAPI):
                 "user": user,
                 "sensitive_word_check": sensitive_word_check,
             },
-            options=make_user_request_input(
-                extra_headers=extra_headers, timeout=timeout
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
             cast_type=_cast_type,
             enable_stream=False,

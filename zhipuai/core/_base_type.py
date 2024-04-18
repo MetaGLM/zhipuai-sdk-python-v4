@@ -12,10 +12,8 @@ from typing import (
 import pydantic
 from typing_extensions import (
     Literal,
-    override,
+    override, Protocol,
 )
-
-
 Query = Mapping[str, object]
 Body = object
 AnyMapping = Mapping[str, object]
@@ -81,6 +79,14 @@ class Omit:
 
 
 Headers = Mapping[str, Union[str, Omit]]
+
+
+class HeadersLikeProtocol(Protocol):
+    def get(self, __key: str) -> str | None:
+        ...
+
+
+HeadersLike = Union[Headers, HeadersLikeProtocol]
 
 ResponseT = TypeVar(
     "ResponseT",

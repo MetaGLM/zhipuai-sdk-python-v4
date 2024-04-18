@@ -7,7 +7,7 @@ from typing import (
     Type,
     Union,
     cast,
-    Mapping,
+    Mapping, TypeVar, Dict,
 )
 
 import httpx
@@ -15,23 +15,22 @@ import pydantic
 from httpx import URL, Timeout
 
 from . import _errors
-from ._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN, RequestFiles, Query, Data
+from ._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN, RequestFiles, Query, Data, Omit, AnyMapping
 from ._errors import APIResponseValidationError, APIStatusError, APITimeoutError
 from ._files import make_httpx_files
 from ._request_opt import ClientRequestParam, UserRequestInput
 from ._response import HttpResponse
 from ._sse_client import StreamResponse
-from ._utils import flatten
+from ._utils import flatten, is_mapping
+
+_T = TypeVar("_T")
+_T_co = TypeVar("_T_co", covariant=True)
+
 
 headers = {
     "Accept": "application/json",
     "Content-Type": "application/json; charset=UTF-8",
 }
-
-
-def _merge_map(map1: Mapping, map2: Mapping) -> Mapping:
-    merged = {**map1, **map2}
-    return {key: val for key, val in merged.items() if val is not None}
 
 
 from httpx._config import DEFAULT_TIMEOUT_CONFIG as HTTPX_DEFAULT_TIMEOUT
@@ -107,23 +106,35 @@ class HttpClient:
 
     def _prepare_headers(self, request_param: ClientRequestParam) -> httpx.Headers:
         custom_headers = request_param.headers or {}
-        headers_dict = _merge_map(self._default_headers, custom_headers)
+        headers_dict = _merge_mappings(self._default_headers, custom_headers)
 
         httpx_headers = httpx.Headers(headers_dict)
 
         return httpx_headers
 
-    def _prepare_request(
+    def _build_request(
             self,
             request_param: ClientRequestParam
     ) -> httpx.Request:
         kwargs: dict[str, Any] = {}
-        json_data = request_param.json_data
         headers = self._prepare_headers(request_param)
         url = self._prepare_url(request_param.url)
         json_data = request_param.json_data
+        if request_param.extra_json is not None:
+            if json_data is None:
+                json_data = cast(Body, request_param.extra_json)
+            elif is_mapping(json_data):
+                json_data = _merge_mappings(json_data, request_param.extra_json)
+            else:
+                raise RuntimeError(f"Unexpected JSON data type, {type(json_data)}, cannot merge with `extra_body`")
+
+        content_type = headers.get("Content-Type")
+        # multipart/form-data; boundary=---abc--
         if headers.get("Content-Type") == "multipart/form-data":
-            headers.pop("Content-Type")
+            if "boundary" not in content_type:
+                # only remove the header if the boundary hasn't been explicitly set
+                # as the caller doesn't want httpx to come up with their own boundary
+                headers.pop("Content-Type")
 
             if json_data:
                 kwargs["data"] = self._make_multipartform(json_data)
@@ -229,13 +240,13 @@ class HttpClient:
 
     def request(
             self,
-            *,
             cast_type: Type[ResponseT],
             params: ClientRequestParam,
+            *,
             enable_stream: bool = False,
             stream_cls: type[StreamResponse[Any]] | None = None,
     ) -> ResponseT | StreamResponse:
-        request = self._prepare_request(params)
+        request = self._build_request(params)
 
         try:
             response = self._client.send(
@@ -357,21 +368,41 @@ class HttpClient:
         return APIStatusError(message=error_msg, response=response)
 
 
-def make_user_request_input(
-        max_retries: int | None = None,
-        timeout: float | Timeout | None | NotGiven = NOT_GIVEN,
-        extra_headers: Headers = None,
+def make_request_options(
+        *,
         query: Query | None = None,
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN
 ) -> UserRequestInput:
+    """Create a dict of type RequestOptions without keys of NotGiven values."""
     options: UserRequestInput = {}
-
     if extra_headers is not None:
         options["headers"] = extra_headers
-    if max_retries is not None:
-        options["max_retries"] = max_retries
-    if not isinstance(timeout, NotGiven):
-        options['timeout'] = timeout
+
+    if extra_body is not None:
+        options["extra_json"] = cast(AnyMapping, extra_body)
+
     if query is not None:
         options["params"] = query
 
+    if extra_query is not None:
+        options["params"] = {**options.get("params", {}), **extra_query}
+
+    if not isinstance(timeout, NotGiven):
+        options["timeout"] = timeout
+
     return options
+
+
+def _merge_mappings(
+        obj1: Mapping[_T_co, Union[_T, Omit]],
+        obj2: Mapping[_T_co, Union[_T, Omit]],
+) -> Dict[_T_co, _T]:
+    """Merge two mappings of the same type, removing any values that are instances of `Omit`.
+
+    In cases with duplicate keys the second mapping takes precedence.
+    """
+    merged = {**obj1, **obj2}
+    return {key: value for key, value in merged.items() if not isinstance(value, Omit)}
