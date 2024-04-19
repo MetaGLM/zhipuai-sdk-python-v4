@@ -8,7 +8,7 @@ def test_images():
         prompt="一只可爱的小猫咪",
         extra_body={"user_id": "1222212"},
     )
-    print(response.data[0].url)
+    print(response)
 
 
 if __name__ == "__main__":

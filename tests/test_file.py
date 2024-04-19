@@ -7,7 +7,7 @@ def test_files():
         file=open("/jfs/chat/zhipu/finetuning/demo.jsonl", "rb"),
         purpose="fine-tune"
     )
-    print(result.id)
+    print(result)
     # "file-20240418025911536-6dqgr"
 
 
@@ -17,7 +17,7 @@ def test_files_validation():
         file=open("/jfs/chat/zhipu/finetuning/demo.jsonl", "rb"),
         purpose="fine-tune"
     )
-    print(result.id)
+    print(result)
     # "file-20240418025931214-c87tj"
 
 
@@ -29,4 +29,4 @@ def test_files_list():
 
 
 if __name__ == "__main__":
-    test_files_validation()
+    test_files_list()

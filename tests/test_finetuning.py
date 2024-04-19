@@ -34,7 +34,7 @@ def test_finetuning_job_list():
 def test_model_check():
     client = ZhipuAI()  # 填写您自己的APIKey
     response = client.chat.completions.create(
-        model="chatglm3-6b",  # 填写需要调用的模型名称
+        model="chatglm3-6b-8572905046912426020-demo_test",  # 填写需要调用的模型名称
         messages=[
             {"role": "user", "content": "你是一位乐于助人，知识渊博的全能AI助手。"},
             {"role": "user", "content": "创造一个更精准、吸引人的slogan"}
