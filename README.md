@@ -15,10 +15,28 @@
 
 - 运行环境： [**Python>=3.7**](https://www.python.org/)
 
-- 使用 pip 安装 `zhipuai` 软件包及其依赖
+### 使用 pip 安装
+
+- 安装`zhipuai` 软件包及其依赖
 
 ```sh
 pip install zhipuai
+```
+
+### Arch Linux 用户也可以使用AUR安装
+
+- 安装依赖
+
+```sh
+sudo pacman -S python-pyjwt python-pydantic python-cachetools python-httpx
+```
+
+- 使用AUR安装
+
+```sh
+git clone https://aur.archlinux.org/python-zhipuai.git
+cd python-zhipuai
+makepkg -si
 ```
 
 ## 使用
