@@ -44,17 +44,6 @@ class _ConfigProtocol(Protocol):
 
 
 class BaseModel(pydantic.BaseModel):
-    extra_json: Dict[str, Any]
-
-    @root_validator(pre=True)
-    def build_extra(cls, values: Dict[str, Any]) -> Dict[str, Any]:
-        all_required_field_names = {field for field in cls.__fields__.keys() if field != 'extra_json'}  # to support alias
-        extra: Dict[str, Any] = {}
-        for field_name in list(values):
-            if field_name not in all_required_field_names:
-                extra[field_name] = values.pop(field_name)
-        values['extra_json'] = extra
-        return values
 
     if PYDANTIC_V2:
         model_config: ClassVar[ConfigDict] = ConfigDict(extra="allow")
