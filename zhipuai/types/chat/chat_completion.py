@@ -35,7 +35,6 @@ class CompletionChoice(BaseModel):
 
 
 class Completion(BaseModel):
-    # model_config = ConfigDict(extra='allow')
     model: Optional[str] = None
     created: Optional[int] = None
     choices: List[CompletionChoice]

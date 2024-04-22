@@ -229,7 +229,7 @@ class HttpClient:
             if inspect.isclass(cast_type) and issubclass(cast_type, ModelBuilderProtocol):
                 return cast(ResponseT, cast_type.build(response=response, data=data))
 
-            return cast(ResponseT, parse_obj(model=cast_type, value=data))
+            return cast(ResponseT, construct_type(type_=cast_type, value=data))
         except pydantic.ValidationError as err:
             raise APIResponseValidationError(response=response, json_data=data) from err
 
