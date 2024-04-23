@@ -29,7 +29,14 @@ pip install zhipuai
 - 开放平台[接口文档](https://open.bigmodel.cn/dev/api)以及[使用指南](https://open.bigmodel.cn/dev/howuse/)中有更多的 demo 示例，请在 demo 中使用自己的 ApiKey 进行测试。
 
 ### 创建Client
+sdk支持通过环境变量配置APIKey
+- env
 
+`ZHIPUAI_API_KEY`: 您的APIKey
+
+`ZHIPUAI_BASE_URL`: 您的API地址
+
+- 也支持通过代码传入APIKey
 ```python
 from zhipuai import ZhipuAI
 
@@ -41,19 +48,31 @@ client = ZhipuAI(
 ### 同步调用
 
 ```python
-from zhipuai import ZhipuAI
-client = ZhipuAI(api_key="") # 填写您自己的APIKey
+from zhipuai import ZhipuAI 
+ 
+client = ZhipuAI()  # 填写您自己的APIKey
 response = client.chat.completions.create(
-    model="",  # 填写需要调用的模型名称
-    messages=[
-        {"role": "user", "content": "你好"},
-        {"role": "assistant", "content": "我是人工智能助手"},
-        {"role": "user", "content": "你叫什么名字"},
-        {"role": "assistant", "content": "我叫chatGLM"},
-        {"role": "user", "content": "你都可以做些什么事"}
-    ],
+  model="glm-4",  # 填写需要调用的模型名称
+  messages=[
+    {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
+    {"role": "assistant", "content": "当然，为了创作一个吸引人的slogan，请告诉我一些关于您产品的信息"},
+    {"role": "user", "content": "智谱AI开放平台"},
+    {"role": "assistant", "content": "智启未来，谱绘无限一智谱AI，让创新触手可及!"},
+    {"role": "user", "content": "创造一个更精准、吸引人的slogan"}
+  ],
+  tools=[
+    {
+      "type": "web_search",
+      "web_search": {
+        "search_query": "帮我看看清华的升学率",
+        "search_result": True,
+      }
+    }
+  ],
+  # 拓展参数
+  extra_body={"temperature": 0.5, "max_tokens": 50},
 )
-print(response.choices[0].message)
+print(response) 
 ```
 
 ### SSE 调用
@@ -72,6 +91,82 @@ response = client.chat.completions.create(
 for chunk in response:
     print(chunk.choices[0].delta)
 ```
+
+### 多模态
+```python
+
+
+# Function to encode the image
+def encode_image(image_path):
+    import base64
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode('utf-8')
+
+
+def test_completions_vis():
+  client = ZhipuAI()  # 填写您自己的APIKey
+  base64_image  = encode_image("img/MetaGLM.png")
+  response = client.chat.completions.create(
+    model="glm-4v",  # 填写需要调用的模型名称
+    extra_body={"temperature": 0.5, "max_tokens": 50},
+    messages=[
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "图里有什么"
+          },
+
+          # {
+          #     "type": "image_url",
+          #     "image_url": {
+          #         "url": "https://img1.baidu.com/it/u=1369931113,3388870256&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703696400&t=f3028c7a1dca43a080aeb8239f09cc2f"
+          #     }
+          # },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": f"data:image/jpeg;base64,{base64_image}"
+            }
+          }
+        ]
+      }
+    ]
+  )
+  print(response)
+
+test_completions_vis()
+```
+
+### 角色扮演
+> 提供能力的模型名称，请从官网获取
+```python
+
+def test_completions_charglm():
+    client = ZhipuAI()  # 请填写您自己的APIKey
+    response = client.chat.completions.create(
+        model="charglm-3",  # 填写需要调用的模型名称
+        messages=[
+            {
+                "role": "user",
+                "content": "请问你在做什么"
+            }
+        ],
+        extra_body={
+            "meta": {
+                "user_info": "我是陆星辰，是一个男性，是一位知名导演，也是苏梦远的合作导演。我擅长拍摄音乐题材的电影。苏梦远对我的态度是尊敬的，并视我为良师益友。",
+                "bot_info": "苏梦远，本名苏远心，是一位当红的国内女歌手及演员。在参加选秀节目后，凭借独特的嗓音及出众的舞台魅力迅速成名，进入娱乐圈。她外表美丽动人，但真正的魅力在于她的才华和勤奋。苏梦远是音乐学院毕业的优秀生，善于创作，拥有多首热门原创歌曲。除了音乐方面的成就，她还热衷于慈善事业，积极参加公益活动，用实际行动传递正能量。在工作中，她对待工作非常敬业，拍戏时总是全身心投入角色，赢得了业内人士的赞誉和粉丝的喜爱。虽然在娱乐圈，但她始终保持低调、谦逊的态度，深得同行尊重。在表达时，苏梦远喜欢使用“我们”和“一起”，强调团队精神。",
+                "bot_name": "苏梦远",
+                "user_name": "陆星辰"
+            },
+        }
+    )
+    print(response)
+test_completions_charglm()
+```
+
+
 
 ### 异常处理
 
@@ -116,3 +211,14 @@ Error codes are as followed:
 | >=500       | `InternalServerError`      |
 | N/A         | `APIConnectionError`       |
 
+
+
+### 更新日志
+
+`2024-4-23` 
+- 一些兼容 `pydantic<3,>=1.9.0 ` 的代码，
+- 报文处理的业务请求参数和响应参数可通过配置扩充
+- 兼容了一些参数 `top_p:1`,`temperture:0`(do_sample重写false，参数top_p temperture不生效)
+- 图像理解部分，  image_url参数base64内容包含 `data:image/jpeg;base64`兼容
+- 删除jwt认证逻辑
+  

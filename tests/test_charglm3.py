@@ -27,7 +27,7 @@ def test_completions_charglm():
 def test_async_completions():
     client = ZhipuAI()  # 请填写您自己的APIKey
     response = client.chat.asyncCompletions.create(
-        model="charglm-3",  # 填写需要调用的模型名称
+        model="charglm",  # 填写需要调用的模型名称
         messages=[
             {
                 "role": "user",
