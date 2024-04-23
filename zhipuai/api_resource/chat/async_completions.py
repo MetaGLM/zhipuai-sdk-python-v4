@@ -6,8 +6,8 @@ import httpx
 from typing_extensions import Literal
 
 from ...core._base_api import BaseAPI
-from ...core._base_type import NotGiven, NOT_GIVEN, Headers
-from ...core._http_client import make_user_request_input
+from ...core._base_type import NotGiven, NOT_GIVEN, Headers, Body
+from ...core._http_client import make_request_options
 from ...types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
 
 if TYPE_CHECKING:
@@ -35,6 +35,7 @@ class AsyncCompletions(BaseAPI):
             tools: Optional[object] | NotGiven = NOT_GIVEN,
             tool_choice: str | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
             disable_strict_validation: Optional[bool] | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> AsyncTaskStatus:
@@ -58,8 +59,8 @@ class AsyncCompletions(BaseAPI):
                 "tools": tools,
                 "tool_choice": tool_choice,
             },
-            options=make_user_request_input(
-                extra_headers=extra_headers, timeout=timeout
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
             cast_type=_cast_type,
             enable_stream=False,
@@ -69,6 +70,7 @@ class AsyncCompletions(BaseAPI):
         self,
         id: str,
         extra_headers: Headers | None = None,
+        extra_body: Body | None = None,
         disable_strict_validation: Optional[bool] | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Union[AsyncCompletion, AsyncTaskStatus]:
@@ -78,10 +80,9 @@ class AsyncCompletions(BaseAPI):
         return self._get(
             path=f"/async-result/{id}",
             cast_type=_cast_type,
-            options=make_user_request_input(
-                extra_headers=extra_headers,
-                timeout=timeout
-            )
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
+            ),
         )
 
 

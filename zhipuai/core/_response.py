@@ -4,18 +4,19 @@ import datetime
 from typing import TypeVar, Generic, cast, Any, TYPE_CHECKING
 
 import httpx
-import pydantic
+import logging
 from typing_extensions import ParamSpec, get_origin, get_args
 
 from ._base_type import NoneType
 from ._sse_client import StreamResponse
+from .._base_models import is_basemodel
 
 if TYPE_CHECKING:
     from ._http_client import HttpClient
 
 P = ParamSpec("P")
 R = TypeVar("R")
-
+log: logging.Logger = logging.getLogger(__name__)
 
 class HttpResponse(Generic[R]):
     _cast_type: type[R]
@@ -66,13 +67,17 @@ class HttpResponse(Generic[R]):
         content_type, *_ = http_response.headers.get("content-type", "application/json").split(";")
         origin = get_origin(cast_type) or cast_type
         if content_type != "application/json":
-            if issubclass(origin, pydantic.BaseModel):
-                data = http_response.json()
-                return self._client._process_response_data(
-                    data=data,
-                    cast_type=cast_type,  # type: ignore
-                    response=http_response,
-                )
+            if is_basemodel(cast_type):
+                try:
+                    data = http_response.json()
+                except Exception as exc:
+                    log.debug("Could not read JSON from response data due to %s - %s", type(exc), exc)
+                else:
+                    return self._client._process_response_data(
+                        data=data,
+                        cast_to=cast_type,  # type: ignore
+                        response=http_response,
+                    )
 
             return http_response.text
 
