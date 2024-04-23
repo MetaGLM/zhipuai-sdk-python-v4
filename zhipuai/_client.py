@@ -56,7 +56,8 @@ class ZhipuAI(HttpClient):
     @override
     def _auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
-        return {"Authorization": f"{_jwt_token.generate_token(api_key)}"}
+        # return {"Authorization": f"{_jwt_token.generate_token(api_key)}"}
+        return {"Authorization": f"{api_key}"}
 
     def __del__(self) -> None:
         if (not hasattr(self, "_has_custom_http_client")

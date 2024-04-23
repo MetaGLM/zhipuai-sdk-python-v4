@@ -2,20 +2,23 @@ from __future__ import annotations
 
 from os import PathLike
 from typing import (
+    IO,
     TYPE_CHECKING,
+    Any,
+    Dict,
+    List,
     Type,
+    Tuple,
     Union,
     Mapping,
-    TypeVar, IO, Tuple, Sequence, Any, List,
+    TypeVar,
+    Callable,
+    Optional,
+    Sequence,
 )
-
 import pydantic
-from typing_extensions import (
-    Literal,
-    override,
-)
-
-
+from httpx import Response
+from typing_extensions import Literal, Protocol, TypeAlias, TypedDict, override, runtime_checkable
 Query = Mapping[str, object]
 Body = object
 AnyMapping = Mapping[str, object]
@@ -80,12 +83,56 @@ class Omit:
         return False
 
 
+@runtime_checkable
+class ModelBuilderProtocol(Protocol):
+    @classmethod
+    def build(
+            cls: type[_T],
+            *,
+            response: Response,
+            data: object,
+    ) -> _T:
+        ...
+
+
 Headers = Mapping[str, Union[str, Omit]]
+
+
+class HeadersLikeProtocol(Protocol):
+    def get(self, __key: str) -> str | None:
+        ...
+
+
+HeadersLike = Union[Headers, HeadersLikeProtocol]
 
 ResponseT = TypeVar(
     "ResponseT",
     bound="Union[str, None, BaseModel, List[Any], Dict[str, Any], Response, UnknownResponse, ModelBuilderProtocol, BinaryResponseContent]",
 )
+
+StrBytesIntFloat = Union[str, bytes, int, float]
+
+# Note: copied from Pydantic
+# https://github.com/pydantic/pydantic/blob/32ea570bf96e84234d2992e1ddf40ab8a565925a/pydantic/main.py#L49
+IncEx: TypeAlias = "set[int] | set[str] | dict[int, Any] | dict[str, Any] | None"
+
+PostParser = Callable[[Any], Any]
+
+
+@runtime_checkable
+class InheritsGeneric(Protocol):
+    """Represents a type that has inherited from `Generic`
+
+    The `__orig_bases__` property can be used to determine the resolved
+    type variable for a given base class.
+    """
+
+    __orig_bases__: tuple[_GenericAlias]
+
+
+class _GenericAlias(Protocol):
+    __origin__: type[object]
+
 
 # for user input files
 if TYPE_CHECKING:

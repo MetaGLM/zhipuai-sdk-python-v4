@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional, List
 
-from pydantic import BaseModel
+from .._base_models import BaseModel
 from .chat.chat_completion import CompletionUsage
 __all__ = ["Embedding", "EmbeddingsResponded"]
 

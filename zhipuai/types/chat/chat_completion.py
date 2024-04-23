@@ -1,6 +1,6 @@
-from typing import List, Optional
+from typing import List, Optional, Union, Dict, Any
 
-from pydantic import BaseModel
+from ..._base_models import BaseModel
 
 __all__ = ["Completion", "CompletionUsage"]
 
@@ -41,5 +41,4 @@ class Completion(BaseModel):
     request_id: Optional[str] = None
     id: Optional[str] = None
     usage: CompletionUsage
-
 

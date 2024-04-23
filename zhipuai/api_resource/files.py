@@ -8,7 +8,7 @@ from ..core._base_api import BaseAPI
 from ..core._base_type import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
 from ..core._files import is_file_content
 from ..core._http_client import (
-    make_user_request_input,
+    make_request_options,
 )
 from ..types.file_object import FileObject, ListOfFileObject
 
@@ -29,6 +29,7 @@ class Files(BaseAPI):
             file: FileTypes,
             purpose: str,
             extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> FileObject:
         if not is_file_content(file):
@@ -46,8 +47,8 @@ class Files(BaseAPI):
                 "purpose": purpose,
             },
             files=files,
-            options=make_user_request_input(
-                extra_headers=extra_headers, timeout=timeout
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
             cast_type=FileObject,
         )
@@ -56,17 +57,19 @@ class Files(BaseAPI):
             self,
             *,
             purpose: str | NotGiven = NOT_GIVEN,
-            limit: int  | NotGiven = NOT_GIVEN,
+            limit: int | NotGiven = NOT_GIVEN,
             after: str | NotGiven = NOT_GIVEN,
             order: str | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> ListOfFileObject:
         return self._get(
             "/files",
             cast_type=ListOfFileObject,
-            options=make_user_request_input(
+            options=make_request_options(
                 extra_headers=extra_headers,
+                extra_body=extra_body,
                 timeout=timeout,
                 query={
                     "purpose": purpose,
