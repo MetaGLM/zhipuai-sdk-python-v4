@@ -158,3 +158,10 @@ jobs:
           ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
           ZHIPUAI_BASE_URL: ${{ secrets.ZHIPUAI_BASE_URL }}
         working-directory: ${{ inputs.working-directory }}
+
+      - name: Run integration tests
+        env:
+          ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
+          ZHIPUAI_BASE_URL: ${{ secrets.ZHIPUAI_BASE_URL }}
+        run: make integration_tests
+        working-directory: ${{ inputs.working-directory }}

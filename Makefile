@@ -13,7 +13,8 @@ TEST_FILE ?= tests/unit_tests/
 
 test tests:
 	poetry run pytest --disable-socket --allow-unix-socket $(TEST_FILE)
-
+integration_tests:
+	poetry run pytest tests/integration_tests
 
 
 ######################
