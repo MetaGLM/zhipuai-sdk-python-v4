@@ -81,6 +81,7 @@ jobs:
     needs:
       - build
       - test-pypi-publish
+    environment: Scheduled testing publish
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
