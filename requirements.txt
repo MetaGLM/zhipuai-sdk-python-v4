@@ -1,4 +1,0 @@
-httpx>=0.23.0
-pydantic<3,>=1.9.0
-cachetools>=4.2.2
-pyjwt~=2.8.0
