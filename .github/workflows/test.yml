@@ -30,8 +30,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python + Poetry ${{ env.POETRY_VERSION }}
-        uses: "./.github/actions/poetry_setup"
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: "./.github/actions/setup"
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           working-directory: ${{ inputs.working-directory }}
