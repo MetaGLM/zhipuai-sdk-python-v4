@@ -1,0 +1,33 @@
+# An action for setting up poetry install with caching.
+# Using a custom action since the default action does not
+# take poetry install groups into account.
+# Action code from:
+# https://github.com/actions/setup-python/issues/505#issuecomment-1273013236
+name: poetry-install-with-caching
+description: Poetry install with support for caching of dependency groups.
+
+inputs:
+  python-version:
+    description: Python version, supporting MAJOR.MINOR only
+    required: true
+
+  cache-key:
+    description: Cache key to use for manual handling of caching
+    required: true
+
+  working-directory:
+    description: Directory whose poetry.lock file should be cached
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      name: Setup python ${{ inputs.python-version }}
+      id: setup-python
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: "python"
+    - id: echo
+      run: echo '${{ steps.setup-python.outputs.cache-hit }}'
+      shell: bash # true if cache-hit occurred on the primary key
