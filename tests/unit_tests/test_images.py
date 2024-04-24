@@ -10,6 +10,3 @@ def test_images():
     )
     print(response)
 
-
-if __name__ == "__main__":
-    test_images()

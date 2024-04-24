@@ -4,7 +4,7 @@ from zhipuai import ZhipuAI
 def test_files():
     client = ZhipuAI()
     result = client.files.create(
-        file=open("/jfs/chat/zhipu/finetuning/demo.jsonl", "rb"),
+        file=open("demo.jsonl", "rb"),
         purpose="fine-tune"
     )
     print(result)
@@ -14,7 +14,7 @@ def test_files():
 def test_files_validation():
     client = ZhipuAI()
     result = client.files.create(
-        file=open("/jfs/chat/zhipu/finetuning/demo.jsonl", "rb"),
+        file=open("demo.jsonl", "rb"),
         purpose="fine-tune"
     )
     print(result)
@@ -26,7 +26,3 @@ def test_files_list():
 
     list = client.files.list()
     print(list)
-
-
-if __name__ == "__main__":
-    test_files_list()

@@ -53,7 +53,7 @@ def encode_image(image_path):
 
 def test_completions_vis():
     client = ZhipuAI()  # 填写您自己的APIKey
-    base64_image = encode_image("img/MetaGLM.png")
+    base64_image = encode_image("../img/MetaGLM.png")
     response = client.chat.completions.create(
         model="glm-4v",  # 填写需要调用的模型名称
         extra_body={"temperature": 0.5, "max_tokens": 50},
@@ -115,6 +115,3 @@ def test_retrieve_completion_result():
     response = client.chat.asyncCompletions.retrieve_completion_result(id="1014908592669352541651237")
     print(response)
 
-
-if __name__ == "__main__":
-    test_completions_vis()

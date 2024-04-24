@@ -51,6 +51,3 @@ def test_retrieve_completion_result():
     response = client.chat.asyncCompletions.retrieve_completion_result(id="1014908592669352541650991")
     print(response)
 
-
-if __name__ == "__main__":
-    test_completions_charglm()

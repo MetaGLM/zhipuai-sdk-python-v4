@@ -12,5 +12,3 @@ def test_embeddings():
     print(response)
 
 
-if __name__ == "__main__":
-    test_embeddings()

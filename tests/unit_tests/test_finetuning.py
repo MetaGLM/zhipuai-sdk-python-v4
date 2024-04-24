@@ -44,5 +44,3 @@ def test_model_check():
     print(response.choices[0].message)
 
 
-if __name__ == "__main__":
-    test_model_check()
