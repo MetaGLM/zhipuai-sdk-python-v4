@@ -1,4 +1,15 @@
 
+
+def test_sdk_import_unit():
+    import zhipuai
+
+    print(zhipuai.__version__)
+
+
+def test_os_import_unit():
+    import os
+    print(os)
+
 def test_sdk_import():
     from zhipuai import ZhipuAI
 
@@ -8,3 +19,4 @@ def test_sdk_import():
         print("SDK导入成功")
     else:
         print("SDK导入失败")
+
