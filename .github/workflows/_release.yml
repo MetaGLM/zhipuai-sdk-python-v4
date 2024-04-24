@@ -21,6 +21,7 @@ env:
 jobs:
   build:
     if: github.ref == 'refs/heads/main'
+    environment: Scheduled testing publish
     runs-on: ubuntu-latest
 
     outputs:
@@ -171,6 +172,7 @@ jobs:
       - build
       - test-pypi-publish
       - pre-release-checks
+    environment: Scheduled testing publish
     runs-on: ubuntu-latest
     permissions:
       # This permission is used for trusted publishing:
@@ -218,6 +220,7 @@ jobs:
       - test-pypi-publish
       - pre-release-checks
       - publish
+    environment: Scheduled testing publish
     runs-on: ubuntu-latest
     permissions:
       # This permission is needed by `ncipollo/release-action` to
