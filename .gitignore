@@ -16,3 +16,4 @@ eggs/
 test/
 examples/
 .pypirc
+/poetry.lock
