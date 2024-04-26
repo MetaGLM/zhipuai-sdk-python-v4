@@ -65,8 +65,8 @@ jobs:
     needs:
       - build
     runs-on: ubuntu-latest
-    permissions:
-      id-token: read  # This is required for requesting the JWT
+    # permissions:
+    #   id-token: none  # This is required for requesting the JWT
 
     steps:
       - uses: actions/checkout@v4
