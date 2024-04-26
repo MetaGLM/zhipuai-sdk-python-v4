@@ -174,9 +174,7 @@ jobs:
       - test-pypi-publish
       - pre-release-checks
     environment: Scheduled testing publish
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write # This is required for requesting the JWT
+    runs-on: ubuntu-latest 
 
     defaults:
       run:
@@ -205,6 +203,7 @@ jobs:
           packages-dir: ${{ inputs.working-directory }}/dist/
           verbose: true
           print-hash: true
+          user: __token__ 
           password: ${{ secrets.PYPI_API_TOKEN }}
           # We overwrite any existing distributions with the same name and version.
           # This is *only for CI use* and is *extremely dangerous* otherwise!
