@@ -175,13 +175,8 @@ jobs:
       - pre-release-checks
     environment: Scheduled testing publish
     runs-on: ubuntu-latest
-#    permissions:
-#      # This permission is used for trusted publishing:
-#      # https://blog.pypi.org/posts/2023-04-20-introducing-trusted-publishers/
-#      #
-#      # Trusted publishing has to also be configured on PyPI for each package:
-#      # https://docs.pypi.org/trusted-publishers/adding-a-publisher/
-#      id-token: write
+    permissions:
+      id-token: write # This is required for requesting the JWT
 
     defaults:
       run:
@@ -205,6 +200,7 @@ jobs:
 
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+       
         with:
           packages-dir: ${{ inputs.working-directory }}/dist/
           verbose: true
