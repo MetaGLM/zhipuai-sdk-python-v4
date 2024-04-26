@@ -1,6 +1,6 @@
-from typing import List, Optional, Union, Dict, Any
+from typing import List, Optional
 
-from ..._base_models import BaseModel
+from zhipuai.core import BaseModel
 
 __all__ = ["Completion", "CompletionUsage"]
 

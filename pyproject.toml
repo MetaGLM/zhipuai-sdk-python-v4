@@ -103,7 +103,7 @@ markers = [
 asyncio_mode = "auto"
 
 # https://python-poetry.org/docs/repositories/
-#[[tool.poetry.source]]
-#name = "tsinghua"
-#url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
-#priority = "default"
+[[tool.poetry.source]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+priority = "default"

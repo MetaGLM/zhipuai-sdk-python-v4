@@ -15,7 +15,6 @@ import pydantic
 from httpx import URL, Timeout
 
 from . import _errors
-from ._base_compat import parse_obj
 from ._base_type import NotGiven, ResponseT, Body, Headers, NOT_GIVEN, RequestFiles, Query, Data, Omit, AnyMapping, \
     ModelBuilderProtocol
 from ._errors import APIResponseValidationError, APIStatusError, APITimeoutError
@@ -24,7 +23,7 @@ from ._request_opt import ClientRequestParam, UserRequestInput
 from ._response import HttpResponse
 from ._sse_client import StreamResponse
 from ._utils import flatten, is_mapping
-from .._base_models import construct_type
+from ._base_models import construct_type
 
 _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)

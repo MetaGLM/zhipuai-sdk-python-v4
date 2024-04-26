@@ -5,9 +5,9 @@ from typing import Union, Mapping
 from typing_extensions import override
 
 from .core import _jwt_token
-from .core._errors import ZhipuAIError
-from .core._http_client import HttpClient, ZHIPUAI_DEFAULT_MAX_RETRIES
-from .core._base_type import NotGiven, NOT_GIVEN
+from .core import ZhipuAIError
+from .core import HttpClient, ZHIPUAI_DEFAULT_MAX_RETRIES
+from .core import NotGiven, NOT_GIVEN
 from . import api_resource
 import os
 import httpx

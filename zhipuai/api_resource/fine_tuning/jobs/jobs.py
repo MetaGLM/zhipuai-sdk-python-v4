@@ -4,12 +4,12 @@ from typing import Optional, TYPE_CHECKING
 
 import httpx
 
-from ...core._base_api import BaseAPI
-from ...core._base_type import NOT_GIVEN, Headers, NotGiven, Body
-from ...core._http_client import (
+from zhipuai.core import BaseAPI
+from zhipuai.core import NOT_GIVEN, Headers, NotGiven, Body
+from zhipuai.core import (
     make_request_options,
 )
-from ...types.fine_tuning import (
+from zhipuai.types.fine_tuning import (
     FineTuningJob,
     job_create_params,
     ListOfFineTuningJob,
@@ -17,7 +17,7 @@ from ...types.fine_tuning import (
 )
 
 if TYPE_CHECKING:
-    from ..._client import ZhipuAI
+    from zhipuai._client import ZhipuAI
 
 __all__ = ["Jobs"]
 

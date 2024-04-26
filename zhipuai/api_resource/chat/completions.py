@@ -6,12 +6,12 @@ import httpx
 import logging
 from typing_extensions import Literal
 
-from ...core._base_api import BaseAPI
-from ...core._base_type import NotGiven, NOT_GIVEN, Headers, Query, Body
-from ...core._http_client import make_request_options
-from ...core._sse_client import StreamResponse
-from ...types.chat.chat_completion import Completion
-from ...types.chat.chat_completion_chunk import ChatCompletionChunk
+from zhipuai.core import BaseAPI
+from zhipuai.core import NotGiven, NOT_GIVEN, Headers, Query, Body
+from zhipuai.core import make_request_options
+from zhipuai.core import StreamResponse
+from zhipuai.types.chat.chat_completion import Completion
+from zhipuai.types.chat.chat_completion_chunk import ChatCompletionChunk
 
 logger = logging.getLogger(__name__)
 

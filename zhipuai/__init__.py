@@ -1,7 +1,7 @@
 
 from ._client import ZhipuAI
 
-from .core._errors import (
+from .core import (
     ZhipuAIError,
     APIStatusError,
     APIRequestFailedError,

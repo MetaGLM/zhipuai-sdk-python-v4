@@ -9,7 +9,7 @@ from typing_extensions import ParamSpec, get_origin, get_args
 
 from ._base_type import NoneType
 from ._sse_client import StreamResponse
-from .._base_models import is_basemodel
+from ._base_models import is_basemodel
 
 if TYPE_CHECKING:
     from ._http_client import HttpClient

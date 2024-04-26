@@ -5,10 +5,10 @@ from typing import Union, List, Optional, TYPE_CHECKING
 import httpx
 from typing_extensions import Literal
 
-from ...core._base_api import BaseAPI
-from ...core._base_type import NotGiven, NOT_GIVEN, Headers, Body
-from ...core._http_client import make_request_options
-from ...types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
+from zhipuai.core import BaseAPI
+from zhipuai.core import NotGiven, NOT_GIVEN, Headers, Body
+from zhipuai.core import make_request_options
+from zhipuai.types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
 
 if TYPE_CHECKING:
     from ..._client import ZhipuAI

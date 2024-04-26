@@ -1,7 +1,6 @@
 from typing import List, Union, Optional, Dict, Any
-from typing_extensions import Literal
 
-from ..._base_models import BaseModel
+from zhipuai.core import BaseModel
 
 __all__ = ["FineTuningJob", "Error", "Hyperparameters", "ListOfFineTuningJob" ]
 
