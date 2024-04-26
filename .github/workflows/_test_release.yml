@@ -79,6 +79,7 @@ jobs:
       - name: Publish to test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
+          user: __token__ 
           password: ${{ secrets.TEST_PYPI_API_TOKEN }} # gets ignored if oidc is true
           packages-dir: ${{ inputs.working-directory }}/dist/
           verbose: true
