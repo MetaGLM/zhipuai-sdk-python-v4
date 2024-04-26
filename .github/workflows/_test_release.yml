@@ -65,6 +65,7 @@ jobs:
     needs:
       - build
     runs-on: ubuntu-latest
+    environment: Scheduled testing publish
     # permissions:
     #   id-token: none  # This is required for requesting the JWT
 
