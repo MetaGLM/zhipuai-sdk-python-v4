@@ -71,7 +71,7 @@ jobs:
        #
        # Trusted publishing has to also be configured on PyPI for each package:
        # https://docs.pypi.org/trusted-publishers/adding-a-publisher/
-       id-token: write
+       id-token: none
 
     steps:
       - uses: actions/checkout@v4
