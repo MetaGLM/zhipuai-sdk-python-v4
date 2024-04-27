@@ -50,7 +50,9 @@ class Completions(BaseAPI):
             _cast_type = object
             _stream_cls = StreamResponse[object]
 
-        if temperature:
+        print(f"temperature:{temperature}")
+        print(f"top_p:{top_p}")
+        if temperature is not None and temperature != NOT_GIVEN:
 
             if temperature <= 0:
                 do_sample = False
@@ -60,7 +62,7 @@ class Completions(BaseAPI):
                 do_sample = False
                 temperature = 0.99
                 logger.warning("取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
-        if top_p:
+        if top_p is not None and top_p != NOT_GIVEN:
 
             if top_p >= 1:
                 top_p = 0.99
@@ -69,6 +71,8 @@ class Completions(BaseAPI):
                 top_p = 0.01
                 logger.warning("取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
 
+        print(f"temperature:{temperature}")
+        print(f"top_p:{top_p}")
         if isinstance(messages, List):
             for item in messages:
                 if item.get('content'):
