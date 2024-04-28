@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from zhipuai.core import BaseModel
+from ...core import BaseModel
 from .chat_completion import CompletionChoice, CompletionUsage
 
 __all__ = ["AsyncTaskStatus", "AsyncCompletion"]

@@ -4,13 +4,13 @@ from typing import TYPE_CHECKING
 
 import httpx
 
-from zhipuai.core import BaseAPI
-from zhipuai.core import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
-from zhipuai.core import is_file_content
-from zhipuai.core import (
+from ..core import BaseAPI
+from ..core import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
+from ..core import is_file_content
+from ..core import (
     make_request_options,
 )
-from zhipuai.types.file_object import FileObject, ListOfFileObject
+from ..types.file_object import FileObject, ListOfFileObject
 
 if TYPE_CHECKING:
     from .._client import ZhipuAI

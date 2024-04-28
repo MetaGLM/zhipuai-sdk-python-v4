@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Optional, List
 
-from zhipuai.core import BaseModel
+from ..core import BaseModel
 
 __all__ = ["GeneratedImage", "ImagesResponded"]
 

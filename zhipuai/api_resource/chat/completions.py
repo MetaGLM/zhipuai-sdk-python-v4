@@ -6,12 +6,12 @@ import httpx
 import logging
 from typing_extensions import Literal
 
-from zhipuai.core import BaseAPI
-from zhipuai.core import NotGiven, NOT_GIVEN, Headers, Query, Body
-from zhipuai.core import make_request_options
-from zhipuai.core import StreamResponse
-from zhipuai.types.chat.chat_completion import Completion
-from zhipuai.types.chat.chat_completion_chunk import ChatCompletionChunk
+from ...core import BaseAPI
+from ...core import NotGiven, NOT_GIVEN, Headers, Query, Body
+from ...core import make_request_options
+from ...core import StreamResponse
+from ...types.chat.chat_completion import Completion
+from ...types.chat.chat_completion_chunk import ChatCompletionChunk
 
 logger = logging.getLogger(__name__)
 
@@ -50,29 +50,27 @@ class Completions(BaseAPI):
             _cast_type = object
             _stream_cls = StreamResponse[object]
 
-        print(f"temperature:{temperature}")
-        print(f"top_p:{top_p}")
+        logger.info(f"temperature:{temperature}, top_p:{top_p}")
         if temperature is not None and temperature != NOT_GIVEN:
 
             if temperature <= 0:
                 do_sample = False
                 temperature = 0.01
-                logger.warning("取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
+                logger.warning("temperature:取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
             if temperature >= 1:
                 do_sample = False
                 temperature = 0.99
-                logger.warning("取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
+                logger.warning("temperature:取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
         if top_p is not None and top_p != NOT_GIVEN:
 
             if top_p >= 1:
                 top_p = 0.99
-                logger.warning("取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
+                logger.warning("top_p:取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
             if top_p <= 0:
                 top_p = 0.01
-                logger.warning("取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
+                logger.warning("top_p:取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
 
-        print(f"temperature:{temperature}")
-        print(f"top_p:{top_p}")
+        logger.info(f"temperature:{temperature}, top_p:{top_p}")
         if isinstance(messages, List):
             for item in messages:
                 if item.get('content'):

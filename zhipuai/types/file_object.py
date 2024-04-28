@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from zhipuai.core import BaseModel
+from ..core import BaseModel
 
 __all__ = ["FileObject", "ListOfFileObject"]
 

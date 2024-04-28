@@ -4,10 +4,10 @@ from typing import Union, List, Optional, TYPE_CHECKING
 
 import httpx
 
-from zhipuai.core import BaseAPI
-from zhipuai.core import NotGiven, NOT_GIVEN, Headers
-from zhipuai.core import make_request_options
-from zhipuai.types.embeddings import EmbeddingsResponded
+from ..core import BaseAPI
+from ..core import NotGiven, NOT_GIVEN, Headers
+from ..core import make_request_options
+from ..types.embeddings import EmbeddingsResponded
 
 if TYPE_CHECKING:
     from .._client import ZhipuAI

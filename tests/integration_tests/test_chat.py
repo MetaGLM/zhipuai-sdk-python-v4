@@ -145,6 +145,78 @@ def test_completions():
         print(err)
 
 
+def test_completions_disenable_web_search():
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        response = client.chat.completions.create(
+            model="glm-4",  # 填写需要调用的模型名称
+            messages=[
+                {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
+                {"role": "assistant", "content": "当然，为了创作一个吸引人的slogan，请告诉我一些关于您产品的信息"},
+                {"role": "user", "content": "智谱AI开放平台"},
+                {"role": "assistant", "content": "智启未来，谱绘无限一智谱AI，让创新触手可及!"},
+                {"role": "user", "content": "创造一个更精准、吸引人的slogan"}
+            ],
+            tools=[
+                {
+                    "type": "web_search",
+                    "web_search": {
+                        "search_query": "帮我看看清华的升学率",
+                        "search_result": True,
+                        "enable": False,
+                    }
+                }
+            ],
+            extra_body={"temperature": 0.5, "max_tokens": 50},
+        )
+        print(response)
+
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+
+def test_completions_enable_web_search():
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        response = client.chat.completions.create(
+            model="glm-4",  # 填写需要调用的模型名称
+            messages=[
+                {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
+                {"role": "assistant", "content": "当然，为了创作一个吸引人的slogan，请告诉我一些关于您产品的信息"},
+                {"role": "user", "content": "智谱AI开放平台"},
+                {"role": "assistant", "content": "智启未来，谱绘无限一智谱AI，让创新触手可及!"},
+                {"role": "user", "content": "创造一个更精准、吸引人的slogan"}
+            ],
+            tools=[
+                {
+                    "type": "web_search",
+                    "web_search": {
+                        "search_query": "帮我看看清华的升学率",
+                        "search_result": True,
+                        "enable": True,
+                    }
+                }
+            ],
+            extra_body={"temperature": 0.5, "max_tokens": 50},
+        )
+        print(response)
+
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+
 def test_completions_stream():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
@@ -309,4 +381,4 @@ def test_retrieve_completion_result():
 
 
 if __name__ == '__main__':
-    test_completions_top0()
+    test_completions_enable_web_search()

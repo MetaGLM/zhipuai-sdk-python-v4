@@ -1,6 +1,6 @@
 from typing import List, Optional, Dict, Any
 
-from zhipuai.core import BaseModel
+from ...core import BaseModel
 
 __all__ = [
     "ChatCompletionChunk",

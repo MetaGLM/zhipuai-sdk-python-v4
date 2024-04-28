@@ -1,6 +1,6 @@
 from typing import List, Union, Optional
 
-from zhipuai.core import BaseModel
+from ...core import BaseModel
 
 __all__ = ["FineTuningJobEvent", "Metric", "JobEvent"]
 
