@@ -4,6 +4,112 @@ from zhipuai import ZhipuAI
 import zhipuai
 
 
+def test_completions_temp0():
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        response = client.chat.completions.create(
+            model="glm-4",
+            messages=[
+                {
+                    "role": "user",
+                    "content": "tell me a joke"
+                }
+            ],
+            top_p=0.7,
+            temperature=0,
+            max_tokens=2000,
+        )
+        print(response)
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+
+def test_completions_temp1():
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        response = client.chat.completions.create(
+            model="glm-4",
+            messages=[
+                {
+                    "role": "user",
+                    "content": "tell me a joke"
+                }
+            ],
+            top_p=0.7,
+            temperature=1,
+            max_tokens=2000,
+        )
+        print(response)
+
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+
+def test_completions_top0():
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        response = client.chat.completions.create(
+            model="glm-4",
+            messages=[
+                {
+                    "role": "user",
+                    "content": "tell me a joke"
+                }
+            ],
+            top_p=0,
+            temperature=0.9,
+            max_tokens=2000,
+        )
+        print(response)
+
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+
+def test_completions_top1():
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        response = client.chat.completions.create(
+            model="glm-4",
+            messages=[
+                {
+                    "role": "user",
+                    "content": "tell me a joke"
+                }
+            ],
+            top_p=1,
+            temperature=0.9,
+            max_tokens=2000,
+        )
+        print(response)
+
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+
 def test_completions():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
@@ -38,6 +144,7 @@ def test_completions():
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
+
 def test_completions_stream():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
@@ -63,6 +170,7 @@ def test_completions_stream():
         print(err)
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
+
 
 # Function to encode the image
 def encode_image(image_path):
@@ -149,6 +257,7 @@ def test_completions_vis_base64(test_file_path):
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
+
 def test_async_completions():
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
@@ -183,6 +292,7 @@ def test_async_completions():
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
+
 def test_retrieve_completion_result():
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
@@ -196,3 +306,7 @@ def test_retrieve_completion_result():
         print(err)
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
+
+
+if __name__ == '__main__':
+    test_completions_top0()
