@@ -170,46 +170,43 @@ test_completions_charglm()
 
 ### 异常处理
 
-When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `openai.APIConnectionError` is raised.
+模块定义了一些统一的参数返回(例如:响应错误，网络超时错误)
 
-When the API returns a non-success status code (that is, 4xx or 5xx
-response), a subclass of `openai.APIStatusError` is raised, containing `status_code` and `response` properties.
-
-All errors inherit from `openai.APIError`.
-
+业务定义了http错误的响应类 (在接口返回，40x或者50x), 会抛出 `zhipuai.APIStatusError`  ,包含 `status_code` 和 `response` 属性. 它们都是继承 `zhipuai.APIStatusError`.
+其它Exception，属于不可预知的错误
 ```python
-import openai
-from openai import OpenAI
-
-client = OpenAI()
-
+from zhipuai import ZhipuAI
+import zhipuai
+client = ZhipuAI()  # 填写您自己的APIKey
 try:
-    client.fine_tunes.create(
-        training_file="file-XGinujblHPwGLSztz8cPS8XY",
-    )
-except openai.APIConnectionError as e:
-    print("The server could not be reached")
-    print(e.__cause__)  # an underlying Exception, likely raised within httpx.
-except openai.RateLimitError as e:
-    print("A 429 status code was received; we should back off a bit.")
-except openai.APIStatusError as e:
-    print("Another non-200-range status code was received")
-    print(e.status_code)
-    print(e.response)
+  response = client.chat.completions.create(
+    model="glm-4",  # 填写需要调用的模型名称
+    messages=[
+      {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
+      {"role": "assistant", "content": "当然，为了创作一个吸引人的slogan，请告诉我一些关于您产品的信息"},
+      {"role": "user", "content": "智谱AI开放平台"},
+      {"role": "assistant", "content": "智启未来，谱绘无限一智谱AI，让创新触手可及!"},
+      {"role": "user", "content": "创造一个更精准、吸引人的slogan"}
+    ]
+  )
+  print(response)
+ 
+except zhipuai.APIStatusError as err:
+  print(err) 
+except zhipuai.APITimeoutError as err:
+  print(err) 
 ```
 
 Error codes are as followed:
 
 | Status Code | Error Type                 |
-| ----------- | -------------------------- |
-| 400         | `BadRequestError`          |
-| 401         | `AuthenticationError`      |
-| 403         | `PermissionDeniedError`    |
-| 404         | `NotFoundError`            |
-| 422         | `UnprocessableEntityError` |
-| 429         | `RateLimitError`           |
-| >=500       | `InternalServerError`      |
-| N/A         | `APIConnectionError`       |
+|-------------| -------------------------- |
+| 400         | `APIRequestFailedError`          |
+| 401         | `APIAuthenticationError`      |
+| 429         | `APIReachLimitError`           |
+| 500         | `APIInternalError`      |
+| 503         | `APIServerFlowExceedError`      |
+| N/A         | `APIStatusError`       |
 
 
 
