@@ -26,6 +26,7 @@ from ._base_compat import (
     get_model_config,
     get_model_fields,
     field_get_default,
+    cached_property,
 )
 from ._files import is_file_content
 from ._errors import (

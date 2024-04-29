@@ -55,3 +55,6 @@ def test_files_list():
         print(err)
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
+
+if __name__ == "__main__":
+    test_files_list()

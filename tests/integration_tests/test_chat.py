@@ -2,12 +2,17 @@ import os.path
 
 from zhipuai import ZhipuAI
 import zhipuai
+import time
 
 
 def test_completions_temp0():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",
             messages=[
                 {
@@ -32,7 +37,11 @@ def test_completions_temp0():
 def test_completions_temp1():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",
             messages=[
                 {
@@ -59,7 +68,11 @@ def test_completions_temp1():
 def test_completions_top0():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",
             messages=[
                 {
@@ -86,7 +99,11 @@ def test_completions_top0():
 def test_completions_top1():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",
             messages=[
                 {
@@ -113,7 +130,11 @@ def test_completions_top1():
 def test_completions():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",  # 填写需要调用的模型名称
             messages=[
                 {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
@@ -148,7 +169,11 @@ def test_completions():
 def test_completions_disenable_web_search():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",  # 填写需要调用的模型名称
             messages=[
                 {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
@@ -184,7 +209,11 @@ def test_completions_disenable_web_search():
 def test_completions_enable_web_search():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",  # 填写需要调用的模型名称
             messages=[
                 {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
@@ -220,7 +249,11 @@ def test_completions_enable_web_search():
 def test_completions_stream():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",  # 填写需要调用的模型名称
             stream=True,
             messages=[
@@ -254,7 +287,11 @@ def encode_image(image_path):
 def test_completions_vis():
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4v",  # 填写需要调用的模型名称
             extra_body={"temperature": 0.5, "max_tokens": 50},
             messages=[
@@ -291,7 +328,11 @@ def test_completions_vis_base64(test_file_path):
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         base64_image = encode_image(os.path.join(test_file_path, "img/MetaGLM.png"))
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4v",  # 填写需要调用的模型名称
             extra_body={"temperature": 0.5, "max_tokens": 50},
             messages=[
@@ -333,7 +374,11 @@ def test_completions_vis_base64(test_file_path):
 def test_async_completions():
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.asyncCompletions.create(
+            request_id=request_id,
             model="glm-4",  # 填写需要调用的模型名称
             messages=[
                 {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},

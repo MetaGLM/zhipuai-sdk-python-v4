@@ -24,6 +24,7 @@ class Embeddings(BaseAPI):
             model: Union[str],
             encoding_format: str | NotGiven = NOT_GIVEN,
             user: str | NotGiven = NOT_GIVEN,
+            request_id: Optional[str] | NotGiven = NOT_GIVEN,
             sensitive_word_check: Optional[object] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
@@ -40,6 +41,7 @@ class Embeddings(BaseAPI):
                 "model": model,
                 "encoding_format": encoding_format,
                 "user": user,
+                "request_id": request_id,
                 "sensitive_word_check": sensitive_word_check,
             },
             options=make_request_options(

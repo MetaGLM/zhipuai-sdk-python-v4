@@ -7,9 +7,10 @@ def test_finetuning_create():
     try:
         job = client.fine_tuning.jobs.create(
             model="chatglm3-6b",
-            training_file="file-20240418025931214-c87tj",  # 请填写已成功上传的文件id
-            validation_file="file-20240418025931214-c87tj",  # 请填写已成功上传的文件id
+            training_file="file-20240428021923715-xjng4",  # 请填写已成功上传的文件id
+            validation_file="file-20240428021923715-xjng4",  # 请填写已成功上传的文件id
             suffix="demo_test",
+
         )
         job_id = job.id
         print(job_id)
@@ -29,7 +30,7 @@ def test_finetuning_create():
 def test_finetuning_retrieve():
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
-        fine_tuning_job = client.fine_tuning.jobs.retrieve(fine_tuning_job_id="ftjob-20240418110039323-j8lh2")
+        fine_tuning_job = client.fine_tuning.jobs.retrieve(fine_tuning_job_id="ftjob-20240429112551154-48vq7")
         print(fine_tuning_job)
 
 
@@ -48,6 +49,38 @@ def test_finetuning_job_list():
         job_list = client.fine_tuning.jobs.list()
 
         print(job_list)
+
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+def test_finetuning_job_cancel():
+    client = ZhipuAI()  # 请填写您自己的APIKey
+    try:
+        cancel = client.fine_tuning.jobs.cancel(fine_tuning_job_id="ftjob-20240429112551154-48vq7")
+
+        print(cancel)
+
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+def test_finetuning_job_delete():
+    client = ZhipuAI()  # 请填写您自己的APIKey
+    try:
+        delete = client.fine_tuning.jobs.delete(fine_tuning_job_id="ftjob-20240126113041678-cs6s9")
+
+        print(delete)
 
 
 
@@ -80,3 +113,5 @@ def test_model_check():
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
+if __name__ == "__main__":
+    test_finetuning_create()

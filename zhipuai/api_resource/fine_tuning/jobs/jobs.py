@@ -114,7 +114,7 @@ class Jobs(BaseAPI):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=FineTuningJob,
+            cast_type=FineTuningJob,
         )
 
     def list_events(
@@ -154,10 +154,10 @@ class Jobs(BaseAPI):
 
         if not fine_tuning_job_id:
             raise ValueError(f"Expected a non-empty value for `fine_tuning_job_id` but received {fine_tuning_job_id!r}")
-        return self._post(
-            f"/fine_tuning/{fine_tuning_job_id}",
+        return self._delete(
+            f"/fine_tuning/jobs/{fine_tuning_job_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_to=FineTuningJob,
+            cast_type=FineTuningJob,
         )
