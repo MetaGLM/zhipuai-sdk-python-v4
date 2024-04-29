@@ -1,8 +1,12 @@
 from zhipuai import ZhipuAI
 import zhipuai
 
+import logging
+import logging.config
 
-def test_completions_charglm():
+
+def test_completions_charglm(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
         response = client.chat.completions.create(
@@ -76,3 +80,6 @@ def test_retrieve_completion_result():
         print(err) 
     except zhipuai.core._errors.APIInternalError as err:
         print(err)
+
+if __name__ == "__main__":
+    test_retrieve_completion_result()

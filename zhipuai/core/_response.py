@@ -75,7 +75,7 @@ class HttpResponse(Generic[R]):
                 else:
                     return self._client._process_response_data(
                         data=data,
-                        cast_to=cast_type,  # type: ignore
+                        cast_type=cast_type,  # type: ignore
                         response=http_response,
                     )
 

@@ -4,8 +4,12 @@ from zhipuai import ZhipuAI
 import zhipuai
 import time
 
+import logging
+import logging.config
 
-def test_completions_temp0():
+
+def test_completions_temp0(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         # 生成request_id
@@ -34,7 +38,8 @@ def test_completions_temp0():
         print(err)
 
 
-def test_completions_temp1():
+def test_completions_temp1(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         # 生成request_id
@@ -65,7 +70,8 @@ def test_completions_temp1():
         print(err)
 
 
-def test_completions_top0():
+def test_completions_top0(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         # 生成request_id
@@ -96,7 +102,8 @@ def test_completions_top0():
         print(err)
 
 
-def test_completions_top1():
+def test_completions_top1(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         # 生成request_id
@@ -127,7 +134,8 @@ def test_completions_top1():
         print(err)
 
 
-def test_completions():
+def test_completions(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         # 生成request_id
@@ -166,7 +174,8 @@ def test_completions():
         print(err)
 
 
-def test_completions_disenable_web_search():
+def test_completions_disenable_web_search(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         # 生成request_id
@@ -206,7 +215,8 @@ def test_completions_disenable_web_search():
         print(err)
 
 
-def test_completions_enable_web_search():
+def test_completions_enable_web_search(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         # 生成request_id
@@ -246,7 +256,8 @@ def test_completions_enable_web_search():
         print(err)
 
 
-def test_completions_stream():
+def test_completions_stream(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         # 生成request_id
@@ -284,7 +295,8 @@ def encode_image(image_path):
         return base64.b64encode(image_file.read()).decode('utf-8')
 
 
-def test_completions_vis():
+def test_completions_vis(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         # 生成request_id
@@ -324,7 +336,8 @@ def test_completions_vis():
         print(err)
 
 
-def test_completions_vis_base64(test_file_path):
+def test_completions_vis_base64(test_file_path, logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         base64_image = encode_image(os.path.join(test_file_path, "img/MetaGLM.png"))
@@ -371,7 +384,8 @@ def test_completions_vis_base64(test_file_path):
         print(err)
 
 
-def test_async_completions():
+def test_async_completions(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
         # 生成request_id
@@ -410,7 +424,8 @@ def test_async_completions():
         print(err)
 
 
-def test_retrieve_completion_result():
+def test_retrieve_completion_result(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
         response = client.chat.asyncCompletions.retrieve_completion_result(id="1014908592669352541651237")
@@ -426,4 +441,4 @@ def test_retrieve_completion_result():
 
 
 if __name__ == '__main__':
-    test_completions_enable_web_search()
+    test_completions_temp0()

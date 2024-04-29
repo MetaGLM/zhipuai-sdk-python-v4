@@ -1,8 +1,12 @@
 from zhipuai import ZhipuAI
 import zhipuai
 
+import logging
+import logging.config
 
-def test_finetuning_create():
+
+def test_finetuning_create(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
         job = client.fine_tuning.jobs.create(
@@ -27,7 +31,8 @@ def test_finetuning_create():
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
-def test_finetuning_retrieve():
+def test_finetuning_retrieve(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
         fine_tuning_job = client.fine_tuning.jobs.retrieve(fine_tuning_job_id="ftjob-20240429112551154-48vq7")
@@ -43,7 +48,8 @@ def test_finetuning_retrieve():
         print(err)
 
 
-def test_finetuning_job_list():
+def test_finetuning_job_list(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
         job_list = client.fine_tuning.jobs.list()
@@ -59,7 +65,8 @@ def test_finetuning_job_list():
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
-def test_finetuning_job_cancel():
+def test_finetuning_job_cancel(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
         cancel = client.fine_tuning.jobs.cancel(fine_tuning_job_id="ftjob-20240429112551154-48vq7")
@@ -75,7 +82,8 @@ def test_finetuning_job_cancel():
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
-def test_finetuning_job_delete():
+def test_finetuning_job_delete(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
         delete = client.fine_tuning.jobs.delete(fine_tuning_job_id="ftjob-20240126113041678-cs6s9")
@@ -91,7 +99,8 @@ def test_finetuning_job_delete():
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
-def test_model_check():
+def test_model_check(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         response = client.chat.completions.create(

@@ -13,6 +13,8 @@ from typing import (
     overload
 )
 
+from random import random
+import time
 import httpx
 import pydantic
 from httpx import URL, Timeout
@@ -54,7 +56,7 @@ headers = {
 
 from httpx._config import DEFAULT_TIMEOUT_CONFIG as HTTPX_DEFAULT_TIMEOUT
 RAW_RESPONSE_HEADER = "X-Stainless-Raw-Response"
-ZHIPUAI_DEFAULT_TIMEOUT = httpx.Timeout(timeout=300.0, connect=60.0)
+ZHIPUAI_DEFAULT_TIMEOUT = httpx.Timeout(timeout=300.0, connect=8.0)
 ZHIPUAI_DEFAULT_MAX_RETRIES = 3
 ZHIPUAI_DEFAULT_LIMITS = httpx.Limits(max_connections=50, max_keepalive_connections=10)
 
@@ -394,7 +396,7 @@ class HttpClient:
             if retries > 0:
                 return self._retry_request(
                     options,
-                    cast_to,
+                    cast_type,
                     retries,
                     stream=stream,
                     stream_cls=stream_cls,
@@ -409,7 +411,7 @@ class HttpClient:
             if retries > 0:
                 return self._retry_request(
                     options,
-                    cast_to,
+                    cast_type,
                     retries,
                     stream=stream,
                     stream_cls=stream_cls,
@@ -432,7 +434,7 @@ class HttpClient:
                 err.response.close()
                 return self._retry_request(
                     options,
-                    cast_to,
+                    cast_type,
                     retries,
                     err.response.headers,
                     stream=stream,
@@ -532,7 +534,7 @@ class HttpClient:
             stream_cls: type[StreamResponse] | None = None,
     ) -> ResponseT | _AsyncStreamT:
         opts = FinalRequestOptions.construct(method="get", url=path, **options)
-        return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+        return cast(ResponseT, self.request(cast_type, opts, stream=stream, stream_cls=stream_cls))
 
     @overload
     def post(

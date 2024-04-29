@@ -1,8 +1,12 @@
 from zhipuai import ZhipuAI
 import zhipuai
 
+import logging
+import logging.config
 
-def test_images():
+
+def test_images(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         response = client.images.generations(

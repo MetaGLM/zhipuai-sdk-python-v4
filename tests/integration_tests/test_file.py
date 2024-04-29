@@ -2,8 +2,12 @@ from zhipuai import ZhipuAI
 import zhipuai
 import os
 
+import logging
+import logging.config
 
-def test_files(test_file_path):
+
+def test_files(test_file_path, logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()
     try:
         result = client.files.create(
@@ -22,7 +26,8 @@ def test_files(test_file_path):
         print(err)
 
 
-def test_files_validation(test_file_path):
+def test_files_validation(test_file_path, logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()
     try:
         result = client.files.create(
@@ -41,7 +46,8 @@ def test_files_validation(test_file_path):
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
-def test_files_list():
+def test_files_list(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()
     try:
         list = client.files.list()
@@ -55,6 +61,3 @@ def test_files_list():
         print(err)
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
-
-if __name__ == "__main__":
-    test_files_list()
