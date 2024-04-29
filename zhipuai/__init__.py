@@ -11,6 +11,7 @@ from .core import (
     APIServerFlowExceedError,
     APIResponseError,
     APIResponseValidationError,
+    APIConnectionError,
     APITimeoutError,
 )
 

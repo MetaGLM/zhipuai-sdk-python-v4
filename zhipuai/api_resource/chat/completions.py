@@ -39,6 +39,7 @@ class Completions(BaseAPI):
             sensitive_word_check: Optional[object] | NotGiven = NOT_GIVEN,
             tools: Optional[object] | NotGiven = NOT_GIVEN,
             tool_choice: str | NotGiven = NOT_GIVEN,
+            meta: Optional[Dict[str,str]] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
@@ -85,6 +86,7 @@ class Completions(BaseAPI):
                 "stream": stream,
                 "tools": tools,
                 "tool_choice": tool_choice,
+                "meta": meta,
             },
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout

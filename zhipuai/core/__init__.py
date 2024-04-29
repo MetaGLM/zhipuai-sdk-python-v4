@@ -39,6 +39,7 @@ from ._errors import (
     APIServerFlowExceedError,
     APIResponseError,
     APIResponseValidationError,
+    APIConnectionError,
     APITimeoutError,
 )
 from ._http_client import (
