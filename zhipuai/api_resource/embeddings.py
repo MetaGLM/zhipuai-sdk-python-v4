@@ -48,5 +48,5 @@ class Embeddings(BaseAPI):
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
             cast_type=_cast_type,
-            enable_stream=False,
+            stream=False,
         )

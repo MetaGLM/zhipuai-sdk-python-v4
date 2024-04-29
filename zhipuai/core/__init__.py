@@ -49,7 +49,7 @@ from ._http_client import (
     ZHIPUAI_DEFAULT_LIMITS,
 
 )
-from ._utils import (is_list, is_mapping, parse_date, parse_datetime)
+from ._utils import (is_list, is_mapping, parse_date, parse_datetime, is_given)
 
 from ._sse_client import StreamResponse
 
@@ -101,6 +101,7 @@ __all__ = [
     "is_mapping",
     "parse_date",
     "parse_datetime",
+    "is_given",
 
     "StreamResponse",
 

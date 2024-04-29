@@ -41,15 +41,8 @@ class Completions(BaseAPI):
             tool_choice: str | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
-            disable_strict_validation: Optional[bool] | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Completion | StreamResponse[ChatCompletionChunk]:
-        _cast_type = Completion
-        _stream_cls = StreamResponse[ChatCompletionChunk]
-        if disable_strict_validation:
-            _cast_type = object
-            _stream_cls = StreamResponse[object]
-
         logger.info(f"temperature:{temperature}, top_p:{top_p}")
         if temperature is not None and temperature != NOT_GIVEN:
 
@@ -96,9 +89,9 @@ class Completions(BaseAPI):
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
-            cast_type=_cast_type,
-            enable_stream=stream or False,
-            stream_cls=_stream_cls,
+            cast_type=Completion,
+            stream=stream or False,
+            stream_cls=StreamResponse[ChatCompletionChunk],
         )
 
     def _drop_prefix_image_data(self, content: Union[str,List[dict]]) -> Union[str,List[dict]]:
