@@ -44,6 +44,25 @@ client = ZhipuAI(
     api_key="", # 填写您的 APIKey
 ) 
 ```
+### 客户端网络链接配置
+在`core/_http_client.py`中，可以配置网络链接的超时时间，重试次数，限制等参数
+```python
+# 通过 `Timeout` 控制接口`connect` 和 `read` 超时时间，默认为`timeout=300.0, connect=8.0`
+ZHIPUAI_DEFAULT_TIMEOUT = httpx.Timeout(timeout=300.0, connect=8.0)
+# 通过 `retry` 参数控制重试次数，默认为3次
+ZHIPUAI_DEFAULT_MAX_RETRIES = 3
+# 通过 `Limits` 控制最大连接数和保持连接数，默认为`max_connections=50, max_keepalive_connections=10`
+ZHIPUAI_DEFAULT_LIMITS = httpx.Limits(max_connections=50, max_keepalive_connections=10)
+ 
+```
+同样在`ZhipuAI`入参中可以配置
+```python
+client = ZhipuAI(
+    timeout= httpx.Timeout(timeout=300.0, connect=8.0),
+    max_retries=3,
+)
+```
+
 
 ### 同步调用
 
