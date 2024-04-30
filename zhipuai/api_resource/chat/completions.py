@@ -6,10 +6,10 @@ import httpx
 import logging
 from typing_extensions import Literal
 
-from ...core._base_api import BaseAPI
-from ...core._base_type import NotGiven, NOT_GIVEN, Headers, Query, Body
-from ...core._http_client import make_request_options
-from ...core._sse_client import StreamResponse
+from ...core import BaseAPI
+from ...core import NotGiven, NOT_GIVEN, Headers, Query, Body
+from ...core import make_request_options
+from ...core import StreamResponse
 from ...types.chat.chat_completion import Completion
 from ...types.chat.chat_completion_chunk import ChatCompletionChunk
 
@@ -39,40 +39,32 @@ class Completions(BaseAPI):
             sensitive_word_check: Optional[object] | NotGiven = NOT_GIVEN,
             tools: Optional[object] | NotGiven = NOT_GIVEN,
             tool_choice: str | NotGiven = NOT_GIVEN,
+            meta: Optional[Dict[str,str]] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
-            disable_strict_validation: Optional[bool] | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Completion | StreamResponse[ChatCompletionChunk]:
-        _cast_type = Completion
-        _stream_cls = StreamResponse[ChatCompletionChunk]
-        if disable_strict_validation:
-            _cast_type = object
-            _stream_cls = StreamResponse[object]
-
-        print(f"temperature:{temperature}")
-        print(f"top_p:{top_p}")
+        logger.info(f"temperature:{temperature}, top_p:{top_p}")
         if temperature is not None and temperature != NOT_GIVEN:
 
             if temperature <= 0:
                 do_sample = False
                 temperature = 0.01
-                logger.warning("取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
+                logger.warning("temperature:取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
             if temperature >= 1:
                 do_sample = False
                 temperature = 0.99
-                logger.warning("取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
+                logger.warning("temperature:取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
         if top_p is not None and top_p != NOT_GIVEN:
 
             if top_p >= 1:
                 top_p = 0.99
-                logger.warning("取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
+                logger.warning("top_p:取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
             if top_p <= 0:
                 top_p = 0.01
-                logger.warning("取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
+                logger.warning("top_p:取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
 
-        print(f"temperature:{temperature}")
-        print(f"top_p:{top_p}")
+        logger.info(f"temperature:{temperature}, top_p:{top_p}")
         if isinstance(messages, List):
             for item in messages:
                 if item.get('content'):
@@ -94,13 +86,14 @@ class Completions(BaseAPI):
                 "stream": stream,
                 "tools": tools,
                 "tool_choice": tool_choice,
+                "meta": meta,
             },
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
-            cast_type=_cast_type,
-            enable_stream=stream or False,
-            stream_cls=_stream_cls,
+            cast_type=Completion,
+            stream=stream or False,
+            stream_cls=StreamResponse[ChatCompletionChunk],
         )
 
     def _drop_prefix_image_data(self, content: Union[str,List[dict]]) -> Union[str,List[dict]]:

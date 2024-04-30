@@ -4,9 +4,9 @@ from typing import Union, List, Optional, TYPE_CHECKING
 
 import httpx
 
-from ..core._base_api import BaseAPI
-from ..core._base_type import NotGiven, NOT_GIVEN, Headers
-from ..core._http_client import make_request_options
+from ..core import BaseAPI
+from ..core import NotGiven, NOT_GIVEN, Headers
+from ..core import make_request_options
 from ..types.embeddings import EmbeddingsResponded
 
 if TYPE_CHECKING:
@@ -24,6 +24,7 @@ class Embeddings(BaseAPI):
             model: Union[str],
             encoding_format: str | NotGiven = NOT_GIVEN,
             user: str | NotGiven = NOT_GIVEN,
+            request_id: Optional[str] | NotGiven = NOT_GIVEN,
             sensitive_word_check: Optional[object] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
@@ -40,11 +41,12 @@ class Embeddings(BaseAPI):
                 "model": model,
                 "encoding_format": encoding_format,
                 "user": user,
+                "request_id": request_id,
                 "sensitive_word_check": sensitive_word_check,
             },
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
             cast_type=_cast_type,
-            enable_stream=False,
+            stream=False,
         )

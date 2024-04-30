@@ -4,12 +4,12 @@ from typing import Optional, TYPE_CHECKING
 
 import httpx
 
-from ...core._base_api import BaseAPI
-from ...core._base_type import NOT_GIVEN, Headers, NotGiven, Body
-from ...core._http_client import (
+from ....core import BaseAPI
+from ....core import NOT_GIVEN, Headers, NotGiven, Body
+from ....core import (
     make_request_options,
 )
-from ...types.fine_tuning import (
+from ....types.fine_tuning import (
     FineTuningJob,
     job_create_params,
     ListOfFineTuningJob,
@@ -17,7 +17,7 @@ from ...types.fine_tuning import (
 )
 
 if TYPE_CHECKING:
-    from ..._client import ZhipuAI
+    from ...._client import ZhipuAI
 
 __all__ = ["Jobs"]
 
@@ -95,6 +95,28 @@ class Jobs(BaseAPI):
             ),
         )
 
+    def cancel(
+            self,
+            fine_tuning_job_id: str,
+            *,
+            # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+            # The extra values given here take precedence over values defined on the client or passed to this method.
+            extra_headers: Headers | None = None,
+            extra_query: Query | None = None,
+            extra_body: Body | None = None,
+            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> FineTuningJob:
+
+        if not fine_tuning_job_id:
+            raise ValueError(f"Expected a non-empty value for `fine_tuning_job_id` but received {fine_tuning_job_id!r}")
+        return self._post(
+            f"/fine_tuning/jobs/{fine_tuning_job_id}/cancel",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_type=FineTuningJob,
+        )
+
     def list_events(
         self,
         fine_tuning_job_id: str,
@@ -118,4 +140,24 @@ class Jobs(BaseAPI):
                     "limit": limit,
                 },
             ),
+        )
+
+    def delete(
+            self,
+            fine_tuning_job_id: str,
+            *,
+            extra_headers: Headers | None = None,
+            extra_query: Query | None = None,
+            extra_body: Body | None = None,
+            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> FineTuningJob:
+
+        if not fine_tuning_job_id:
+            raise ValueError(f"Expected a non-empty value for `fine_tuning_job_id` but received {fine_tuning_job_id!r}")
+        return self._delete(
+            f"/fine_tuning/jobs/{fine_tuning_job_id}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_type=FineTuningJob,
         )

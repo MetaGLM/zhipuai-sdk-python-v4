@@ -5,9 +5,9 @@ from typing import Union, Mapping
 from typing_extensions import override
 
 from .core import _jwt_token
-from .core._errors import ZhipuAIError
-from .core._http_client import HttpClient, ZHIPUAI_DEFAULT_MAX_RETRIES
-from .core._base_type import NotGiven, NOT_GIVEN
+from .core import ZhipuAIError
+from .core import HttpClient, ZHIPUAI_DEFAULT_MAX_RETRIES
+from .core import NotGiven, NOT_GIVEN
 from . import api_resource
 import os
 import httpx
@@ -42,6 +42,7 @@ class ZhipuAI(HttpClient):
         super().__init__(
             version=__version__,
             base_url=base_url,
+            max_retries=max_retries,
             timeout=timeout,
             custom_httpx_client=http_client,
             custom_headers=custom_headers,
@@ -54,7 +55,7 @@ class ZhipuAI(HttpClient):
 
     @property
     @override
-    def _auth_headers(self) -> dict[str, str]:
+    def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
         # return {"Authorization": f"{_jwt_token.generate_token(api_key)}"}
         return {"Authorization": f"{api_key}"}

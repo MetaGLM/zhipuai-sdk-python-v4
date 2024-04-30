@@ -4,10 +4,10 @@ from typing import TYPE_CHECKING
 
 import httpx
 
-from ..core._base_api import BaseAPI
-from ..core._base_type import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
-from ..core._files import is_file_content
-from ..core._http_client import (
+from ..core import BaseAPI
+from ..core import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
+from ..core import is_file_content
+from ..core import (
     make_request_options,
 )
 from ..types.file_object import FileObject, ListOfFileObject

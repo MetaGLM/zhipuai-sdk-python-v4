@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zhipuai"
-version = "2.0.1.20240427"
+version = "2.0.1.20240429"
 description = "A SDK library for accessing big model apis from ZhipuAI"
 authors = ["Zhipu AI"]
 readme = "README.md"
@@ -104,7 +104,7 @@ markers = [
 asyncio_mode = "auto"
 
 # https://python-poetry.org/docs/repositories/
-#[[tool.poetry.source]]
-#name = "tsinghua"
-#url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
-#priority = "default"
+[[tool.poetry.source]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+priority = "default"

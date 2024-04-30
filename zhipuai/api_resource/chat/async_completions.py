@@ -5,9 +5,9 @@ from typing import Union, List, Optional, TYPE_CHECKING
 import httpx
 from typing_extensions import Literal
 
-from ...core._base_api import BaseAPI
-from ...core._base_type import NotGiven, NOT_GIVEN, Headers, Body
-from ...core._http_client import make_request_options
+from ...core import BaseAPI
+from ...core import NotGiven, NOT_GIVEN, Headers, Body
+from ...core import make_request_options
 from ...types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
 
 if TYPE_CHECKING:
@@ -34,6 +34,7 @@ class AsyncCompletions(BaseAPI):
             sensitive_word_check: Optional[object] | NotGiven = NOT_GIVEN,
             tools: Optional[object] | NotGiven = NOT_GIVEN,
             tool_choice: str | NotGiven = NOT_GIVEN,
+            meta: Optional[Dict[str,str]] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             disable_strict_validation: Optional[bool] | None = None,
@@ -58,12 +59,13 @@ class AsyncCompletions(BaseAPI):
                 "sensitive_word_check": sensitive_word_check,
                 "tools": tools,
                 "tool_choice": tool_choice,
+                "meta": meta,
             },
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
             cast_type=_cast_type,
-            enable_stream=False,
+            stream=False,
         )
 
     def retrieve_completion_result(
