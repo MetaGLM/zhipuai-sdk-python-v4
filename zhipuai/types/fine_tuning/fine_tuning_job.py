@@ -1,7 +1,6 @@
 from typing import List, Union, Optional, Dict, Any
-from typing_extensions import Literal
 
-from ..._base_models import BaseModel
+from ...core import BaseModel
 
 __all__ = ["FineTuningJob", "Error", "Hyperparameters", "ListOfFineTuningJob" ]
 
@@ -44,11 +43,9 @@ class FineTuningJob(BaseModel):
     training_file: str
 
     validation_file: Optional[str] = None
-    extra_json: Dict[str, Any]
 
 
 class ListOfFineTuningJob(BaseModel):
     object: Optional[str] = None
     data: List[FineTuningJob]
     has_more: Optional[bool] = None
-    extra_json: Dict[str, Any]

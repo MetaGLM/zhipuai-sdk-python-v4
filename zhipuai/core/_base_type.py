@@ -134,6 +134,9 @@ class _GenericAlias(Protocol):
     __origin__: type[object]
 
 
+class HttpxSendArgs(TypedDict, total=False):
+    auth: httpx.Auth
+
 # for user input files
 if TYPE_CHECKING:
     FileContent = Union[IO[bytes], bytes, PathLike[str]]

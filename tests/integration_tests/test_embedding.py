@@ -1,8 +1,12 @@
 from zhipuai import ZhipuAI
 import zhipuai
 
+import logging
+import logging.config
 
-def test_embeddings():
+
+def test_embeddings(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
 
     client = ZhipuAI()
     try:

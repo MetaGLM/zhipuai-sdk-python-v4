@@ -15,12 +15,12 @@ import pydantic
 import pydantic.generics
 from pydantic.fields import FieldInfo
 from pydantic import root_validator
-from .core._base_type import (
+from ._base_type import (
     IncEx,
     ModelT,
 )
-from .core._utils import is_list, is_mapping, parse_date, parse_datetime
-from .core._base_compat import (
+from ._utils import is_list, is_mapping, parse_date, parse_datetime
+from ._base_compat import (
     PYDANTIC_V2,
     ConfigDict,
     GenericModel as BaseGenericModel,

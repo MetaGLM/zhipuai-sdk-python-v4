@@ -1,8 +1,8 @@
 from typing import Optional, List
 
-from .._base_models import BaseModel
+from ..core import BaseModel
 
-__all__ = ["FileObject"]
+__all__ = ["FileObject", "ListOfFileObject"]
 
 
 class FileObject(BaseModel):

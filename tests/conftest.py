@@ -5,6 +5,11 @@ from typing import Dict, List, Sequence
 
 import pytest
 from pytest import Config, Function, Parser
+from zhipuai.core.logs import (
+    get_config_dict,
+    get_log_file,
+    get_timestamp_ms,
+)
 
 
 
@@ -94,8 +99,8 @@ def logging_conf() -> dict:
     return get_config_dict(
         "DEBUG",
         get_log_file(log_path="logs", sub_dir=f"local_{get_timestamp_ms()}"),
-        122,
-        111,
+        1024*1024,
+        1024*1024*1024,
     )
 
 @pytest.fixture

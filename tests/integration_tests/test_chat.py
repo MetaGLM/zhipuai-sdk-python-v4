@@ -2,12 +2,21 @@ import os.path
 
 from zhipuai import ZhipuAI
 import zhipuai
+import time
+
+import logging
+import logging.config
 
 
-def test_completions_temp0():
+def test_completions_temp0(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",
             messages=[
                 {
@@ -29,10 +38,15 @@ def test_completions_temp0():
         print(err)
 
 
-def test_completions_temp1():
+def test_completions_temp1(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",
             messages=[
                 {
@@ -56,10 +70,15 @@ def test_completions_temp1():
         print(err)
 
 
-def test_completions_top0():
+def test_completions_top0(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",
             messages=[
                 {
@@ -83,10 +102,15 @@ def test_completions_top0():
         print(err)
 
 
-def test_completions_top1():
+def test_completions_top1(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",
             messages=[
                 {
@@ -110,10 +134,15 @@ def test_completions_top1():
         print(err)
 
 
-def test_completions():
+def test_completions(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",  # 填写需要调用的模型名称
             messages=[
                 {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
@@ -145,10 +174,97 @@ def test_completions():
         print(err)
 
 
-def test_completions_stream():
+def test_completions_disenable_web_search(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
+            model="glm-4",  # 填写需要调用的模型名称
+            messages=[
+                {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
+                {"role": "assistant", "content": "当然，为了创作一个吸引人的slogan，请告诉我一些关于您产品的信息"},
+                {"role": "user", "content": "智谱AI开放平台"},
+                {"role": "assistant", "content": "智启未来，谱绘无限一智谱AI，让创新触手可及!"},
+                {"role": "user", "content": "创造一个更精准、吸引人的slogan"}
+            ],
+            tools=[
+                {
+                    "type": "web_search",
+                    "web_search": {
+                        "search_query": "帮我看看清华的升学率",
+                        "search_result": True,
+                        "enable": False,
+                    }
+                }
+            ],
+            extra_body={"temperature": 0.5, "max_tokens": 50},
+        )
+        print(response)
+
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+
+def test_completions_enable_web_search(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
+        response = client.chat.completions.create(
+            request_id=request_id,
+            model="glm-4",  # 填写需要调用的模型名称
+            messages=[
+                {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
+                {"role": "assistant", "content": "当然，为了创作一个吸引人的slogan，请告诉我一些关于您产品的信息"},
+                {"role": "user", "content": "智谱AI开放平台"},
+                {"role": "assistant", "content": "智启未来，谱绘无限一智谱AI，让创新触手可及!"},
+                {"role": "user", "content": "创造一个更精准、吸引人的slogan"}
+            ],
+            tools=[
+                {
+                    "type": "web_search",
+                    "web_search": {
+                        "search_query": "帮我看看清华的升学率",
+                        "search_result": True,
+                        "enable": True,
+                    }
+                }
+            ],
+            extra_body={"temperature": 0.5, "max_tokens": 50},
+        )
+        print(response)
+
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+
+def test_completions_stream(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
+        response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4",  # 填写需要调用的模型名称
             stream=True,
             messages=[
@@ -179,10 +295,15 @@ def encode_image(image_path):
         return base64.b64encode(image_file.read()).decode('utf-8')
 
 
-def test_completions_vis():
+def test_completions_vis(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4v",  # 填写需要调用的模型名称
             extra_body={"temperature": 0.5, "max_tokens": 50},
             messages=[
@@ -215,11 +336,16 @@ def test_completions_vis():
         print(err)
 
 
-def test_completions_vis_base64(test_file_path):
+def test_completions_vis_base64(test_file_path, logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         base64_image = encode_image(os.path.join(test_file_path, "img/MetaGLM.png"))
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.completions.create(
+            request_id=request_id,
             model="glm-4v",  # 填写需要调用的模型名称
             extra_body={"temperature": 0.5, "max_tokens": 50},
             messages=[
@@ -258,10 +384,15 @@ def test_completions_vis_base64(test_file_path):
         print(err)
 
 
-def test_async_completions():
+def test_async_completions(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
         response = client.chat.asyncCompletions.create(
+            request_id=request_id,
             model="glm-4",  # 填写需要调用的模型名称
             messages=[
                 {"role": "user", "content": "作为一名营销专家，请为我的产品创作一个吸引人的slogan"},
@@ -293,7 +424,8 @@ def test_async_completions():
         print(err)
 
 
-def test_retrieve_completion_result():
+def test_retrieve_completion_result(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 请填写您自己的APIKey
     try:
         response = client.chat.asyncCompletions.retrieve_completion_result(id="1014908592669352541651237")
@@ -309,4 +441,4 @@ def test_retrieve_completion_result():
 
 
 if __name__ == '__main__':
-    test_completions_top0()
+    test_completions_temp0()

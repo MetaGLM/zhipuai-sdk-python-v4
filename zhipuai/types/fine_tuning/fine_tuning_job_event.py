@@ -1,7 +1,6 @@
 from typing import List, Union, Optional
-from typing_extensions import Literal
 
-from ..._base_models import BaseModel
+from ...core import BaseModel
 
 __all__ = ["FineTuningJobEvent", "Metric", "JobEvent"]
 
