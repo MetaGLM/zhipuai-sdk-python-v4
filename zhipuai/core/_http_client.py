@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import inspect
+import warnings
 from typing import (
     Any,
     Type,
@@ -10,7 +11,7 @@ from typing import (
     Mapping,
     TypeVar,
     Dict,
-    overload
+    overload, Optional, Literal
 )
 
 from random import random
@@ -54,7 +55,8 @@ headers = {
 }
 
 
-from httpx._config import DEFAULT_TIMEOUT_CONFIG as HTTPX_DEFAULT_TIMEOUT
+from httpx._config import DEFAULT_TIMEOUT_CONFIG as HTTPX_DEFAULT_TIMEOUT, Limits
+
 RAW_RESPONSE_HEADER = "X-Stainless-Raw-Response"
 # 通过 `Timeout` 控制接口`connect` 和 `read` 超时时间，默认为`timeout=300.0, connect=8.0`
 ZHIPUAI_DEFAULT_TIMEOUT = httpx.Timeout(timeout=300.0, connect=8.0)
@@ -74,7 +76,7 @@ class HttpClient:
     timeout: Union[float, Timeout, None]
     _limits: httpx.Limits
     _has_custom_http_client: bool
-    _default_stream_cls: type[StreamResponse[Any]] | None = None
+    _default_stream_cls: Type[StreamResponse[Any]] | None = None
 
     def __init__(
             self,
@@ -93,7 +95,7 @@ class HttpClient:
                 category=DeprecationWarning,
                 stacklevel=3,
             )
-            if http_client is not None:
+            if custom_httpx_client is not None:
                 raise ValueError("The `http_client` argument is mutually exclusive with `connection_pool_limits`")
         else:
             limits = ZHIPUAI_DEFAULT_LIMITS
@@ -270,7 +272,7 @@ class HttpClient:
             response: httpx.Response,
             stream: bool,
             options: FinalRequestOptions,
-            stream_cls: type[StreamResponse[Any]] | None = None,
+            stream_cls: Type[StreamResponse[Any]] | None = None,
     ) -> HttpResponse:
 
         http_response = HttpResponse(
@@ -286,7 +288,7 @@ class HttpClient:
             self,
             *,
             data: object,
-            cast_type: type[ResponseT],
+            cast_type: Type[ResponseT],
             response: httpx.Response,
     ) -> ResponseT:
 
@@ -361,7 +363,7 @@ class HttpClient:
             remaining_retries: Optional[int] = None,
             *,
             stream: bool = False,
-            stream_cls: type[StreamResponse] | None = None,
+            stream_cls: Type[StreamResponse] | None = None,
     ) -> ResponseT | StreamResponse:
         return self._request(
             cast_type=cast_type,
@@ -378,7 +380,7 @@ class HttpClient:
             options: FinalRequestOptions,
             remaining_retries: int | None,
             stream: bool,
-            stream_cls: type[StreamResponse] | None,
+            stream_cls: Type[StreamResponse] | None,
     ) -> ResponseT | StreamResponse:
 
         retries = self._remaining_retries(remaining_retries, options)
@@ -469,7 +471,7 @@ class HttpClient:
             response_headers: httpx.Headers | None,
             *,
             stream: bool,
-            stream_cls: type[StreamResponse] | None,
+            stream_cls: Type[StreamResponse] | None,
     ) -> ResponseT | StreamResponse:
         remaining = remaining_retries - 1
         if remaining == 1:
@@ -511,7 +513,7 @@ class HttpClient:
             cast_type: Type[ResponseT],
             options: UserRequestInput = {},
             stream: Literal[True],
-            stream_cls: type[StreamResponse],
+            stream_cls: Type[StreamResponse],
     ) -> StreamResponse:
         ...
 
@@ -523,7 +525,7 @@ class HttpClient:
             cast_type: Type[ResponseT],
             options: UserRequestInput = {},
             stream: bool,
-            stream_cls: type[StreamResponse] | None = None,
+            stream_cls: Type[StreamResponse] | None = None,
     ) -> ResponseT | StreamResponse:
         ...
 
@@ -534,8 +536,8 @@ class HttpClient:
             cast_type: Type[ResponseT],
             options: UserRequestInput = {},
             stream: bool = False,
-            stream_cls: type[StreamResponse] | None = None,
-    ) -> ResponseT | _AsyncStreamT:
+            stream_cls: Type[StreamResponse] | None = None,
+    ) -> ResponseT:
         opts = FinalRequestOptions.construct(method="get", url=path, **options)
         return cast(ResponseT, self.request(cast_type, opts, stream=stream, stream_cls=stream_cls))
 
@@ -562,7 +564,7 @@ class HttpClient:
             options: UserRequestInput = {},
             files: RequestFiles | None = None,
             stream: Literal[True],
-            stream_cls: type[StreamResponse],
+            stream_cls: Type[StreamResponse],
     ) -> StreamResponse:
         ...
 
@@ -576,7 +578,7 @@ class HttpClient:
             options: UserRequestInput = {},
             files: RequestFiles | None = None,
             stream: bool,
-            stream_cls: type[StreamResponse] | None = None,
+            stream_cls: Type[StreamResponse] | None = None,
     ) -> ResponseT | StreamResponse:
         ...
 
@@ -589,7 +591,7 @@ class HttpClient:
             options: UserRequestInput = {},
             files: RequestFiles | None = None,
             stream: bool = False,
-            stream_cls: type[StreamResponse[Any]] | None = None,
+            stream_cls: Type[StreamResponse[Any]] | None = None,
     ) -> ResponseT | StreamResponse:
         opts = FinalRequestOptions.construct(
             method="post", url=path, json_data=body, files=make_httpx_files(files), **options
