@@ -3,6 +3,7 @@ from typing import List, Optional, Dict, Any
 from ...core import BaseModel
 
 __all__ = [
+    "CompletionUsage",
     "ChatCompletionChunk",
     "Choice",
     "ChoiceDelta",

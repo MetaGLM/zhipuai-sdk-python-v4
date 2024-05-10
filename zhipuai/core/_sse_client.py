@@ -6,6 +6,7 @@ from typing import Generic, Iterator, TYPE_CHECKING, Mapping
 
 import httpx
 
+from ._utils import is_mapping
 from ._base_type import ResponseT
 from ._errors import APIResponseError
 
@@ -56,8 +57,41 @@ class StreamResponse(Generic[ResponseT]):
                         request=self.response.request,
                         json_data=data["error"],
                     )
+            if sse.event is None:
+                data = sse.json_data()
+                if is_mapping(data) and data.get("error"):
+                    message = None
+                    error = data.get("error")
+                    if is_mapping(error):
+                        message = error.get("message")
+                    if not message or not isinstance(message, str):
+                        message = "An error occurred during streaming"
 
+                    raise APIResponseError(
+                        message=message,
+                        request=self.response.request,
+                        json_data=data["error"],
+                    )
                 yield self._data_process_func(data=data, cast_type=self._cast_type, response=self.response)
+
+            else:
+                data = sse.json_data()
+
+                if sse.event == "error" and is_mapping(data) and data.get("error"):
+                    message = None
+                    error = data.get("error")
+                    if is_mapping(error):
+                        message = error.get("message")
+                    if not message or not isinstance(message, str):
+                        message = "An error occurred during streaming"
+
+                    raise APIResponseError(
+                        message=message,
+                        request=self.response.request,
+                        json_data=data["error"],
+                    )
+                yield self._data_process_func(data=data, cast_type=self._cast_type, response=self.response)
+
         for sse in iterator:
             pass
 

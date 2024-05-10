@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from zhipuai import ZhipuAI
 import zhipuai
 

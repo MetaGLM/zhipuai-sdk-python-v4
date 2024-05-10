@@ -50,19 +50,19 @@ class Completions(BaseAPI):
             if temperature <= 0:
                 do_sample = False
                 temperature = 0.01
-                logger.warning("temperature:取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
+                # logger.warning("temperature:取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
             if temperature >= 1:
                 do_sample = False
                 temperature = 0.99
-                logger.warning("temperature:取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
+                # logger.warning("temperature:取值范围是：(0.0, 1.0) 开区间，do_sample重写为:false（参数top_p temperture不生效）")
         if top_p is not None and top_p != NOT_GIVEN:
 
             if top_p >= 1:
                 top_p = 0.99
-                logger.warning("top_p:取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
+                # logger.warning("top_p:取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
             if top_p <= 0:
                 top_p = 0.01
-                logger.warning("top_p:取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
+                # logger.warning("top_p:取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
 
         logger.info(f"temperature:{temperature}, top_p:{top_p}")
         if isinstance(messages, List):
