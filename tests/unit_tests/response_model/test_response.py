@@ -18,9 +18,10 @@ from zhipuai.types.chat.chat_completion import (Completion,
 from zhipuai.types.embeddings import Embedding, EmbeddingsResponded
 from zhipuai.types.file_object import FileObject, ListOfFileObject
 from zhipuai.types.fine_tuning import FineTuningJobEvent
-from zhipuai.types.fine_tuning.fine_tuning_job import FineTuningJob, ListOfFineTuningJob
+from zhipuai.types.fine_tuning.fine_tuning_job import FineTuningJob, ListOfFineTuningJob, Error
 from zhipuai.types.fine_tuning.fine_tuning_job_event import Metric, JobEvent
 from zhipuai.types.fine_tuning.job_create_params import Hyperparameters
+from zhipuai.types.fine_tuning.fine_tuning_job import Hyperparameters as FineTuningHyperparameters
 from zhipuai.types.fine_tuning.models import FineTunedModelsStatus
 from zhipuai.types.image import GeneratedImage, ImagesResponded
 
@@ -200,27 +201,31 @@ def test_response_job_model_cast(
     MockClient._process_response_data = HttpClient._process_response_data
     response = httpx.Response(
         status_code=200,
-        content="""{
-        "object": "job_event",
-        "id": "event123",
-        "type": "training",
-        "created_at": 1617181723,
-        "level": "info",
-        "message": "Training has started.",
-        "data": {
-          "epoch": 1,
-          "current_steps": 100,
-          "total_steps": 1000,
-          "elapsed_time": "00:10:00",
-          "remaining_time": "05:20:00",
-          "trained_tokens": 500000,
-          "loss": 0.05,
-          "eval_loss": 0.03,
-          "acc": 0.9,
-          "eval_acc": 0.95,
-          "learning_rate": 0.001
-        }
-      }"""
+        content=""" {
+    "id": "job123",
+    "request_id": "req456",
+    "created_at": 1617181723,
+    "error": {
+      "code": "404",
+      "message": "Not Found",
+      "param": "model_id"
+    },
+    "fine_tuned_model": "ft_model_1",
+    "finished_at": 1617182000,
+    "hyperparameters": {
+      "n_epochs": 10
+    },
+    "model": "base_model",
+    "object": "fine_tuning_job",
+    "result_files": [
+      "result1.txt",
+      "result2.json"
+    ],
+    "status": "completed",
+    "trained_tokens": 1000000,
+    "training_file": "training_data.csv",
+    "validation_file": "validation_data.csv"
+  }"""
     )
 
     http_response = HttpResponse(
@@ -234,24 +239,24 @@ def test_response_job_model_cast(
 
     assert R == model.__class__
     assert isinstance(model, FineTuningJob)
-    assert model.object == "job_event"
-    assert model.id == "event123"
-    assert model.type == "training"
+    assert model.id == "job123"
+    assert model.request_id == "req456"
     assert model.created_at == 1617181723
-    assert model.level == "info"
-    assert model.message == "Training has started."
-    assert isinstance(model.data, Metric)
-    assert model.data.epoch == 1
-    assert model.data.current_steps == 100
-    assert model.data.total_steps == 1000
-    assert model.data.elapsed_time == "00:10:00"
-    assert model.data.remaining_time == "05:20:00"
-    assert model.data.trained_tokens == 500000
-    assert model.data.loss == 0.05
-    assert model.data.eval_loss == 0.03
-    assert model.data.acc == 0.9
-    assert model.data.eval_acc == 0.95
-    assert model.data.learning_rate == 0.001
+    assert isinstance(model.error, Error)
+    assert model.error.code == "404"
+    assert model.error.message == "Not Found"
+    assert model.error.param == "model_id"
+    assert model.fine_tuned_model == "ft_model_1"
+    assert model.finished_at == 1617182000
+    assert isinstance(model.hyperparameters, FineTuningHyperparameters)
+    assert model.hyperparameters.n_epochs == 10
+    assert model.model == "base_model"
+    assert model.object == "fine_tuning_job"
+    assert model.result_files == ["result1.txt", "result2.json"]
+    assert model.status == "completed"
+    assert model.trained_tokens == 1000000
+    assert model.training_file == "training_data.csv"
+    assert model.validation_file == "validation_data.csv"
 
 
 @pytest.mark.parametrize(

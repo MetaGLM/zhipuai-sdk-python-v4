@@ -13,7 +13,7 @@ def test_os_import_unit():
 def test_sdk_import():
     from zhipuai import ZhipuAI
 
-    client = ZhipuAI()  # 请填写您自己的APIKey
+    client = ZhipuAI(api_key="empty")  # 请填写您自己的APIKey
 
     if client is not None:
         print("SDK导入成功")

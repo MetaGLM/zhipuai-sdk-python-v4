@@ -61,7 +61,7 @@ def test_parse_method():
     assert parsed_data == '{"key": "value"}'
 
     raw_response = Response(200, content=b'{"key": "value"}', stream=ByteStream(b'{"key": "value"}\n"foo"\n"boo"\n'))
-    http_response = HttpResponse(raw_response=raw_response, cast_type=str, client=MockHttpClient(), enable_stream=True,
+    http_response = HttpResponse(raw_response=raw_response, cast_type=str, client=MockHttpClient(), stream=True,
                                  stream_cls=MockStreamResponse[str])
     parsed_data = http_response.parse()
     excepted_data = ['{"key": "value"}', '"foo"', '"boo"']
