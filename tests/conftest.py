@@ -97,7 +97,7 @@ def pytest_collection_modifyitems(config: Config, items: Sequence[Function]) -> 
 @pytest.fixture
 def logging_conf() -> dict:
     return get_config_dict(
-        "DEBUG",
+        "info",
         get_log_file(log_path="logs", sub_dir=f"local_{get_timestamp_ms()}"),
         1024*1024,
         1024*1024*1024,

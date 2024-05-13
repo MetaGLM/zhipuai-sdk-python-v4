@@ -44,7 +44,7 @@ class Completions(BaseAPI):
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> Completion | StreamResponse[ChatCompletionChunk]:
-        logger.info(f"temperature:{temperature}, top_p:{top_p}")
+        logger.debug(f"temperature:{temperature}, top_p:{top_p}")
         if temperature is not None and temperature != NOT_GIVEN:
 
             if temperature <= 0:
@@ -64,7 +64,7 @@ class Completions(BaseAPI):
                 top_p = 0.01
                 # logger.warning("top_p:取值范围是：(0.0, 1.0) 开区间，不能等于 0 或 1")
 
-        logger.info(f"temperature:{temperature}, top_p:{top_p}")
+        logger.debug(f"temperature:{temperature}, top_p:{top_p}")
         if isinstance(messages, List):
             for item in messages:
                 if item.get('content'):

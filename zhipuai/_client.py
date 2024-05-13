@@ -28,7 +28,8 @@ class ZhipuAI(HttpClient):
             max_retries: int = ZHIPUAI_DEFAULT_MAX_RETRIES,
             http_client: httpx.Client | None = None,
             custom_headers: Mapping[str, str] | None = None,
-            disable_token_cache: bool = True
+            disable_token_cache: bool = True,
+            _strict_response_validation: bool = False,
     ) -> None:
         if api_key is None:
             api_key = os.environ.get("ZHIPUAI_API_KEY")
@@ -49,6 +50,7 @@ class ZhipuAI(HttpClient):
             timeout=timeout,
             custom_httpx_client=http_client,
             custom_headers=custom_headers,
+            _strict_response_validation=_strict_response_validation,
         )
         self.chat = api_resource.chat.Chat(self)
         self.images = api_resource.images.Images(self)

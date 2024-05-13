@@ -1,12 +1,15 @@
 # -*- coding:utf-8 -*-
 from __future__ import annotations
 
+import inspect
 import json
-from typing import Generic, Iterator, TYPE_CHECKING, Mapping
+from typing import Generic, Iterator, TYPE_CHECKING, Mapping, cast, Type
+from typing_extensions import TypeGuard
 
 import httpx
 
-from ._utils import is_mapping
+from . import get_origin
+from ._utils import is_mapping, extract_type_var_from_base
 from ._base_type import ResponseT
 from ._errors import APIResponseError
 
@@ -17,14 +20,13 @@ if TYPE_CHECKING:
 
 
 class StreamResponse(Generic[ResponseT]):
-
     response: httpx.Response
-    _cast_type: type[ResponseT]
+    _cast_type: Type[ResponseT]
 
     def __init__(
             self,
             *,
-            cast_type: type[ResponseT],
+            cast_type: Type[ResponseT],
             response: httpx.Response,
             client: HttpClient,
     ) -> None:
@@ -181,3 +183,33 @@ class SSELineParser:
             except (TypeError, ValueError):
                 pass
         return
+
+
+def is_stream_class_type(typ: type) -> TypeGuard[type[StreamResponse[object]]]:
+    """TypeGuard for determining whether or not the given type is a subclass of `Stream` / `AsyncStream`"""
+    origin = get_origin(typ) or typ
+    return inspect.isclass(origin) and issubclass(origin, StreamResponse)
+
+
+def extract_stream_chunk_type(
+        stream_cls: type,
+        *,
+        failure_message: str | None = None,
+) -> type:
+    """Given a type like `StreamResponse[T]`, returns the generic type variable `T`.
+
+    This also handles the case where a concrete subclass is given, e.g.
+    ```py
+    class MyStream(StreamResponse[bytes]):
+        ...
+
+    extract_stream_chunk_type(MyStream) -> bytes
+    ```
+    """
+
+    return extract_type_var_from_base(
+        stream_cls,
+        index=0,
+        generic_bases=cast("tuple[type, ...]", (StreamResponse, )),
+        failure_message=failure_message,
+    )

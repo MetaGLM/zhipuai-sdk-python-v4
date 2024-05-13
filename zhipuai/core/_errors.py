@@ -13,6 +13,7 @@ __all__ = [
     "APIResponseError",
     "APIResponseValidationError",
     "APITimeoutError",
+    "APIConnectionError",
 ]
 
 

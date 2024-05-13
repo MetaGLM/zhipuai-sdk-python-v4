@@ -19,6 +19,7 @@ from typing import (
 import pydantic
 from httpx import Response
 from typing_extensions import Literal, Protocol, TypeAlias, TypedDict, override, runtime_checkable
+
 Query = Mapping[str, object]
 Body = object
 AnyMapping = Mapping[str, object]
@@ -137,29 +138,38 @@ class _GenericAlias(Protocol):
 class HttpxSendArgs(TypedDict, total=False):
     auth: httpx.Auth
 
+
 # for user input files
 if TYPE_CHECKING:
+    Base64FileInput = Union[IO[bytes], PathLike[str]]
     FileContent = Union[IO[bytes], bytes, PathLike[str]]
 else:
+    Base64FileInput = Union[IO[bytes], PathLike]
     FileContent = Union[IO[bytes], bytes, PathLike]
 
 FileTypes = Union[
-    FileContent,  # file content
-    Tuple[str, FileContent],  # (filename, file)
-    Tuple[str, FileContent, str],  # (filename, file , content_type)
-    Tuple[str, FileContent, str, Mapping[str, str]],  # (filename, file , content_type, headers)
+    # file (or bytes)
+    FileContent,
+        # (filename, file (or bytes))
+    Tuple[Optional[str], FileContent],
+        # (filename, file (or bytes), content_type)
+    Tuple[Optional[str], FileContent, Optional[str]],
+        # (filename, file (or bytes), content_type, headers)
+    Tuple[Optional[str], FileContent, Optional[str], Mapping[str, str]],
 ]
-
 RequestFiles = Union[Mapping[str, FileTypes], Sequence[Tuple[str, FileTypes]]]
 
-# for httpx client supported files
-
+# duplicate of the above but without our custom file support
 HttpxFileContent = Union[bytes, IO[bytes]]
 HttpxFileTypes = Union[
-    FileContent,  # file content
-    Tuple[str, HttpxFileContent],  # (filename, file)
-    Tuple[str, HttpxFileContent, str],  # (filename, file , content_type)
-    Tuple[str, HttpxFileContent, str, Mapping[str, str]],  # (filename, file , content_type, headers)
+    # file (or bytes)
+    HttpxFileContent,
+        # (filename, file (or bytes))
+    Tuple[Optional[str], HttpxFileContent],
+        # (filename, file (or bytes), content_type)
+    Tuple[Optional[str], HttpxFileContent, Optional[str]],
+        # (filename, file (or bytes), content_type, headers)
+    Tuple[Optional[str], HttpxFileContent, Optional[str], Mapping[str, str]],
 ]
 
 HttpxRequestFiles = Union[Mapping[str, HttpxFileTypes], Sequence[Tuple[str, HttpxFileTypes]]]

@@ -8,7 +8,8 @@ import inspect
 import pydantic
 from zhipuai.core import BaseModel, StreamResponse, get_args, HttpClient, construct_type
 from zhipuai.core._base_type import ResponseT, ModelBuilderProtocol
-from zhipuai.core._response import HttpResponse
+from zhipuai.core._request_opt import FinalRequestOptions
+from zhipuai.core._response import APIResponse
 from zhipuai.types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
 from zhipuai.types.chat.chat_completion import (Completion,
                                                 CompletionChoice as ChatCompletionChoice,
@@ -27,6 +28,7 @@ from zhipuai.types.image import GeneratedImage, ImagesResponded
 
 
 class MockClient:
+    _strict_response_validation: bool = False
     def _process_response_data(
             self,
             *,
@@ -85,13 +87,13 @@ def test_response_chat_model_cast(
   }"""
     )
 
-    http_response = HttpResponse(
-        raw_response=response,
-        cast_type=R,
-        client=MockClient(),
-        stream=False,
-        stream_cls=None
-    )
+    opts = FinalRequestOptions.construct(method="get", url="path")
+    http_response = APIResponse(raw=response,
+                                cast_type=R,
+                                client=MockClient(),
+                                stream=False,
+                                stream_cls=None,
+                                options=opts)
     model = http_response.parse()
 
     if R == AsyncTaskStatus:
@@ -150,6 +152,7 @@ def test_response_chat_model_cast(
     else:
         assert False, f"Unexpected model type: {R}"
 
+
 @pytest.mark.parametrize(
     "R",
     [
@@ -171,13 +174,13 @@ def test_response_finetuned_model_model_cast(
   }"""
     )
 
-    http_response = HttpResponse(
-        raw_response=response,
-        cast_type=R,
-        client=MockClient(),
-        stream=False,
-        stream_cls=None
-    )
+    opts = FinalRequestOptions.construct(method="get", url="path")
+    http_response = APIResponse(raw=response,
+                                cast_type=R,
+                                client=MockClient(),
+                                stream=False,
+                                stream_cls=None,
+                                options=opts)
     model = http_response.parse()
 
     assert R == model.__class__
@@ -228,13 +231,13 @@ def test_response_job_model_cast(
   }"""
     )
 
-    http_response = HttpResponse(
-        raw_response=response,
-        cast_type=R,
-        client=MockClient(),
-        stream=False,
-        stream_cls=None
-    )
+    opts = FinalRequestOptions.construct(method="get", url="path")
+    http_response = APIResponse(raw=response,
+                                cast_type=R,
+                                client=MockClient(),
+                                stream=False,
+                                stream_cls=None,
+                                options=opts)
     model = http_response.parse()
 
     assert R == model.__class__
@@ -302,13 +305,13 @@ def test_response_joblist_model_cast(
   }"""
     )
 
-    http_response = HttpResponse(
-        raw_response=response,
-        cast_type=R,
-        client=MockClient(),
-        stream=False,
-        stream_cls=None
-    )
+    opts = FinalRequestOptions.construct(method="get", url="path")
+    http_response = APIResponse(raw=response,
+                                cast_type=R,
+                                client=MockClient(),
+                                stream=False,
+                                stream_cls=None,
+                                options=opts)
     model = http_response.parse()
 
     assert R == model.__class__
@@ -367,13 +370,13 @@ def test_response_embedding_model_cast(
   }"""
     )
 
-    http_response = HttpResponse(
-        raw_response=response,
-        cast_type=R,
-        client=MockClient(),
-        stream=False,
-        stream_cls=None
-    )
+    opts = FinalRequestOptions.construct(method="get", url="path")
+    http_response = APIResponse(raw=response,
+                                cast_type=R,
+                                client=MockClient(),
+                                stream=False,
+                                stream_cls=None,
+                                options=opts)
     model = http_response.parse()
 
     assert R == model.__class__
@@ -416,13 +419,13 @@ def test_response_file_list_model_cast(
       }"""
     )
 
-    http_response = HttpResponse(
-        raw_response=response,
-        cast_type=R,
-        client=MockClient(),
-        stream=False,
-        stream_cls=None
-    )
+    opts = FinalRequestOptions.construct(method="get", url="path")
+    http_response = APIResponse(raw=response,
+                                cast_type=R,
+                                client=MockClient(),
+                                stream=False,
+                                stream_cls=None,
+                                options=opts)
     model = http_response.parse()
 
     assert R == model.__class__
@@ -469,13 +472,13 @@ def test_response_file_list_model_cast(
   }"""
     )
 
-    http_response = HttpResponse(
-        raw_response=response,
-        cast_type=R,
-        client=MockClient(),
-        stream=False,
-        stream_cls=None
-    )
+    opts = FinalRequestOptions.construct(method="get", url="path")
+    http_response = APIResponse(raw=response,
+                                cast_type=R,
+                                client=MockClient(),
+                                stream=False,
+                                stream_cls=None,
+                                options=opts)
     model = http_response.parse()
 
     assert R == model.__class__
@@ -517,13 +520,13 @@ def test_response_image_model_cast(
 }"""
     )
 
-    http_response = HttpResponse(
-        raw_response=response,
-        cast_type=R,
-        client=MockClient(),
-        stream=False,
-        stream_cls=None
-    )
+    opts = FinalRequestOptions.construct(method="get", url="path")
+    http_response = APIResponse(raw=response,
+                                cast_type=R,
+                                client=MockClient(),
+                                stream=False,
+                                stream_cls=None,
+                                options=opts)
     model = http_response.parse()
 
     assert R == model.__class__
