@@ -10,13 +10,13 @@ import pydantic
 from typing_extensions import ParamSpec, get_origin, get_args, override
 
 from ._base_type import NoneType
-from ._request_opt import FinalRequestOptions
 from ._sse_client import StreamResponse, is_stream_class_type, extract_stream_chunk_type
 from ._base_models import is_basemodel, BaseModel
 from ._utils import is_annotated_type, extract_type_arg, extract_type_var_from_base, is_given
 from ._errors import ZhipuAIError, APIResponseValidationError
 
 if TYPE_CHECKING:
+    from ._request_opt import FinalRequestOptions
     from ._http_client import HttpClient
 
 P = ParamSpec("P")

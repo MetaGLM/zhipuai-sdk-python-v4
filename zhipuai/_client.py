@@ -64,9 +64,9 @@ class ZhipuAI(HttpClient):
     def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
         if self._disable_token_cache:
-            return {"Authorization": f"{api_key}"}
+            return {"Authorization": f"Bearer {api_key}"}
         else:
-            return {"Authorization": f"{_jwt_token.generate_token(api_key)}"}
+            return {"Authorization": f"Bearer {_jwt_token.generate_token(api_key)}"}
 
     def __del__(self) -> None:
         if (not hasattr(self, "_has_custom_http_client")
