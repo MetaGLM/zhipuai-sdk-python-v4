@@ -16,6 +16,10 @@ from .fine_tuning import (
     FineTuning
 )
 
+from .batches import (
+    Batches
+)
+
 __all__ = [
     'AsyncCompletions',
     'Chat',
@@ -23,6 +27,7 @@ __all__ = [
     'Images',
     'Embeddings',
     'Files',
-    'FineTuning'
+    'FineTuning',
+    'Batches',
 
 ]

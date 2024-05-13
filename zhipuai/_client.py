@@ -57,6 +57,7 @@ class ZhipuAI(HttpClient):
         self.embeddings = api_resource.embeddings.Embeddings(self)
         self.files = api_resource.files.Files(self)
         self.fine_tuning = api_resource.fine_tuning.FineTuning(self)
+        self.batches = api_resource.Batches(self)
 
     @property
     @override
