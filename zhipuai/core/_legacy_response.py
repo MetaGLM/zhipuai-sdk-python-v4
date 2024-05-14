@@ -394,9 +394,6 @@ class HttpxBinaryResponseContent:
             for data in self.response.iter_bytes():
                 f.write(data)
 
-    @deprecated(
-        "Due to a bug, this method doesn't actually stream the response content, `.with_streaming_response.method()` should be used instead"
-    )
     def stream_to_file(
             self,
             file: str | os.PathLike[str],
@@ -425,9 +422,6 @@ class HttpxBinaryResponseContent:
     async def aiter_raw(self, chunk_size: int | None = None) -> AsyncIterator[bytes]:
         return self.response.aiter_raw(chunk_size)
 
-    @deprecated(
-        "Due to a bug, this method doesn't actually stream the response content, `.with_streaming_response.method()` should be used instead"
-    )
     async def astream_to_file(
             self,
             file: str | os.PathLike[str],
