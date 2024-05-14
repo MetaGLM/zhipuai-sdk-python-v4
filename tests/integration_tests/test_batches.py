@@ -59,6 +59,10 @@ def test_batch_list(logging_conf) -> None:
     list = client.batches.list(limit=10)
     print(list)
 #     SyncCursorPage[Batch](data=[Batch(id='batch_jaJkXUJJJ3212wTQ5Hd2jI1M', completion_window='24h', created_at=1715395401, endpoint='/v1/chat/completions', input_file_id='file-MlVVOdCeGXu03QkoPOEfPdD3', object='batch', status='cancelling', cancelled_at=None, cancelling_at=1715396130, completed_at=None, error_file_id=None, errors=None, expired_at=None, expires_at=1715481801, failed_at=None, finalizing_at=None, in_progress_at=1715395401, metadata={'description': 'nightly eval job'}, output_file_id=None, request_counts=BatchRequestCounts(completed=2, failed=0, total=2))], object='list', first_id='batch_jaJkXUJJJ3212wTQ5Hd2jI1M', last_id='batch_jaJkXUJJJ3212wTQ5Hd2jI1M', has_more=False)
+    batch = list.get_next_page()
+    print(batch)
+    for batch in list.iter_pages():
+        print(batch)
 
 
 def test_batch_result(logging_conf)->None:
