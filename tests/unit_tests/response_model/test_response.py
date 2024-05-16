@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-import unittest
-from typing import Type, cast, Iterable
+from typing import Type
 import pytest
 import httpx
-import inspect
 
-import pydantic
-from zhipuai.core import BaseModel, StreamResponse, get_args, HttpClient, construct_type
-from zhipuai.core._base_type import ResponseT, ModelBuilderProtocol
+from zhipuai.core import BaseModel, HttpClient
+from zhipuai.core._base_type import ResponseT
 from zhipuai.core._request_opt import FinalRequestOptions
 from zhipuai.core._response import APIResponse
 from zhipuai.types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
@@ -17,11 +14,10 @@ from zhipuai.types.chat.chat_completion import (Completion,
                                                 CompletionUsage as ChatCompletionUsage)
 
 from zhipuai.types.embeddings import Embedding, EmbeddingsResponded
-from zhipuai.types.file_object import FileObject, ListOfFileObject
+from zhipuai.types.file.file_object import FileObject, ListOfFileObject
 from zhipuai.types.fine_tuning import FineTuningJobEvent
-from zhipuai.types.fine_tuning.fine_tuning_job import FineTuningJob, ListOfFineTuningJob, Error
+from zhipuai.types.fine_tuning.fine_tuning_job import FineTuningJob, Error
 from zhipuai.types.fine_tuning.fine_tuning_job_event import Metric, JobEvent
-from zhipuai.types.fine_tuning.job_create_params import Hyperparameters
 from zhipuai.types.fine_tuning.fine_tuning_job import Hyperparameters as FineTuningHyperparameters
 from zhipuai.types.fine_tuning.models import FineTunedModelsStatus
 from zhipuai.types.image import GeneratedImage, ImagesResponded

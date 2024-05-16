@@ -28,7 +28,6 @@ from ._base_compat import (
     field_get_default,
     cached_property,
 )
-from ._files import is_file_content
 from ._errors import (
     ZhipuAIError,
     APIStatusError,
@@ -47,13 +46,18 @@ from ._http_client import (
     HttpClient
 
 )
+from ._files import (
+    is_file_content
+)
 from ._utils import (
     is_list,
     is_mapping,
     parse_date,
     parse_datetime,
     is_given,
-    maybe_transform
+    maybe_transform,
+    deepcopy_minimal,
+    extract_files,
 )
 
 from ._sse_client import StreamResponse
@@ -114,6 +118,9 @@ __all__ = [
     "parse_datetime",
     "is_given",
     "maybe_transform",
+
+    "deepcopy_minimal",
+    "extract_files",
 
     "StreamResponse",
 
