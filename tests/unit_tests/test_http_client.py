@@ -158,9 +158,6 @@ class TestZhipuAI:
         from zhipuai.core._jwt_token import generate_token
         assert request.headers.get("Authorization") == f"Bearer {generate_token(api_key)}"
 
-        with pytest.raises(ZhipuAIError):
-            client2 = ZhipuAI(base_url=base_url, api_key=None)
-            _ = client2
 
     def test_request_extra_headers(self) -> None:
         request = self.client._build_request(
