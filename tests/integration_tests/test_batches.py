@@ -1,8 +1,27 @@
+import base64
+import json
 import os
 import logging
 import logging.config
+from hashlib import sha256
+
 import zhipuai
 from zhipuai import ZhipuAI
+
+
+def test_batch_input_file_sha(test_file_path, logging_conf) -> None:
+    # 读取batchinput 编辑每一行的custom_id为sha
+    with open(os.path.join(test_file_path, "batchinput.jsonl"), "r",encoding="utf-8") as f:
+        lines = f.readlines()
+
+    for i in range(len(lines)):
+        lines[i] = json.loads(lines[i])
+        lines[i]["custom_id"] = sha256(lines[i]["custom_id"].encode()).hexdigest()
+        lines[i] = json.dumps(lines[i], ensure_ascii=False)
+
+    # 然后写入文件
+    with open(os.path.join(test_file_path, "batchinput_sha.jsonl"), "w", encoding="utf-8") as f:
+        f.writelines(lines)
 
 
 def test_batch_input_file(test_file_path, logging_conf) -> None:
@@ -11,11 +30,11 @@ def test_batch_input_file(test_file_path, logging_conf) -> None:
 
     try:
         batch_input_file = client.files.create(
-            file=open(os.path.join(test_file_path, "batchinput.jsonl"), "rb"),
+            file=open(os.path.join(test_file_path, "batchinput_sha.jsonl"), "rb"),
             purpose="batch"
         )
 
-        print(batch_input_file)
+        print(json.dumps(batch_input_file.dict(), indent=4, ensure_ascii=False))
 
     #   FileObject(id='20240514_ea19d21b-d256-4586-b0df-e80a45e3c286', bytes=490, created_at=1715673494, filename=None, object='file', purpose='batch', status=None, status_details=None, fileName='batchinput.jsonl')
 
@@ -105,16 +124,19 @@ def test_batch_result(test_file_path, logging_conf) -> None:
     logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
-        content = client.files.content("file-QDpVyDIhxj8mcFiduUydNqQN")
+        content = client.files.content("1715915732_ccb17b864eff4cddb89c741533e91fe3")
         with open(os.path.join(test_file_path, "content_batchoutput.jsonl"), "wb") as f:
             f.write(content.content)
         content.write_to_file(os.path.join(test_file_path, "write_to_file_batchoutput.jsonl"))
 
-        assert content.content == open(os.path.join(test_file_path, "batchoutput.jsonl"), "rb").read()
+        assert content.content == open(os.path.join(test_file_path, "content_batchoutput.jsonl"), "rb").read()
         assert content.content == open(os.path.join(test_file_path, "write_to_file_batchoutput.jsonl"), "rb").read()
     except zhipuai.core._errors.APIRequestFailedError as err:
-        print(err)
+
+        print("zhipuai.core._errors.APIRequestFailedError"+str(err))
     except zhipuai.core._errors.APIInternalError as err:
-        print(err)
+
+        print("zhipuai.core._errors.APIInternalError"+str(err))
     except zhipuai.core._errors.APIStatusError as err:
-        print(err)
+
+        print("zhipuai.core._errors.APIStatusError"+str(err))
