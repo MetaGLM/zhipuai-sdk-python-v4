@@ -124,7 +124,7 @@ def test_batch_result(test_file_path, logging_conf) -> None:
     logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
-        content = client.files.content("1715915732_ccb17b864eff4cddb89c741533e91fe3")
+        content = client.files.content("1715934232_f1740465a9c246e8b4247c6966c5a489")
         with open(os.path.join(test_file_path, "content_batchoutput.jsonl"), "wb") as f:
             f.write(content.content)
         content.write_to_file(os.path.join(test_file_path, "write_to_file_batchoutput.jsonl"))
