@@ -44,16 +44,26 @@ from ._errors import (
 )
 from ._http_client import (
     make_request_options,
-    HttpClient,
-    ZHIPUAI_DEFAULT_TIMEOUT,
-    ZHIPUAI_DEFAULT_MAX_RETRIES,
-    ZHIPUAI_DEFAULT_LIMITS,
+    HttpClient
 
 )
-from ._utils import (is_list, is_mapping, parse_date, parse_datetime, is_given)
+from ._utils import (
+    is_list,
+    is_mapping,
+    parse_date,
+    parse_datetime,
+    is_given,
+    maybe_transform
+)
 
 from ._sse_client import StreamResponse
 
+from ._constants import (
+
+    ZHIPUAI_DEFAULT_TIMEOUT,
+    ZHIPUAI_DEFAULT_MAX_RETRIES,
+    ZHIPUAI_DEFAULT_LIMITS,
+)
 __all__ = [
     "BaseModel",
     "construct_type",
@@ -103,6 +113,7 @@ __all__ = [
     "parse_date",
     "parse_datetime",
     "is_given",
+    "maybe_transform",
 
     "StreamResponse",
 

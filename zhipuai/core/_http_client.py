@@ -11,7 +11,7 @@ from typing import (
     Mapping,
     TypeVar,
     Dict,
-    overload, Optional, Literal
+    overload, Optional, Literal, Generic, Iterator, TYPE_CHECKING
 )
 
 from random import random
@@ -20,7 +20,8 @@ import httpx
 import pydantic
 from httpx import URL, Timeout
 
-from . import _errors
+from . import _errors, get_origin
+from ._base_compat import model_copy
 from ._base_type import (
     NotGiven,
     ResponseT,
@@ -33,20 +34,37 @@ from ._base_type import (
     Omit,
     AnyMapping,
     ModelBuilderProtocol,
-    HttpxSendArgs,
+    HttpxSendArgs, PostParser,
 )
+from ._constants import ZHIPUAI_DEFAULT_MAX_RETRIES, ZHIPUAI_DEFAULT_LIMITS, ZHIPUAI_DEFAULT_TIMEOUT, \
+    INITIAL_RETRY_DELAY, MAX_RETRY_DELAY, RAW_RESPONSE_HEADER
 from ._errors import APIResponseValidationError, APIStatusError, APITimeoutError, APIConnectionError
 from ._files import make_httpx_files
 from ._request_opt import FinalRequestOptions, UserRequestInput
-from ._response import HttpResponse
+from ._response import BaseAPIResponse, APIResponse, extract_response_type
 from ._sse_client import StreamResponse
 from ._utils import flatten, is_mapping, is_given
-from ._base_models import construct_type
+from ._base_models import construct_type, GenericModel, validate_type
 import logging
+
+
+log: logging.Logger = logging.getLogger(__name__)
+
+# TODO: make base page type vars covariant
+SyncPageT = TypeVar("SyncPageT", bound="BaseSyncPage[Any]")
+# AsyncPageT = TypeVar("AsyncPageT", bound="BaseAsyncPage[Any]")
+
 _T = TypeVar("_T")
 _T_co = TypeVar("_T_co", covariant=True)
 
-log: logging.Logger = logging.getLogger(__name__)
+if TYPE_CHECKING:
+    from httpx._config import DEFAULT_TIMEOUT_CONFIG as HTTPX_DEFAULT_TIMEOUT
+else:
+    try:
+        from httpx._config import DEFAULT_TIMEOUT_CONFIG as HTTPX_DEFAULT_TIMEOUT
+    except ImportError:
+        # taken from https://github.com/encode/httpx/blob/3ba5fe0d7ac70222590e759c31442b1cab263791/httpx/_config.py#L366
+        HTTPX_DEFAULT_TIMEOUT = Timeout(5.0)
 
 
 headers = {
@@ -55,18 +73,136 @@ headers = {
 }
 
 
-from httpx._config import DEFAULT_TIMEOUT_CONFIG as HTTPX_DEFAULT_TIMEOUT, Limits
 
-RAW_RESPONSE_HEADER = "X-Stainless-Raw-Response"
-# 通过 `Timeout` 控制接口`connect` 和 `read` 超时时间，默认为`timeout=300.0, connect=8.0`
-ZHIPUAI_DEFAULT_TIMEOUT = httpx.Timeout(timeout=300.0, connect=8.0)
-# 通过 `retry` 参数控制重试次数，默认为3次
-ZHIPUAI_DEFAULT_MAX_RETRIES = 3
-# 通过 `Limits` 控制最大连接数和保持连接数，默认为`max_connections=50, max_keepalive_connections=10`
-ZHIPUAI_DEFAULT_LIMITS = httpx.Limits(max_connections=50, max_keepalive_connections=10)
+class PageInfo:
+    """Stores the necessary information to build the request to retrieve the next page.
 
-INITIAL_RETRY_DELAY = 0.5
-MAX_RETRY_DELAY = 8.0
+    Either `url` or `params` must be set.
+    """
+
+    url: URL | NotGiven
+    params: Query | NotGiven
+
+    @overload
+    def __init__(
+            self,
+            *,
+            url: URL,
+    ) -> None:
+        ...
+
+    @overload
+    def __init__(
+            self,
+            *,
+            params: Query,
+    ) -> None:
+        ...
+
+    def __init__(
+            self,
+            *,
+            url: URL | NotGiven = NOT_GIVEN,
+            params: Query | NotGiven = NOT_GIVEN,
+    ) -> None:
+        self.url = url
+        self.params = params
+
+
+class BasePage(GenericModel, Generic[_T]):
+    """
+    Defines the core interface for pagination.
+
+    Type Args:
+        ModelT: The pydantic model that represents an item in the response.
+
+    Methods:
+        has_next_page(): Check if there is another page available
+        next_page_info(): Get the necessary information to make a request for the next page
+    """
+
+    _options: FinalRequestOptions = pydantic.PrivateAttr()
+    _model: Type[_T] = pydantic.PrivateAttr()
+
+    def has_next_page(self) -> bool:
+        items = self._get_page_items()
+        if not items:
+            return False
+        return self.next_page_info() is not None
+
+    def next_page_info(self) -> Optional[PageInfo]:
+        ...
+
+    def _get_page_items(self) -> Iterable[_T]:  # type: ignore[empty-body]
+        ...
+
+    def _params_from_url(self, url: URL) -> httpx.QueryParams:
+        # TODO: do we have to preprocess params here?
+        return httpx.QueryParams(cast(Any, self._options.params)).merge(url.params)
+
+    def _info_to_options(self, info: PageInfo) -> FinalRequestOptions:
+        options = model_copy(self._options)
+        options._strip_raw_response_header()
+
+        if not isinstance(info.params, NotGiven):
+            options.params = {**options.params, **info.params}
+            return options
+
+        if not isinstance(info.url, NotGiven):
+            params = self._params_from_url(info.url)
+            url = info.url.copy_with(params=params)
+            options.params = dict(url.params)
+            options.url = str(url)
+            return options
+
+        raise ValueError("Unexpected PageInfo state")
+
+
+class BaseSyncPage(BasePage[_T], Generic[_T]):
+    _client: HttpClient = pydantic.PrivateAttr()
+
+    def _set_private_attributes(
+            self,
+            client: HttpClient,
+            model: Type[_T],
+            options: FinalRequestOptions,
+    ) -> None:
+        self._model = model
+        self._client = client
+        self._options = options
+
+    # Pydantic uses a custom `__iter__` method to support casting BaseModels
+    # to dictionaries. e.g. dict(model).
+    # As we want to support `for item in page`, this is inherently incompatible
+    # with the default pydantic behaviour. It is not possible to support both
+    # use cases at once. Fortunately, this is not a big deal as all other pydantic
+    # methods should continue to work as expected as there is an alternative method
+    # to cast a model to a dictionary, model.dict(), which is used internally
+    # by pydantic.
+    def __iter__(self) -> Iterator[_T]:  # type: ignore
+        for page in self.iter_pages():
+            for item in page._get_page_items():
+                yield item
+
+    def iter_pages(self: SyncPageT) -> Iterator[SyncPageT]:
+        page = self
+        while True:
+            yield page
+            if page.has_next_page():
+                page = page.get_next_page()
+            else:
+                return
+
+    def get_next_page(self: SyncPageT) -> SyncPageT:
+        info = self.next_page_info()
+        if not info:
+            raise RuntimeError(
+                "No next page expected; please check `.has_next_page()` before calling `.get_next_page()`."
+            )
+
+        options = self._info_to_options(info)
+        return self._client._request_api_list(self._model, page=self.__class__, options=options)
+
 
 class HttpClient:
     _client: httpx.Client
@@ -78,14 +214,17 @@ class HttpClient:
     _has_custom_http_client: bool
     _default_stream_cls: Type[StreamResponse[Any]] | None = None
 
+    _strict_response_validation: bool
+
     def __init__(
             self,
             *,
             version: str,
             base_url: URL,
+            _strict_response_validation: bool,
             max_retries: int = ZHIPUAI_DEFAULT_MAX_RETRIES,
             timeout: Union[float, Timeout, None],
-            limits: Limits | None = None,
+            limits: httpx.Limits | None = None,
             custom_httpx_client: httpx.Client | None = None,
             custom_headers: Mapping[str, str] | None = None,
     ) -> None:
@@ -120,6 +259,7 @@ class HttpClient:
             url = url.copy_with(raw_path=url.raw_path + b"/")
         self._base_url = url
         self._custom_headers = custom_headers or {}
+        self._strict_response_validation = _strict_response_validation
 
     def _prepare_url(self, url: str) -> URL:
 
@@ -142,6 +282,7 @@ class HttpClient:
                 **self.auth_headers,
                 **self._custom_headers,
             }
+
     @property
     def custom_auth(self) -> httpx.Auth | None:
         return None
@@ -265,24 +406,6 @@ class HttpClient:
             serialized[key] = value
         return serialized
 
-    def _parse_response(
-            self,
-            *,
-            cast_type: Type[ResponseT],
-            response: httpx.Response,
-            stream: bool,
-            options: FinalRequestOptions,
-            stream_cls: Type[StreamResponse[Any]] | None = None,
-    ) -> HttpResponse:
-
-        http_response = HttpResponse(
-            raw_response=response,
-            cast_type=cast_type,
-            client=self,
-            stream=stream,
-            stream_cls=stream_cls
-        )
-        return http_response.parse()
 
     def _process_response_data(
             self,
@@ -301,6 +424,9 @@ class HttpClient:
         try:
             if inspect.isclass(cast_type) and issubclass(cast_type, ModelBuilderProtocol):
                 return cast(ResponseT, cast_type.build(response=response, data=data))
+
+            if self._strict_response_validation:
+                return cast(ResponseT, validate_type(type_=cast_type, value=data))
 
             return cast(ResponseT, construct_type(type_=cast_type, value=data))
         except pydantic.ValidationError as err:
@@ -454,8 +580,14 @@ class HttpClient:
             log.debug("Re-raising status error")
             raise self._make_status_error(err.response) from None
 
-
-        return self._parse_response(
+        # return self._parse_response(
+        #     cast_type=cast_type,
+        #     options=options,
+        #     response=response,
+        #     stream=stream,
+        #     stream_cls=stream_cls,
+        # )
+        return self._process_response(
             cast_type=cast_type,
             options=options,
             response=response,
@@ -493,6 +625,82 @@ class HttpClient:
             stream=stream,
             stream_cls=stream_cls,
         )
+
+    def _process_response(
+            self,
+            *,
+            cast_type: Type[ResponseT],
+            options: FinalRequestOptions,
+            response: httpx.Response,
+            stream: bool,
+            stream_cls: Type[StreamResponse] | None,
+    ) -> ResponseT:
+        # TODO 服务器支持
+        # if response.request.headers.get(RAW_RESPONSE_HEADER) == "true":
+        #     return cast(
+        #         ResponseT,
+        #         LegacyAPIResponse(
+        #             raw=response,
+        #             client=self,
+        #             cast_type=cast_type,
+        #             stream=stream,
+        #             stream_cls=stream_cls,
+        #             options=options,
+        #         ),
+        #     )
+
+        origin = get_origin(cast_type) or cast_type
+
+        if inspect.isclass(origin) and issubclass(origin, BaseAPIResponse):
+            if not issubclass(origin, APIResponse):
+                raise TypeError(f"API Response types must subclass {APIResponse}; Received {origin}")
+
+            response_cls = cast("type[BaseAPIResponse[Any]]", cast_type)
+            return cast(
+                ResponseT,
+                response_cls(
+                    raw=response,
+                    client=self,
+                    cast_type=extract_response_type(response_cls),
+                    stream=stream,
+                    stream_cls=stream_cls,
+                    options=options,
+                ),
+            )
+
+        if cast_type == httpx.Response:
+            return cast(ResponseT, response)
+
+        api_response = APIResponse(
+            raw=response,
+            client=self,
+            cast_type=cast("type[ResponseT]", cast_type),  # pyright: ignore[reportUnnecessaryCast]
+            stream=stream,
+            stream_cls=stream_cls,
+            options=options,
+        )
+        if bool(response.request.headers.get(RAW_RESPONSE_HEADER)):
+            return cast(ResponseT, api_response)
+
+        return api_response.parse()
+
+    def _request_api_list(
+            self,
+            model: Type[object],
+            page: Type[SyncPageT],
+            options: FinalRequestOptions,
+    ) -> SyncPageT:
+        def _parser(resp: SyncPageT) -> SyncPageT:
+            resp._set_private_attributes(
+                client=self,
+                model=model,
+                options=options,
+            )
+            return resp
+
+        options.post_parser = _parser
+
+        return self.request(page, options, stream=False)
 
     @overload
     def get(
@@ -597,7 +805,7 @@ class HttpClient:
             method="post", url=path, json_data=body, files=make_httpx_files(files), **options
         )
 
-        return cast(ResponseT,  self.request(cast_type, opts, stream=stream, stream_cls=stream_cls))
+        return cast(ResponseT, self.request(cast_type, opts, stream=stream, stream_cls=stream_cls))
 
     def patch(
             self,
@@ -623,7 +831,7 @@ class HttpClient:
             files: RequestFiles | None = None,
     ) -> ResponseT | StreamResponse:
         opts = FinalRequestOptions.construct(method="put", url=path, json_data=body, files=make_httpx_files(files),
-                                            **options)
+                                             **options)
 
         return self.request(
             cast_type=cast_type, options=opts,
@@ -642,6 +850,19 @@ class HttpClient:
         return self.request(
             cast_type=cast_type, options=opts,
         )
+
+    def get_api_list(
+            self,
+            path: str,
+            *,
+            model: Type[object],
+            page: Type[SyncPageT],
+            body: Body | None = None,
+            options: UserRequestInput = {},
+            method: str = "get",
+    ) -> SyncPageT:
+        opts = FinalRequestOptions.construct(method=method, url=path, json_data=body, **options)
+        return self._request_api_list(model, page, opts)
 
     def _make_status_error(self, response) -> APIStatusError:
         response_text = response.text.strip()
@@ -667,7 +888,8 @@ def make_request_options(
         extra_headers: Headers | None = None,
         extra_query: Query | None = None,
         extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN
+        timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+        post_parser: PostParser | NotGiven = NOT_GIVEN,
 ) -> UserRequestInput:
     """Create a dict of type RequestOptions without keys of NotGiven values."""
     options: UserRequestInput = {}
@@ -685,6 +907,10 @@ def make_request_options(
 
     if not isinstance(timeout, NotGiven):
         options["timeout"] = timeout
+
+    if is_given(post_parser):
+        # internal
+        options["post_parser"] = post_parser  # type: ignore
 
     return options
 

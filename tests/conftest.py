@@ -1,6 +1,7 @@
 """Configuration for unit tests."""
 import logging
 from importlib import util
+from pathlib import Path
 from typing import Dict, List, Sequence
 
 import pytest
@@ -97,14 +98,14 @@ def pytest_collection_modifyitems(config: Config, items: Sequence[Function]) -> 
 @pytest.fixture
 def logging_conf() -> dict:
     return get_config_dict(
-        "DEBUG",
+        "info",
         get_log_file(log_path="logs", sub_dir=f"local_{get_timestamp_ms()}"),
         1024*1024,
         1024*1024*1024,
     )
 
 @pytest.fixture
-def test_file_path(request) -> str:
+def test_file_path(request) -> Path:
     from pathlib import Path
     import os
     # 当前执行目录

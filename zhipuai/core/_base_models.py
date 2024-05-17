@@ -38,13 +38,13 @@ __all__ = ["BaseModel", "GenericModel"]
 
 _T = TypeVar("_T")
 
+
 @runtime_checkable
 class _ConfigProtocol(Protocol):
     allow_population_by_field_name: bool
 
 
 class BaseModel(pydantic.BaseModel):
-
     if PYDANTIC_V2:
         model_config: ClassVar[ConfigDict] = ConfigDict(extra="allow")
     else:
@@ -68,9 +68,9 @@ class BaseModel(pydantic.BaseModel):
     @classmethod
     @override
     def construct(
-        cls: Type[ModelT],
-        _fields_set: set[str] | None = None,
-        **values: object,
+            cls: Type[ModelT],
+            _fields_set: set[str] | None = None,
+            **values: object,
     ) -> ModelT:
         m = cls.__new__(cls)
         fields_values: dict[str, object] = {}
@@ -136,17 +136,17 @@ class BaseModel(pydantic.BaseModel):
 
         @override
         def model_dump(
-            self,
-            *,
-            mode: Literal["json", "python"] | str = "python",
-            include: IncEx = None,
-            exclude: IncEx = None,
-            by_alias: bool = False,
-            exclude_unset: bool = False,
-            exclude_defaults: bool = False,
-            exclude_none: bool = False,
-            round_trip: bool = False,
-            warnings: bool = True,
+                self,
+                *,
+                mode: Literal["json", "python"] | str = "python",
+                include: IncEx = None,
+                exclude: IncEx = None,
+                by_alias: bool = False,
+                exclude_unset: bool = False,
+                exclude_defaults: bool = False,
+                exclude_none: bool = False,
+                round_trip: bool = False,
+                warnings: bool = True,
         ) -> dict[str, Any]:
             """Usage docs: https://docs.pydantic.dev/2.4/concepts/serialization/#modelmodel_dump
 
@@ -185,17 +185,17 @@ class BaseModel(pydantic.BaseModel):
 
         @override
         def model_dump_json(
-            self,
-            *,
-            indent: int | None = None,
-            include: IncEx = None,
-            exclude: IncEx = None,
-            by_alias: bool = False,
-            exclude_unset: bool = False,
-            exclude_defaults: bool = False,
-            exclude_none: bool = False,
-            round_trip: bool = False,
-            warnings: bool = True,
+                self,
+                *,
+                indent: int | None = None,
+                include: IncEx = None,
+                exclude: IncEx = None,
+                by_alias: bool = False,
+                exclude_unset: bool = False,
+                exclude_defaults: bool = False,
+                exclude_none: bool = False,
+                round_trip: bool = False,
+                warnings: bool = True,
         ) -> str:
             """Usage docs: https://docs.pydantic.dev/2.4/concepts/serialization/#modelmodel_dump_json
 
@@ -349,7 +349,6 @@ else:
     class GenericModel(BaseGenericModel, BaseModel):
         pass
 
-
 if PYDANTIC_V2:
     from pydantic import TypeAdapter
 
@@ -369,6 +368,7 @@ elif not TYPE_CHECKING:
            # validated: 5
            ```
            """
+
         def __init__(self, type_: Type[_T]):
             self.type_ = type_
 
@@ -377,6 +377,6 @@ elif not TYPE_CHECKING:
                 raise ValueError(f"Invalid type: {value} is not of type {self.type_}")
             return value
 
+
     def _validate_non_model_type(*, type_: type[_T], value: object) -> _T:
         return TypeAdapter(type_).validate_python(value)
-

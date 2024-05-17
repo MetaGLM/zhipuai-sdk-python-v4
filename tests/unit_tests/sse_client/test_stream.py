@@ -13,6 +13,8 @@ from zhipuai.types.chat.chat_completion_chunk import ChatCompletionChunk
 
 
 class MockClient:
+
+    _strict_response_validation: bool = False
     def _process_response_data(
             self,
             *,

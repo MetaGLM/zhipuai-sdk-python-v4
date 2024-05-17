@@ -4,13 +4,19 @@ import io
 import os
 from pathlib import Path
 from typing import Mapping, Sequence
+from typing_extensions import TypeGuard
 
 from ._base_type import (
     FileTypes,
     HttpxFileTypes,
     HttpxRequestFiles,
     RequestFiles,
+    Base64FileInput,
 )
+
+
+def is_base64_file_input(obj: object) -> TypeGuard[Base64FileInput]:
+    return isinstance(obj, io.IOBase) or isinstance(obj, os.PathLike)
 
 
 def is_file_content(obj: object) -> bool:

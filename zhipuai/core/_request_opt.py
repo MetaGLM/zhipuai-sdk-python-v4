@@ -2,11 +2,13 @@ from __future__ import annotations
 
 from typing import Union, Any, cast, TYPE_CHECKING
 
+from ._constants import RAW_RESPONSE_HEADER
+from ._utils import is_given
 from ._base_compat import ConfigDict, PYDANTIC_V2
 import pydantic.generics
 from httpx import Timeout
 from typing_extensions import (
-    final, Unpack, ClassVar, TypedDict
+    final, Unpack, ClassVar, TypedDict, Required, Callable
 
 )
 
@@ -21,6 +23,7 @@ class UserRequestInput(TypedDict, total=False):
     params: Query
     extra_json: AnyMapping
 
+
 class FinalRequestOptionsInput(TypedDict, total=False):
     method: Required[str]
     url: Required[str]
@@ -31,6 +34,7 @@ class FinalRequestOptionsInput(TypedDict, total=False):
     files: HttpxRequestFiles | None
     json_data: Body
     extra_json: AnyMapping
+
 
 @final
 class FinalRequestOptions(pydantic.BaseModel):
@@ -48,7 +52,6 @@ class FinalRequestOptions(pydantic.BaseModel):
     # a BaseModel method in an incompatible fashion.
     json_data: Union[Body, None] = None
     extra_json: Union[AnyMapping, None] = None
-
 
     if PYDANTIC_V2:
         model_config: ClassVar[ConfigDict] = ConfigDict(arbitrary_types_allowed=True)

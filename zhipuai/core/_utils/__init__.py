@@ -42,3 +42,11 @@ from ._typing import (
     strip_annotated_type as strip_annotated_type,
     extract_type_var_from_base as extract_type_var_from_base,
 )
+
+from ._transform import (
+    PropertyInfo as PropertyInfo,
+    transform as transform,
+    async_transform as async_transform,
+    maybe_transform as maybe_transform,
+    async_maybe_transform as async_maybe_transform,
+)
