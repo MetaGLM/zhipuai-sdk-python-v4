@@ -87,12 +87,13 @@ def test_batch_list(logging_conf) -> None:
     try:
         list = client.batches.list(limit=10)
         print(list)
-        print("_________get_next_page___________")
-        batch = list.get_next_page()
-        print(batch)
-        print("_________iter_pages___________")
-        for batch in list.iter_pages():
+        if list.has_more:
+            print("_________get_next_page___________")
+            batch = list.get_next_page()
             print(batch)
+            print("_________iter_pages___________")
+            for batch in list.iter_pages():
+                print(batch)
     except zhipuai.core._errors.APIRequestFailedError as err:
         print(err)
     except zhipuai.core._errors.APIInternalError as err:
