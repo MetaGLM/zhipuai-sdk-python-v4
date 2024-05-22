@@ -86,6 +86,11 @@ markers = [
 ]
 asyncio_mode = "auto"
 
+[tool.poetry.plugins.dotenv]
+ignore = "false"
+location = ".env"
+
+
 # https://python-poetry.org/docs/repositories/
 [[tool.poetry.source]]
 name = "tsinghua"
