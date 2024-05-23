@@ -32,12 +32,6 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:2333")
 api_key = "Key.secret"
 
 
-def _get_params(client: HttpClient[Any, Any]) -> dict[str, str]:
-    request = client._build_request(
-        FinalRequestOptions.construct(method="get", url="/foo")
-    )
-    url = httpx.URL(request.url)
-    return dict(url.params)
 
 
 @contextlib.contextmanager
