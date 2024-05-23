@@ -10,7 +10,8 @@ from .embeddings import (
     Embeddings
 )
 from .files import (
-    Files
+    Files,
+    FilesWithRawResponse
 )
 from .fine_tuning import (
     FineTuning
@@ -27,6 +28,7 @@ __all__ = [
     'Images',
     'Embeddings',
     'Files',
+    'FilesWithRawResponse',
     'FineTuning',
     'Batches',
 

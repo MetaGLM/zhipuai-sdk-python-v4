@@ -14,6 +14,7 @@ from ..core import (
 )
 from ..types.file_object import FileObject, ListOfFileObject
 
+from ..core import _legacy_binary_response
 from ..core import _legacy_response
 
 if TYPE_CHECKING:
@@ -113,37 +114,26 @@ class Files(BaseAPI):
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
-            cast_type=_legacy_response.HttpxBinaryResponseContent,
+            cast_type=_legacy_binary_response.HttpxBinaryResponseContent,
         )
 
-    @typing_extensions.deprecated("The `.content()` method should be used instead")
-    def retrieve_content(
-            self,
-            file_id: str,
-            *,
-            extra_headers: Headers | None = None,
-            extra_query: Query | None = None,
-            extra_body: Body | None = None,
-            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> str:
-        """
-        Returns the contents of the specified file.
 
-        Args:
-          extra_headers: Send extra headers
+class FilesWithRawResponse:
+    def __init__(self, files: Files) -> None:
+        self._files = files
 
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not file_id:
-            raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
-        return self._get(
-            f"/files/{file_id}/content",
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_type=str,
+        self.create = _legacy_response.to_raw_response_wrapper(
+            files.create,
+        )
+        # self.retrieve = _legacy_response.to_raw_response_wrapper(
+        #     files.retrieve,
+        # )
+        self.list = _legacy_response.to_raw_response_wrapper(
+            files.list,
+        )
+        # self.delete = _legacy_response.to_raw_response_wrapper(
+        #     files.delete,
+        # )
+        self.content = _legacy_response.to_raw_response_wrapper(
+            files.content,
         )
