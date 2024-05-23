@@ -19,7 +19,7 @@ class FileCreateParams(TypedDict, total=False):
     upload_detail: List[UploadDetail]
     """file和 upload_detail二选一必填"""
 
-    purpose: Required[Literal["fine-tune", "retrieval"]]
+    purpose: Required[Literal["fine-tune", "retrieval", "batch"]]
     """ 
     上传文件的用途，支持 "fine-tune和 "retrieval"
     retrieval支持上传Doc、Docx、PDF、Xlsx、URL类型文件，且单个文件的大小不超过 5MB。

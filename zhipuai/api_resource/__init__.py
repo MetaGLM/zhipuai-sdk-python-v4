@@ -21,6 +21,10 @@ from .batches import (
     Batches
 )
 
+from .knowledge import (
+    Knowledge
+)
+
 __all__ = [
     'AsyncCompletions',
     'Chat',
@@ -31,5 +35,6 @@ __all__ = [
     'FilesWithRawResponse',
     'FineTuning',
     'Batches',
+    'Knowledge',
 
 ]
