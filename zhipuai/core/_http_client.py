@@ -39,7 +39,7 @@ from ._base_type import (
 from ._constants import ZHIPUAI_DEFAULT_MAX_RETRIES, ZHIPUAI_DEFAULT_LIMITS, ZHIPUAI_DEFAULT_TIMEOUT, \
     INITIAL_RETRY_DELAY, MAX_RETRY_DELAY, RAW_RESPONSE_HEADER
 from ._errors import APIResponseValidationError, APIStatusError, APITimeoutError, APIConnectionError
-from ._files import make_httpx_files
+from ._files import to_httpx_files
 from ._legacy_response import LegacyAPIResponse
 from ._request_opt import FinalRequestOptions, UserRequestInput
 from ._response import BaseAPIResponse, APIResponse, extract_response_type
@@ -803,7 +803,7 @@ class HttpClient:
             stream_cls: Type[StreamResponse[Any]] | None = None,
     ) -> ResponseT | StreamResponse:
         opts = FinalRequestOptions.construct(
-            method="post", url=path, json_data=body, files=make_httpx_files(files), **options
+            method="post", url=path, json_data=body, files=to_httpx_files(files), **options
         )
 
         return cast(ResponseT, self.request(cast_type, opts, stream=stream, stream_cls=stream_cls))
@@ -831,7 +831,7 @@ class HttpClient:
             options: UserRequestInput = {},
             files: RequestFiles | None = None,
     ) -> ResponseT | StreamResponse:
-        opts = FinalRequestOptions.construct(method="put", url=path, json_data=body, files=make_httpx_files(files),
+        opts = FinalRequestOptions.construct(method="put", url=path, json_data=body, files=to_httpx_files(files),
                                              **options)
 
         return self.request(

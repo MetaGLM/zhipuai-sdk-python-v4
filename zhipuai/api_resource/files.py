@@ -1,18 +1,21 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+
+from typing import TYPE_CHECKING, List, Mapping, cast
+from typing_extensions import Literal
+
+from ..core import BaseAPI, maybe_transform
+from ..core import NOT_GIVEN, Body, Headers, NotGiven, FileTypes
 
 import httpx
-import typing_extensions
-
-from ..core import BaseAPI
-from ..core import NOT_GIVEN, Body, Query, Headers, NotGiven, FileTypes
-from ..core import is_file_content
 
 from ..core import (
     make_request_options,
 )
-from ..types.file_object import FileObject, ListOfFileObject
+from ..core import deepcopy_minimal, extract_files
+from ..types.files import FileObject, ListOfFileObject, file_create_params, FileDeleted
+
+from ..types.files import UploadDetail
 
 from ..core import _legacy_binary_response
 from ..core import _legacy_response
@@ -20,7 +23,7 @@ from ..core import _legacy_response
 if TYPE_CHECKING:
     from .._client import ZhipuAI
 
-__all__ = ["Files"]
+__all__ = ["Files", "FilesWithRawResponse"]
 
 
 class Files(BaseAPI):
@@ -31,27 +34,66 @@ class Files(BaseAPI):
     def create(
             self,
             *,
-            file: FileTypes,
-            purpose: str,
+            file: FileTypes = None,
+            upload_detail: List[UploadDetail] = None,
+            purpose: Literal["fine-tune", "retrieval"],
+            knowledge_id: str = None,
+            sentence_size: int = None,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> FileObject:
-        if not is_file_content(file):
-            prefix = f"Expected file input `{file!r}`"
-            raise RuntimeError(
-                f"{prefix} to be bytes, an io.IOBase instance, PathLike or a tuple but received {type(file)} instead."
-            ) from None
-        files = [("file", file)]
 
-        extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
-
+        if not file and not upload_detail:
+            raise ValueError("At least one of `file` and `upload_detail` must be provided.")
+        body = deepcopy_minimal(
+            {
+                "file": file,
+                "upload_detail": upload_detail,
+                "purpose": purpose,
+                "knowledge_id": knowledge_id,
+                "sentence_size": sentence_size,
+            }
+        )
+        files = extract_files(cast(Mapping[str, object], body), paths=[["file"]])
+        if files:
+            # It should be noted that the actual Content-Type header that will be
+            # sent to the server will contain a `boundary` parameter, e.g.
+            # multipart/form-data; boundary=---abc--
+            extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return self._post(
             "/files",
-            body={
-                "purpose": purpose,
-            },
+            body=maybe_transform(body, file_create_params.FileCreateParams),
             files=files,
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
+            ),
+            cast_type=FileObject,
+        )
+
+    def retrieve(
+            self,
+            file_id: str,
+            *,
+            extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
+            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> FileObject:
+        """
+        Returns information about a specific file.
+
+        Args:
+          file_id: The ID of the file to retrieve information about
+          extra_headers: Send extra headers
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_id:
+            raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
+        return self._get(
+            f"/files/{file_id}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
@@ -85,12 +127,40 @@ class Files(BaseAPI):
             ),
         )
 
+    def delete(
+            self,
+            file_id: str,
+            *,
+            extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
+            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> FileDeleted:
+        """
+        Delete a file.
+
+        Args:
+          file_id: The ID of the file to delete
+          extra_headers: Send extra headers
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_id:
+            raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
+        return self._delete(
+            f"/files/{file_id}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
+            ),
+            cast_type=FileDeleted,
+        )
+
     def content(
             self,
             file_id: str,
             *,
             extra_headers: Headers | None = None,
-            extra_query: Query | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> _legacy_response.HttpxBinaryResponseContent:
@@ -99,8 +169,6 @@ class Files(BaseAPI):
 
         Args:
           extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
 
           extra_body: Add additional JSON properties to the request
 
@@ -112,7 +180,7 @@ class Files(BaseAPI):
         return self._get(
             f"/files/{file_id}/content",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
             cast_type=_legacy_binary_response.HttpxBinaryResponseContent,
         )
@@ -125,15 +193,15 @@ class FilesWithRawResponse:
         self.create = _legacy_response.to_raw_response_wrapper(
             files.create,
         )
-        # self.retrieve = _legacy_response.to_raw_response_wrapper(
-        #     files.retrieve,
-        # )
+        self.retrieve = _legacy_response.to_raw_response_wrapper(
+            files.retrieve,
+        )
         self.list = _legacy_response.to_raw_response_wrapper(
             files.list,
         )
-        # self.delete = _legacy_response.to_raw_response_wrapper(
-        #     files.delete,
-        # )
+        self.delete = _legacy_response.to_raw_response_wrapper(
+            files.delete,
+        )
         self.content = _legacy_response.to_raw_response_wrapper(
             files.content,
         )
