@@ -125,22 +125,6 @@ class TestZhipuAIKnowledgeServer:
         except zhipuai.core._errors.APIStatusError as err:
             print(err)
 
-    def test_knowledge_delete(self, test_server):
-
-        try:
-            result = test_server.client.knowledge.delete(
-                knowledge_id=test_server.test_knowledge_id
-            )
-            print(result)
-
-
-        except zhipuai.core._errors.APIRequestFailedError as err:
-            print(err)
-        except zhipuai.core._errors.APIInternalError as err:
-            print(err)
-        except zhipuai.core._errors.APIStatusError as err:
-            print(err)
-
     def test_knowledge_document_retrieve(self,test_server, test_file_path):
         try:
             result = test_server.client.knowledge.document.retrieve(
@@ -159,6 +143,22 @@ class TestZhipuAIKnowledgeServer:
         try:
             file1 = test_server.client.knowledge.document.delete(test_server.test_knowledge_document_id)
             print(file1)
+
+        except zhipuai.core._errors.APIRequestFailedError as err:
+            print(err)
+        except zhipuai.core._errors.APIInternalError as err:
+            print(err)
+        except zhipuai.core._errors.APIStatusError as err:
+            print(err)
+
+    def test_knowledge_delete(self, test_server):
+
+        try:
+            result = test_server.client.knowledge.delete(
+                knowledge_id=test_server.test_knowledge_id
+            )
+            print(result)
+
 
         except zhipuai.core._errors.APIRequestFailedError as err:
             print(err)
