@@ -158,7 +158,7 @@ class Document(BaseAPI):
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> FileDeleted:
+    ) -> httpx.Response:
         """
         Delete a file.
 
@@ -179,7 +179,7 @@ class Document(BaseAPI):
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
-            cast_type=FileDeleted,
+            cast_type=httpx.Response,
         )
 
     def retrieve(

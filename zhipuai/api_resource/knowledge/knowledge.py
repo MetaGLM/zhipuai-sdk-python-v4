@@ -82,7 +82,7 @@ class Knowledge(BaseAPI):
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> KnowledgeInfo:
+    ) -> httpx.Response:
 
         body = deepcopy_minimal(
             {
@@ -101,7 +101,7 @@ class Knowledge(BaseAPI):
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
-            cast_type=KnowledgeInfo,
+            cast_type=httpx.Response,
         )
 
 
@@ -139,7 +139,7 @@ class Knowledge(BaseAPI):
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> KnowledgeInfo:
+    ) -> httpx.Response:
         """
         Delete a file.
 
@@ -159,7 +159,7 @@ class Knowledge(BaseAPI):
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
-            cast_type=KnowledgeInfo,
+            cast_type=httpx.Response,
         )
 
     def used(
