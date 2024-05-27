@@ -139,6 +139,37 @@ class TestZhipuAIKnowledgeServer:
         except zhipuai.core._errors.APIStatusError as err:
             print(err)
 
+    def test_knowledge_document_edit(self,test_server):
+        try:
+            result = test_server.client.knowledge.document.edit(
+                document_id=test_server.test_knowledge_document_id,
+                knowledge_type="1",
+                sentence_size=204,
+            )
+            print(result)
+
+        except zhipuai.core._errors.APIRequestFailedError as err:
+            print(err)
+        except zhipuai.core._errors.APIInternalError as err:
+            print(err)
+        except zhipuai.core._errors.APIStatusError as err:
+            print(err)
+
+    def test_knowledge_document_list(self,test_server):
+        try:
+            result = test_server.client.knowledge.document.list(
+                test_server.test_knowledge_id,
+                purpose="retrieval"
+            )
+            print(result)
+
+        except zhipuai.core._errors.APIRequestFailedError as err:
+            print(err)
+        except zhipuai.core._errors.APIInternalError as err:
+            print(err)
+        except zhipuai.core._errors.APIStatusError as err:
+            print(err)
+
     def test_knowledge_document_delete(self,test_server):
         try:
             file1 = test_server.client.knowledge.document.delete(test_server.test_knowledge_document_id)
