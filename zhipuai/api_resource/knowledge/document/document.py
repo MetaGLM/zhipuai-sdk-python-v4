@@ -83,11 +83,17 @@ class Document(BaseAPI):
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> DocumentObject:
+    ) -> httpx.Response:
         """
 
         Args:
           document_id: 知识id
+          knowledge_type: 知识类型:
+                        1:文章知识: 支持pdf,url,docx
+                        2.问答知识-文档:  支持pdf,url,docx
+                        3.问答知识-表格:  支持xlsx
+                        4.商品库-表格:  支持xlsx
+                        5.自定义:  支持pdf,url,docx
           extra_headers: Send extra headers
 
           extra_body: Add additional JSON properties to the request
@@ -114,7 +120,7 @@ class Document(BaseAPI):
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
-            cast_type=DocumentObject,
+            cast_type=httpx.Response,
         )
 
     def list(
