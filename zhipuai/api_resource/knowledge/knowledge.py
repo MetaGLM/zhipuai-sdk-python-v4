@@ -35,7 +35,7 @@ class Knowledge(BaseAPI):
 
     def create(
             self,
-            embedding_id: int,
+            embedding_model: str,
             name: str,
             *,
             customer_identifier: Optional[str] = None,
@@ -50,7 +50,7 @@ class Knowledge(BaseAPI):
 
         body = deepcopy_minimal(
             {
-                "embedding_id": embedding_id,
+                "embedding_model": embedding_model,
                 "name": name,
                 "customer_identifier": customer_identifier,
                 "description": description,

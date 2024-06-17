@@ -35,7 +35,7 @@ class TestZhipuAIKnowledgeServer:
 
         try:
             result = test_server.client.knowledge.create(
-                embedding_id=1,
+                embedding_model="embedding-2",
                 name="test",
                 description="测试",
                 background="blue",
