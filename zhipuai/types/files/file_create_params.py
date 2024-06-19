@@ -1,7 +1,7 @@
 
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
 
 from typing_extensions import Literal, Required, TypedDict
 
@@ -24,6 +24,10 @@ class FileCreateParams(TypedDict, total=False):
     上传文件的用途，支持 "fine-tune和 "retrieval"
     retrieval支持上传Doc、Docx、PDF、Xlsx、URL类型文件，且单个文件的大小不超过 5MB。
     fine-tune支持上传.jsonl文件且当前单个文件的大小最大可为 100 MB ，文件中语料格式需满足微调指南中所描述的格式。
+    """
+    custom_separator: Optional[List[str]]
+    """ 
+    当 purpose 为 retrieval 且文件类型为 pdf, url, docx 时上传，切片规则默认为 `\n`。
     """
     knowledge_id: str
     """ 
