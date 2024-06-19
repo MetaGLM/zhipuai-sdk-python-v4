@@ -1,4 +1,3 @@
-
 from __future__ import annotations
 
 import unittest
@@ -15,6 +14,7 @@ from respx import MockRouter
 
 from zhipuai import ZhipuAI
 
+
 @pytest.fixture(scope='class')
 def test_server():
     class SharedData:
@@ -30,12 +30,11 @@ class TestZhipuAIKnowledgeServer:
     def test_logs(self, logging_conf):
         logging.config.dictConfig(logging_conf)  # type: ignore
 
-
-    def test_knowledge_create(self,test_server):
+    def test_knowledge_create(self, test_server):
 
         try:
             result = test_server.client.knowledge.create(
-                embedding_model="embedding-2",
+                embedding_id=1,
                 name="test",
                 description="测试",
                 background="blue",
@@ -53,12 +52,11 @@ class TestZhipuAIKnowledgeServer:
         except zhipuai.core._errors.APIStatusError as err:
             print(err)
 
-
-    def test_knowledge_document_create(self,test_server, test_file_path):
+    def test_knowledge_document_create(self, test_server, test_file_path):
 
         try:
             result = test_server.client.knowledge.document.create(
-                file=open(os.path.join(test_file_path,"file.xlsx"), "rb"),
+                file=open(os.path.join(test_file_path, "file.xlsx"), "rb"),
                 purpose="retrieval",
                 knowledge_id=test_server.test_knowledge_id,
                 sentence_size=202
@@ -125,7 +123,7 @@ class TestZhipuAIKnowledgeServer:
         except zhipuai.core._errors.APIStatusError as err:
             print(err)
 
-    def test_knowledge_document_retrieve(self,test_server, test_file_path):
+    def test_knowledge_document_retrieve(self, test_server, test_file_path):
         try:
             result = test_server.client.knowledge.document.retrieve(
                 test_server.test_knowledge_document_id
@@ -139,7 +137,7 @@ class TestZhipuAIKnowledgeServer:
         except zhipuai.core._errors.APIStatusError as err:
             print(err)
 
-    def test_knowledge_document_edit(self,test_server):
+    def test_knowledge_document_edit(self, test_server):
         try:
             result = test_server.client.knowledge.document.edit(
                 document_id=test_server.test_knowledge_document_id,
@@ -155,7 +153,7 @@ class TestZhipuAIKnowledgeServer:
         except zhipuai.core._errors.APIStatusError as err:
             print(err)
 
-    def test_knowledge_document_list(self,test_server):
+    def test_knowledge_document_list(self, test_server):
         try:
             result = test_server.client.knowledge.document.list(
                 test_server.test_knowledge_id,
@@ -170,7 +168,7 @@ class TestZhipuAIKnowledgeServer:
         except zhipuai.core._errors.APIStatusError as err:
             print(err)
 
-    def test_knowledge_document_delete(self,test_server):
+    def test_knowledge_document_delete(self, test_server):
         try:
             file1 = test_server.client.knowledge.document.delete(test_server.test_knowledge_document_id)
             print(file1)

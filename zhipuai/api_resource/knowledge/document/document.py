@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 
-from typing import TYPE_CHECKING, List, Mapping, cast
+from typing import TYPE_CHECKING, List, Mapping, cast, Optional, Dict
 from typing_extensions import Literal
 
 from ....core import BaseAPI, maybe_transform
@@ -15,13 +15,12 @@ from ....core import (
 from ....core import deepcopy_minimal, extract_files
 from ....types.knowledge.document import DocumentData, DocumentObject, document_edit_params, document_list_params
 
-from ....types.files import UploadDetail, file_create_params, FileDeleted
+from ....types.files import UploadDetail, file_create_params
 
-from ....core import _legacy_binary_response
-from ....core import _legacy_response
+from ....types.knowledge.document.document_list_resp import DocumentPage
 
 if TYPE_CHECKING:
-    from .._client import ZhipuAI
+    from ...._client import ZhipuAI
 
 __all__ = ["Document"]
 
@@ -35,6 +34,7 @@ class Document(BaseAPI):
             self,
             *,
             file: FileTypes = None,
+            custom_separator: Optional[List[str]] = None,
             upload_detail: List[UploadDetail] = None,
             purpose: Literal["retrieval"],
             knowledge_id: str = None,
@@ -51,6 +51,7 @@ class Document(BaseAPI):
                 "file": file,
                 "upload_detail": upload_detail,
                 "purpose": purpose,
+                "custom_separator": custom_separator,
                 "knowledge_id": knowledge_id,
                 "sentence_size": sentence_size,
             }
@@ -99,6 +100,15 @@ class Document(BaseAPI):
           extra_body: Add additional JSON properties to the request
 
           timeout: Override the client-level default timeout for this request, in seconds
+          :param knowledge_type:
+          :param document_id:
+          :param timeout:
+          :param extra_body:
+          :param callback_header:
+          :param sentence_size:
+          :param extra_headers:
+          :param callback_url:
+          :param custom_separator:
         """
         if not document_id:
             raise ValueError(f"Expected a non-empty value for `document_id` but received {document_id!r}")
@@ -134,10 +144,9 @@ class Document(BaseAPI):
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncCursorPage[DocumentData]:
-        return self._get_api_list(
+    ) -> DocumentPage:
+        return self._get(
             "/files",
-            page=SyncCursorPage[DocumentData],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_body=extra_body,
@@ -153,7 +162,7 @@ class Document(BaseAPI):
                     document_list_params.DocumentListParams,
                 ),
             ),
-            model=DocumentData,
+            cast_type=DocumentPage,
         )
 
 

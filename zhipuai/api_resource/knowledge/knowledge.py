@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-
-from typing import TYPE_CHECKING, List, Mapping, cast
+from typing import TYPE_CHECKING, List, Mapping, cast, Optional
 from typing_extensions import Literal
 
-from ...core import NOT_GIVEN, Body, Headers, NotGiven, FileTypes,BaseAPI, maybe_transform
+from ...core import NOT_GIVEN, Body, Headers, NotGiven, FileTypes, BaseAPI, maybe_transform
 
 import httpx
 
@@ -16,9 +15,10 @@ from ...types.knowledge import knowledge_create_params, knowledge_list_params
 from ...types.knowledge import KnowledgeInfo, KnowledgeUsed
 from ...core.pagination import SyncCursorPage
 from .document import Document
+from ...types.knowledge.knowledge_list_resp import KnowledgePage
 
 if TYPE_CHECKING:
-    from .._client import ZhipuAI
+    from ..._client import ZhipuAI
 
 __all__ = ["Knowledge"]
 
@@ -32,10 +32,9 @@ class Knowledge(BaseAPI):
     def document(self) -> Document:
         return Document(self._client)
 
-
     def create(
             self,
-            embedding_model: str,
+            embedding_id: int,
             name: str,
             *,
             customer_identifier: Optional[str] = None,
@@ -47,10 +46,9 @@ class Knowledge(BaseAPI):
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> KnowledgeInfo:
-
         body = deepcopy_minimal(
             {
-                "embedding_model": embedding_model,
+                "embedding_id": embedding_id,
                 "name": name,
                 "customer_identifier": customer_identifier,
                 "description": description,
@@ -69,7 +67,6 @@ class Knowledge(BaseAPI):
             cast_type=KnowledgeInfo,
         )
 
-
     def modify(
             self,
             knowledge_id: str,
@@ -83,7 +80,6 @@ class Knowledge(BaseAPI):
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> httpx.Response:
-
         body = deepcopy_minimal(
             {
                 "id": knowledge_id,
@@ -104,7 +100,6 @@ class Knowledge(BaseAPI):
             cast_type=httpx.Response,
         )
 
-
     def query(
             self,
             *,
@@ -113,10 +108,9 @@ class Knowledge(BaseAPI):
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> SyncCursorPage[KnowledgeInfo]:
-        return self._get_api_list(
+    ) -> KnowledgePage:
+        return self._get(
             "/knowledge",
-            page=SyncCursorPage[KnowledgeInfo],
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_body=extra_body,
@@ -129,7 +123,7 @@ class Knowledge(BaseAPI):
                     knowledge_list_params.KnowledgeListParams,
                 ),
             ),
-            model=KnowledgeInfo,
+            cast_type=KnowledgePage,
         )
 
     def delete(
