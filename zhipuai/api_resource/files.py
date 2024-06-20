@@ -193,14 +193,8 @@ class FilesWithRawResponse:
         self.create = _legacy_response.to_raw_response_wrapper(
             files.create,
         )
-        self.retrieve = _legacy_response.to_raw_response_wrapper(
-            files.retrieve,
-        )
         self.list = _legacy_response.to_raw_response_wrapper(
             files.list,
-        )
-        self.delete = _legacy_response.to_raw_response_wrapper(
-            files.delete,
         )
         self.content = _legacy_response.to_raw_response_wrapper(
             files.content,
