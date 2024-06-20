@@ -1,63 +1,88 @@
-from zhipuai import ZhipuAI
-import zhipuai
+
+from __future__ import annotations
+
+import unittest
 import os
 
 import logging
 import logging.config
 
+import zhipuai
 
-def test_files(test_file_path, logging_conf):
-    logging.config.dictConfig(logging_conf)  # type: ignore
-    client = ZhipuAI()
-    try:
-        result = client.files.create(
-            file=open(os.path.join(test_file_path,"demo.jsonl"), "rb"),
-            purpose="fine-tune"
-        )
-        print(result)
-        # "file-20240418025911536-6dqgr"
+import httpx
+import pytest
+from respx import MockRouter
 
+from zhipuai import ZhipuAI
+from zhipuai.api_resource import FilesWithRawResponse
 
-    except zhipuai.core._errors.APIRequestFailedError as err:
-        print(err)
-    except zhipuai.core._errors.APIInternalError as err:
-        print(err)
-    except zhipuai.core._errors.APIStatusError as err:
-        print(err)
+@pytest.fixture(scope='class')
+def test_server():
+    class SharedData:
+        client = ZhipuAI()
+        file_id1 = None
+        file_id2 = None
+
+    return SharedData()
 
 
-def test_files_validation(test_file_path, logging_conf):
-    logging.config.dictConfig(logging_conf)  # type: ignore
-    client = ZhipuAI()
-    try:
-        result = client.files.create(
-            file=open(os.path.join(test_file_path,"demo.jsonl"), "rb"),
-            purpose="fine-tune"
-        )
-        print(result)
-        # "file-20240418025931214-c87tj"
+class TestZhipuAIFileServer:
+
+    def test_logs(self, logging_conf):
+        logging.config.dictConfig(logging_conf)  # type: ignore
+
+    def test_files(self,test_server, test_file_path):
+
+        try:
+            result = test_server.client.files.create(
+                file=open(os.path.join(test_file_path,"demo.jsonl"), "rb"),
+                purpose="fine-tune"
+            )
+            print(result)
+            test_server.file_id1 = result.id
+
+
+        except zhipuai.core._errors.APIRequestFailedError as err:
+            print(err)
+        except zhipuai.core._errors.APIInternalError as err:
+            print(err)
+        except zhipuai.core._errors.APIStatusError as err:
+            print(err)
+
+
+    def test_files_validation(self,test_server, test_file_path):
+        try:
+            result = test_server.client.files.create(
+                file=open(os.path.join(test_file_path,"demo.jsonl"), "rb"),
+                purpose="fine-tune"
+            )
+            print(result)
+
+            test_server.file_id2 = result.id
 
 
 
-    except zhipuai.core._errors.APIRequestFailedError as err:
-        print(err)
-    except zhipuai.core._errors.APIInternalError as err:
-        print(err)
-    except zhipuai.core._errors.APIStatusError as err:
-        print(err)
-
-def test_files_list(logging_conf):
-    logging.config.dictConfig(logging_conf)  # type: ignore
-    client = ZhipuAI()
-    try:
-        list = client.files.list()
-        print(list)
+        except zhipuai.core._errors.APIRequestFailedError as err:
+            print(err)
+        except zhipuai.core._errors.APIInternalError as err:
+            print(err)
+        except zhipuai.core._errors.APIStatusError as err:
+            print(err)
 
 
+    def test_files_list(self,test_server):
+        try:
+            list = test_server.client.files.list()
+            print(list)
 
-    except zhipuai.core._errors.APIRequestFailedError as err:
-        print(err)
-    except zhipuai.core._errors.APIInternalError as err:
-        print(err)
-    except zhipuai.core._errors.APIStatusError as err:
-        print(err)
+
+
+        except zhipuai.core._errors.APIRequestFailedError as err:
+            print(err)
+        except zhipuai.core._errors.APIInternalError as err:
+            print(err)
+        except zhipuai.core._errors.APIStatusError as err:
+            print(err)
+
+
+
