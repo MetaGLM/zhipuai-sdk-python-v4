@@ -59,6 +59,7 @@ class ZhipuAI(HttpClient):
         self.fine_tuning = api_resource.fine_tuning.FineTuning(self)
         self.batches = api_resource.Batches(self)
         self.knowledge = api_resource.Knowledge(self)
+        self.tools = api_resource.Tools(self)
 
     @property
     @override

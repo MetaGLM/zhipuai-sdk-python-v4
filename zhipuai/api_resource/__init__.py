@@ -24,7 +24,9 @@ from .batches import (
 from .knowledge import (
     Knowledge
 )
-
+from .tools import (
+    Tools
+)
 __all__ = [
     'AsyncCompletions',
     'Chat',
@@ -36,5 +38,6 @@ __all__ = [
     'FineTuning',
     'Batches',
     'Knowledge',
+    'Tools',
 
 ]
