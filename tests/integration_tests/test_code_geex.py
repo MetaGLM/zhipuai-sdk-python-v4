@@ -34,7 +34,7 @@ def test_code_geex(logging_conf):
             temperature=0.9,
             max_tokens=2000,
             stop=["<|endoftext|>", "<|user|>", "<|assistant|>", "<|observation|>"],
-            code_geex_extra={
+            extra={
                 "target": {
                     "path": "11111",
                     "language": "Python",
