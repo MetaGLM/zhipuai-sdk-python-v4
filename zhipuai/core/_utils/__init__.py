@@ -29,6 +29,7 @@ from ._utils import (
     get_required_header as get_required_header,
     maybe_coerce_boolean as maybe_coerce_boolean,
     maybe_coerce_integer as maybe_coerce_integer,
+    drop_prefix_image_data as drop_prefix_image_data,
 )
 
 
