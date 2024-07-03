@@ -13,7 +13,7 @@ from typing import (
     Iterable,
     Sequence,
     cast,
-    overload,
+    overload, List, Union,
 )
 from pathlib import Path
 from typing_extensions import TypeGuard
@@ -396,3 +396,20 @@ def get_async_library() -> str:
         return sniffio.current_async_library()
     except Exception:
         return "false"
+
+
+def drop_prefix_image_data(content: Union[str, List[dict]]) -> Union[str, List[dict]]:
+    """
+    删除 ;base64, 前缀
+    :param image_data:
+    :return:
+    """
+    if isinstance(content, List):
+        for data in content:
+            if data.get('type') == 'image_url':
+                image_data = data.get("image_url").get("url")
+                if image_data.startswith("data:image/"):
+                    image_data = image_data.split("base64,")[-1]
+                    data["image_url"]["url"] = image_data
+
+    return content
