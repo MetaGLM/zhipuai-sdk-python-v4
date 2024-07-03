@@ -41,7 +41,7 @@ class Completions(BaseAPI):
             tools: Optional[object] | NotGiven = NOT_GIVEN,
             tool_choice: str | NotGiven = NOT_GIVEN,
             meta: Optional[Dict[str,str]] | NotGiven = NOT_GIVEN,
-            code_geex_extra: Optional[code_geex_params.CodeGeexExtra] | NotGiven = NOT_GIVEN,
+            extra: Optional[code_geex_params.CodeGeexExtra] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
@@ -86,7 +86,7 @@ class Completions(BaseAPI):
             "tools": tools,
             "tool_choice": tool_choice,
             "meta": meta,
-            "extra": maybe_transform(code_geex_extra, code_geex_params.CodeGeexExtra),
+            "extra": maybe_transform(extra, code_geex_params.CodeGeexExtra),
         })
         return self._post(
             "/chat/completions",
