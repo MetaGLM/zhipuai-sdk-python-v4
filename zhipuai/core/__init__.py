@@ -58,6 +58,7 @@ from ._utils import (
     maybe_transform,
     deepcopy_minimal,
     extract_files,
+    drop_prefix_image_data,
 )
 
 from ._sse_client import StreamResponse

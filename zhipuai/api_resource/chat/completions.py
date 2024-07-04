@@ -1,17 +1,18 @@
 from __future__ import annotations
 
-from typing import Union, List, Optional, TYPE_CHECKING
+from typing import Union, List, Optional, TYPE_CHECKING, Dict
 
 import httpx
 import logging
 from typing_extensions import Literal
 
-from ...core import BaseAPI
+from ...core import BaseAPI, deepcopy_minimal, maybe_transform, drop_prefix_image_data
 from ...core import NotGiven, NOT_GIVEN, Headers, Query, Body
 from ...core import make_request_options
 from ...core import StreamResponse
 from ...types.chat.chat_completion import Completion
 from ...types.chat.chat_completion_chunk import ChatCompletionChunk
+from ...types.chat.code_geex import code_geex_params
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +41,7 @@ class Completions(BaseAPI):
             tools: Optional[object] | NotGiven = NOT_GIVEN,
             tool_choice: str | NotGiven = NOT_GIVEN,
             meta: Optional[Dict[str,str]] | NotGiven = NOT_GIVEN,
+            extra: Optional[code_geex_params.CodeGeexExtra] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
@@ -67,26 +69,28 @@ class Completions(BaseAPI):
         if isinstance(messages, List):
             for item in messages:
                 if item.get('content'):
-                    item['content'] = self._drop_prefix_image_data(item['content'])
+                    item['content'] = drop_prefix_image_data(item['content'])
 
+        body = deepcopy_minimal({
+            "model": model,
+            "request_id": request_id,
+            "temperature": temperature,
+            "top_p": top_p,
+            "do_sample": do_sample,
+            "max_tokens": max_tokens,
+            "seed": seed,
+            "messages": messages,
+            "stop": stop,
+            "sensitive_word_check": sensitive_word_check,
+            "stream": stream,
+            "tools": tools,
+            "tool_choice": tool_choice,
+            "meta": meta,
+            "extra": maybe_transform(extra, code_geex_params.CodeGeexExtra),
+        })
         return self._post(
             "/chat/completions",
-            body={
-                "model": model,
-                "request_id": request_id,
-                "temperature": temperature,
-                "top_p": top_p,
-                "do_sample": do_sample,
-                "max_tokens": max_tokens,
-                "seed": seed,
-                "messages": messages,
-                "stop": stop,
-                "sensitive_word_check": sensitive_word_check,
-                "stream": stream,
-                "tools": tools,
-                "tool_choice": tool_choice,
-                "meta": meta,
-            },
+            body=body,
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
@@ -95,19 +99,4 @@ class Completions(BaseAPI):
             stream_cls=StreamResponse[ChatCompletionChunk],
         )
 
-    def _drop_prefix_image_data(self, content: Union[str,List[dict]]) -> Union[str,List[dict]]:
-        """
-        删除 ;base64, 前缀
-        :param image_data:
-        :return:
-        """
-        if isinstance(content, List):
-            for data in content:
-                if data.get('type') == 'image_url':
-                    image_data = data.get("image_url").get("url")
-                    if image_data.startswith("data:image/"):
-                        image_data = image_data.split("base64,")[-1]
-                        data["image_url"]["url"] = image_data
-
-        return content
 
