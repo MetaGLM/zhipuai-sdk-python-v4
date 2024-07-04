@@ -122,5 +122,22 @@ def test_model_check(logging_conf):
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
+
+def test_model_delete(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        delete = client.fine_tuning.models.delete(fine_tuned_model="chatglm3-6b-8572905046912426020-demo_test")
+
+        print(delete)
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
 if __name__ == "__main__":
     test_finetuning_create()
