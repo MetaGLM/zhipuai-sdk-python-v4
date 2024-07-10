@@ -20,7 +20,6 @@ from ._constants import RAW_RESPONSE_HEADER
 from ._sse_client import StreamResponse, is_stream_class_type, extract_stream_chunk_type
 from ._errors import APIResponseValidationError
 from ._legacy_binary_response import HttpxBinaryResponseContent, HttpxTextBinaryResponseContent, HttpxResponseContent
-from ._legacy_xlsx_response import HttpxXlsxBinaryResponseContent
 
 if TYPE_CHECKING:
     from ._request_opt import FinalRequestOptions
@@ -253,7 +252,7 @@ class LegacyAPIResponse(Generic[R]):
             if filename and filename.endswith(".jsonl"):
                 return cast(R, HttpxTextBinaryResponseContent(response))
             elif filename and filename.endswith(".xlsx"):
-                return cast(R, HttpxXlsxBinaryResponseContent(response))
+                return cast(R, HttpxTextBinaryResponseContent(response))
             else:
                 return cast(R, cast_type(response))  # type: ignore
 
