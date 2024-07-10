@@ -12,8 +12,6 @@ pydantic = ">=1.9.0,<3.0"
 pydantic-core = ">=2.14.6"
 cachetools = ">=4.2.2"
 pyjwt = "~=2.8.0"
-pandas = {version = ">=1.0.0", python = ">=3.8,<3.9.7 || >3.9.7,<4.0"}
-openpyxl = {version = ">=3.1.0", python = ">=3.8,<3.9.7 || >3.9.7,<4.0"}
 
 
 [tool.poetry.group.test.dependencies]
