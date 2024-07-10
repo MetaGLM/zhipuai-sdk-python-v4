@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List, Union, Dict, Optional
 from typing_extensions import Literal
 
-from ...core import NOT_GIVEN, Body, Headers, NotGiven, BaseAPI, maybe_transform, StreamResponse
+from ...core import NOT_GIVEN, Body, Headers, NotGiven, BaseAPI, maybe_transform, StreamResponse, deepcopy_minimal
 
 import httpx
 
@@ -42,9 +42,8 @@ class Tools(BaseAPI):
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> WebSearch | StreamResponse[WebSearchChunk]:
 
-        return self._post(
-            "/tools",
-            body= maybe_transform({
+        body = deepcopy_minimal(
+            {
                 "model": model,
                 "request_id": request_id,
                 "messages": messages,
@@ -52,7 +51,10 @@ class Tools(BaseAPI):
                 "scope": scope,
                 "location": location,
                 "recent_days": recent_days,
-            }, tools_web_search_params.WebSearchParams),
+            })
+        return self._post(
+            "/tools",
+            body= maybe_transform(body, tools_web_search_params.WebSearchParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
