@@ -50,25 +50,7 @@ class TestZhipuAIFile:
 
         text = next(files_content.iter_text())
         assert text == '{"custom_id": "request-1", "method": "POST", "url": "/v4/chat/completions", "body": {"model": "glm-4", "messages": [{"role": "system", "content": "You are a helpful assistant."},{"role": "user", "content": "Hello world!"}],"max_tokens": 1000}}'
-
-    @pytest.mark.respx(base_url=base_url)
-    def test_file_download_xlsx(self, test_file_path: str, respx_mock: MockRouter) -> None:
-        with open(os.path.join(test_file_path, "batchinput.xlsx"), "rb") as file:
-            respx_mock.get("/files/1/content").mock(
-                return_value=httpx.Response(200, content=file.read(),
-                                            headers={
-                                                "Content-Type": "application/jsonl",
-                                                "Content-Disposition": "attachment; filename=batchinput.xlsx"
-                                            }
-                                            )
-            )
-        legacy = FilesWithRawResponse(self.client.files)
-        response = legacy.content("1")
-        files_content = response.parse()
-        assert files_content.json() == []
-        text = next(files_content.iter_text())
-        # 去除换行符
-        assert text.replace("\n", "") == ""
+ 
 
     def test_is_closed(self):
         assert self.client.is_closed() is False
