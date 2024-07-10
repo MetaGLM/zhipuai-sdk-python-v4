@@ -33,9 +33,10 @@ jobs:
             working-directory: ${{ inputs.working-directory }}
             cache-key: core
 
-        - name: Install dependencies
-          shell: bash
-          run: poetry install --with test,test_integration
+
+        - name: Import test dependencies
+          run: poetry install --with test
+          working-directory: ${{ inputs.working-directory }}
 
         - name: Run integration tests
           shell: bash
