@@ -13,9 +13,10 @@
 ## 安装
 
 
-- 运行环境： [**Python>=3.8,<3.12**](https://www.python.org/)
+### Python版本支持
+正式的 Python (3.8, 3.9, 3.10, 3.11, 3.12)
 
-- 使用 pip 安装 `zhipuai` 软件包及其依赖
+### 使用 pip 安装 `zhipuai` 软件包及其依赖
 
 ```sh
 pip install zhipuai
