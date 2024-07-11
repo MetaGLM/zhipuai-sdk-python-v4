@@ -27,7 +27,11 @@ from .knowledge import (
 from .tools import (
     Tools
 )
+from .videos import (
+    Videos,
+)
 __all__ = [
+    'Videos',
     'AsyncCompletions',
     'Chat',
     'Completions',
