@@ -60,6 +60,7 @@ class ZhipuAI(HttpClient):
         self.batches = api_resource.Batches(self)
         self.knowledge = api_resource.Knowledge(self)
         self.tools = api_resource.Tools(self)
+        self.videos = api_resource.Videos(self)
 
     @property
     @override
