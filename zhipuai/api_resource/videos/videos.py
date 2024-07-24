@@ -31,6 +31,7 @@ class Videos(BaseAPI):
             self,
             model: str,
             prompt: str,
+            image_url: str,
             *,
             request_id: str = None,
             extra_headers: Headers | None = None,
@@ -44,6 +45,7 @@ class Videos(BaseAPI):
             {
                 "model": model,
                 "prompt": prompt,
+                "image_url": image_url,
                 "request_id": request_id,
             }
         )
