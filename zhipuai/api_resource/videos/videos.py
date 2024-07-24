@@ -31,8 +31,9 @@ class Videos(BaseAPI):
             self,
             model: str,
             prompt: str,
-            image_url: str,
             *,
+            image_url: str = None,
+            prompt_opt_model: str = None,
             request_id: str = None,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
@@ -46,6 +47,7 @@ class Videos(BaseAPI):
                 "model": model,
                 "prompt": prompt,
                 "image_url": image_url,
+                "prompt_opt_model": prompt_opt_model,
                 "request_id": request_id,
             }
         )
