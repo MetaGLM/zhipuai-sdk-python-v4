@@ -229,6 +229,8 @@ Error codes are as followed:
 
 
 ### 更新日志
+`2024-7-25`  
+- cogvideo 修复
 `2024-7-12` 
 - 高级搜索工具 Web search 业务 
 - specified Python versions (3.8, 3.9, 3.10, 3.11, 3.12) 
