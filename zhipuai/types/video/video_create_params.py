@@ -18,3 +18,6 @@ class VideoCreateParams(TypedDict, total=False):
      *   图片大小："""
     request_id: str
     """由用户端传参，需保证唯一性；用于区分每次请求的唯一标识，用户端不传时平台会默认生成。"""
+
+    user_id: str
+    """用户端。"""

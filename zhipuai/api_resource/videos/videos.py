@@ -34,6 +34,7 @@ class Videos(BaseAPI):
             *,
             image_url: str = None,
             request_id: str = None,
+            user_id: str = None,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
@@ -47,6 +48,7 @@ class Videos(BaseAPI):
                 "prompt": prompt,
                 "image_url": image_url,
                 "request_id": request_id,
+                "user_id": user_id,
             }
         )
         return self._post(
