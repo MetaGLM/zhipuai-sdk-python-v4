@@ -29,6 +29,7 @@ class Completions(BaseAPI):
             *,
             model: str,
             request_id: Optional[str] | NotGiven = NOT_GIVEN,
+            user_id: Optional[str] | NotGiven = NOT_GIVEN,
             do_sample: Optional[Literal[False]] | Literal[True] | NotGiven = NOT_GIVEN,
             stream: Optional[Literal[False]] | Literal[True] | NotGiven = NOT_GIVEN,
             temperature: Optional[float] | NotGiven = NOT_GIVEN,
@@ -74,6 +75,7 @@ class Completions(BaseAPI):
         body = deepcopy_minimal({
             "model": model,
             "request_id": request_id,
+            "user_id": user_id,
             "temperature": temperature,
             "top_p": top_p,
             "do_sample": do_sample,

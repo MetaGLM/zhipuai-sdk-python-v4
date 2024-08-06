@@ -29,6 +29,7 @@ class Images(BaseAPI):
             style: Optional[str] | NotGiven = NOT_GIVEN,
             user: str | NotGiven = NOT_GIVEN,
             request_id: Optional[str] | NotGiven = NOT_GIVEN,
+            user_id: Optional[str] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             disable_strict_validation: Optional[bool] | None = None,
@@ -48,6 +49,7 @@ class Images(BaseAPI):
                 "size": size,
                 "style": style,
                 "user": user,
+                "user_id": user_id,
                 "request_id": request_id,
             },
             options=make_request_options(
