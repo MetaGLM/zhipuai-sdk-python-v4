@@ -25,6 +25,7 @@ def test_completions_charglm(logging_conf):
                 "bot_name": "苏梦远",
                 "user_name": "陆星辰"
             },
+            user_id="12345678"
         )
         print(response)
 
