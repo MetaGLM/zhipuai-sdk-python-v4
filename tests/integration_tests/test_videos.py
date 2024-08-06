@@ -11,7 +11,9 @@ def test_videos(logging_conf):
     try:
         response = client.videos.generations(
             model="cogvideo",
-            prompt="一些相信光的人，举着奥特曼"
+            prompt="一个开船的人",
+
+            user_id="1212222"
         )
         print(response)
 
@@ -32,7 +34,8 @@ def test_videos_image_url(logging_conf):
         response = client.videos.generations(
             model="cogvideo",
             image_url="https://cdn.bigmodel.cn/static/platform/images/solutions/car/empowerment/icon-metric.png",
-            prompt="一些相信光的人，举着奥特曼"
+            prompt="一些相信光的人，举着奥特曼",
+            user_id="12222211"
         )
         print(response)
 

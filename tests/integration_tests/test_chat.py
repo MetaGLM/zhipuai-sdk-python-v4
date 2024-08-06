@@ -27,6 +27,7 @@ def test_completions_temp0(logging_conf):
             top_p=0.7,
             temperature=0,
             max_tokens=2000,
+            user_id="12345678"
         )
         print(response)
 
@@ -57,6 +58,7 @@ def test_completions_temp1(logging_conf):
             top_p=0.7,
             temperature=1,
             max_tokens=2000,
+            user_id="12345678"
         )
         print(response)
 
@@ -89,6 +91,7 @@ def test_completions_top0(logging_conf):
             top_p=0,
             temperature=0.9,
             max_tokens=2000,
+            user_id="12345678"
         )
         print(response)
 
@@ -121,6 +124,7 @@ def test_completions_top1(logging_conf):
             top_p=1,
             temperature=0.9,
             max_tokens=2000,
+            user_id="12345678"
         )
         print(response)
 
@@ -160,6 +164,7 @@ def test_completions(logging_conf):
                     }
                 }
             ],
+            user_id="12345678",
             extra_body={"temperature": 0.5, "max_tokens": 50},
         )
         print(response)
@@ -201,6 +206,7 @@ def test_completions_disenable_web_search(logging_conf):
                     }
                 }
             ],
+            user_id="12345678",
             extra_body={"temperature": 0.5, "max_tokens": 50},
         )
         print(response)
@@ -243,6 +249,7 @@ def test_completions_enable_web_search(logging_conf):
                 }
             ],
             extra_body={"temperature": 0.5, "max_tokens": 50},
+            user_id="12345678"
         )
         print(response)
 
@@ -275,6 +282,7 @@ def test_completions_stream(logging_conf):
                 {"role": "user", "content": "创造一个更精准、吸引人的slogan"}
             ],
             extra_body={"temperature": 0.5, "max_tokens": 50},
+            user_id="12345678"
         )
         for item in response:
             print(item)
@@ -323,7 +331,9 @@ def test_completions_vis(logging_conf):
                         }
                     ]
                 }
-            ]
+            ],
+
+            user_id="12345678"
         )
         print(response)
 
@@ -371,7 +381,9 @@ def test_completions_vis_base64(test_file_path, logging_conf):
                         }
                     ]
                 }
-            ]
+            ],
+
+            user_id="12345678"
         )
         print(response)
 
@@ -411,6 +423,8 @@ def test_async_completions(logging_conf):
                 }
             ],
             extra_body={"temperature": 0.5, "max_tokens": 50},
+
+            user_id="12345678"
         )
         print(response)
 

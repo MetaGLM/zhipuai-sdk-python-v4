@@ -13,6 +13,7 @@ def test_images(logging_conf):
             model="cogview-3", #填写需要调用的模型名称
             prompt="一只可爱的小猫咪",
             extra_body={"user_id": "1222212"},
+            user_id="12345678"
         )
         print(response)
 
