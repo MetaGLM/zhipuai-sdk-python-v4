@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING, List, Mapping, cast, Optional, Dict
 from typing_extensions import Literal
 
 from ...types.assistant import AssistantCompletion
+from ...types.assistant.assistant_completion import AssistantSupport
 from ...types.video import video_create_params
 from ...types.video import VideoObject
 from ...core import BaseAPI, maybe_transform, StreamResponse
@@ -69,4 +70,31 @@ class Assistant(BaseAPI):
             cast_type=AssistantCompletion,
             stream=stream or True,
             stream_cls=StreamResponse[AssistantCompletion],
+        )
+
+    def query_support(
+            self,
+            assistant_id_list: List[str],
+            *,
+            request_id: str = None,
+            user_id: str = None,
+            extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
+            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> AssistantSupport:
+
+        body = deepcopy_minimal(
+            {
+                "assistant_id_list": assistant_id_list,
+                "request_id": request_id,
+                "user_id": user_id,
+            }
+        )
+        return self._post(
+            "/assistant/list",
+            body=body,
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
+            ),
+            cast_type=AssistantSupport,
         )

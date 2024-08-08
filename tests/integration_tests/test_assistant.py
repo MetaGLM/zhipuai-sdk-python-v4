@@ -16,10 +16,10 @@ def test_assistant(logging_conf) -> None:
         messages=[
             {
                 "role": "user",
-                "content": {
+                "content": [{
                     "type": "text",
                     "text": "帮我搜索下智谱的cogvideox发布时间"
-                }
+                }]
             }
         ],
         stream=True,
@@ -30,4 +30,16 @@ def test_assistant(logging_conf) -> None:
     )
     for assistant in generate:
         print(assistant)
+
+
+def test_assistant_query_support(logging_conf) -> None:
+
+    logging.config.dictConfig(logging_conf)  # type: ignore
+    client = ZhipuAI()  # 填写您自己的APIKey
+    response = client.assistant.query_support(
+        assistant_id_list=["659e54b1b8006379b4b2abd6"],
+        request_id="request_1790291013237211136",
+        user_id="12345678"
+    )
+    print(response)
 
