@@ -12,7 +12,7 @@ def test_assistant(logging_conf) -> None:
     client = ZhipuAI()  # 填写您自己的APIKey
     generate = client.assistant.conversation(
         assistant_id="659e54b1b8006379b4b2abd6",
-        model="GLM-4-Assistant",
+        model="glm-4-assistant",
         messages=[
             {
                 "role": "user",
