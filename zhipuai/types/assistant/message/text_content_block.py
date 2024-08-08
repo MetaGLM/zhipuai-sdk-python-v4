@@ -10,5 +10,5 @@ class TextContentBlock(BaseModel):
 
     role: str = "assistant"
 
-    type: Literal["content"]
+    type: Literal["content"] = "content"
     """Always `content`."""

@@ -27,5 +27,4 @@ class AssistantParameters(TypedDict, total=False):
     stream: bool  # 是否支持流式 SSE，需要传入 True
     messages: List[ConversationMessage]  # 会话消息体
     attachments: Optional[List[AssistantAttachments]]  # 会话指定的文件，非必填
-    file_id: Optional[str]  # 文件ID，通过文件上传接口返回，非必填
     metadata: Optional[dict]  # 元信息，拓展字段，非必填

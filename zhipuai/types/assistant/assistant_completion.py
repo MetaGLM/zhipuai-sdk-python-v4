@@ -1,4 +1,6 @@
 from typing import List, Optional, Dict, Any
+
+from .message import MessageContent
 from ...core import BaseModel
 
 __all__ = ["AssistantCompletion", "CompletionUsage"]
@@ -11,7 +13,7 @@ class ErrorInfo(BaseModel):
 
 class AssistantChoice(BaseModel):
     index: int  # 结果下标
-    delta: Dict[str, Any]  # 当前会话输出消息体
+    delta: MessageContent  # 当前会话输出消息体
     finish_reason: str
     """
     # 推理结束原因 stop代表推理自然结束或触发停止词。  sensitive 代表模型推理内容被安全审核接口拦截。请注意，针对此类内容，请用户自行判断并决定是否撤回已公开的内容。 
@@ -24,12 +26,6 @@ class CompletionUsage(BaseModel):
     prompt_tokens: int  # 输入的 tokens 数量
     completion_tokens: int  # 输出的 tokens 数量
     total_tokens: int  # 总 tokens 数量
-
-
-class AssistantMessage(BaseModel):
-    role: str  # 消息角色，包括：`assistant` 表示智能体 `user` 表示用户
-
-class AssistantTextMessage(AssistantMessage):
 
 
 

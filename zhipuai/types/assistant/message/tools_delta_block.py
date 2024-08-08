@@ -13,5 +13,5 @@ class ToolsDeltaBlock(BaseModel):
 
     role: str = "tool"
 
-    type: Literal["tool_calls"]
+    type: Literal["tool_calls"] = "tool_calls"
     """Always `tool_calls`."""
