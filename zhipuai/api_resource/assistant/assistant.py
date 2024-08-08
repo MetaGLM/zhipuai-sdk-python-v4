@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-
 from typing import TYPE_CHECKING, List, Mapping, cast, Optional, Dict
 from typing_extensions import Literal
 
 from ...types.assistant import AssistantCompletion
-from ...types.assistant.assistant_completion import AssistantSupport
-from ...types.video import video_create_params
-from ...types.video import VideoObject
+from ...types.assistant.assistant_conversation_resp import ConversationUsageList, ConversationUsageListResp
+from ...types.assistant.assistant_support_resp import AssistantSupportResp
 from ...core import BaseAPI, maybe_transform, StreamResponse
 from ...core import NOT_GIVEN, Body, Headers, NotGiven
 
@@ -22,6 +20,7 @@ if TYPE_CHECKING:
     from ..._client import ZhipuAI
 
 from ...types.assistant import assistant_create_params
+from ...types.assistant import assistant_conversation_params
 
 __all__ = ["Assistant"]
 
@@ -47,7 +46,6 @@ class Assistant(BaseAPI):
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
     ) -> StreamResponse[AssistantCompletion]:
-
         body = deepcopy_minimal(
             {
                 "assistant_id": assistant_id,
@@ -74,15 +72,14 @@ class Assistant(BaseAPI):
 
     def query_support(
             self,
-            assistant_id_list: List[str],
             *,
+            assistant_id_list: List[str] = None,
             request_id: str = None,
             user_id: str = None,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> AssistantSupport:
-
+    ) -> AssistantSupportResp:
         body = deepcopy_minimal(
             {
                 "assistant_id_list": assistant_id_list,
@@ -96,5 +93,36 @@ class Assistant(BaseAPI):
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
-            cast_type=AssistantSupport,
+            cast_type=AssistantSupportResp,
+        )
+
+    def query_conversation_usage(
+            self,
+            assistant_id: str,
+            page: int = 1,
+            page_size: int = 10,
+            *,
+            request_id: str = None,
+            user_id: str = None,
+            extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
+            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> ConversationUsageListResp:
+        body = deepcopy_minimal(
+            {
+                "assistant_id": assistant_id,
+                "page": page,
+                "page_size": page_size,
+                "request_id": request_id,
+                "user_id": user_id,
+            }
+        )
+        return self._post(
+            "/assistant/conversation/list",
+
+            body=maybe_transform(body, assistant_conversation_params.ConversationParameters),
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
+            ),
+            cast_type=ConversationUsageListResp,
         )

@@ -21,7 +21,7 @@ class ConversationMessage(TypedDict):
 
 class AssistantParameters(TypedDict, total=False):
     """智能体参数类"""
-    assistant_id: str  # 智能体 ID，通过地址栏查看
+    assistant_id: str  # 智能体 ID
     conversation_id: Optional[str]  # 会话 ID，不传则创建新会话
     model: str  # 模型名称，默认为 'GLM-4-Assistant'
     stream: bool  # 是否支持流式 SSE，需要传入 True
