@@ -22,6 +22,7 @@ class Embeddings(BaseAPI):
             *,
             input: Union[str, List[str], List[int], List[List[int]]],
             model: Union[str],
+            dimensions: Union[int],
             encoding_format: str | NotGiven = NOT_GIVEN,
             user: str | NotGiven = NOT_GIVEN,
             request_id: Optional[str] | NotGiven = NOT_GIVEN,
@@ -39,6 +40,7 @@ class Embeddings(BaseAPI):
             body={
                 "input": input,
                 "model": model,
+                "dimensions": dimensions,
                 "encoding_format": encoding_format,
                 "user": user,
                 "request_id": request_id,
