@@ -4,7 +4,7 @@ from typing import Union, List, Optional, TYPE_CHECKING
 
 import httpx
 
-from ..core import BaseAPI
+from ..core import BaseAPI, Body
 from ..core import NotGiven, NOT_GIVEN, Headers
 from ..core import make_request_options
 from ..types.embeddings import EmbeddingsResponded
@@ -22,7 +22,7 @@ class Embeddings(BaseAPI):
             *,
             input: Union[str, List[str], List[int], List[List[int]]],
             model: Union[str],
-            dimensions: Union[int],
+            dimensions: Union[int]| NotGiven = NOT_GIVEN,
             encoding_format: str | NotGiven = NOT_GIVEN,
             user: str | NotGiven = NOT_GIVEN,
             request_id: Optional[str] | NotGiven = NOT_GIVEN,
