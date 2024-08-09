@@ -30,6 +30,10 @@ from .tools import (
 from .videos import (
     Videos,
 )
+from .assistant import (
+    Assistant,
+)
+
 __all__ = [
     'Videos',
     'AsyncCompletions',
@@ -43,5 +47,6 @@ __all__ = [
     'Batches',
     'Knowledge',
     'Tools',
+    'Assistant',
 
 ]
