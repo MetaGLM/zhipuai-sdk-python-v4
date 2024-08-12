@@ -185,6 +185,56 @@ test_completions_charglm()
 ```
 
 
+### 智能体 
+```python
+
+def test_assistant() -> None: 
+  client = ZhipuAI()  # 填写您自己的APIKey
+ 
+
+  generate = client.assistant.conversation(
+    assistant_id="659e54b1b8006379b4b2abd6",
+    model="glm-4-assistant",
+    messages=[
+      {
+        "role": "user",
+        "content": [{
+          "type": "text",
+          "text": "帮我搜索下智谱的cogvideox发布时间"
+        }]
+      }
+    ],
+    stream=True,
+    attachments=None,
+    metadata=None,
+    request_id="request_1790291013237211136",
+    user_id="12345678"
+  )
+  for assistant in generate:
+    print(assistant)
+
+test_assistant()
+```
+
+### 视频生成 
+```python
+
+
+def test_videos(): 
+  client = ZhipuAI()  # 填写您自己的APIKey
+  try:
+    response = client.videos.generations(
+      model="cogvideo",
+      prompt="一个开船的人",
+
+      user_id="1212222"
+    )
+    print(response)
+    
+test_videos()
+```
+
+
 
 ### 异常处理
 
@@ -229,6 +279,10 @@ Error codes are as followed:
 
 
 ### 更新日志
+`2024-8-12`  
+- 修改视频提示词可选,增加文件删除
+- Assistant业务
+- embedding 3 fix dimensions
 `2024-7-25`  
 - cogvideo 修复
 `2024-7-12` 
