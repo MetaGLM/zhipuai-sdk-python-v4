@@ -127,34 +127,34 @@ class Files(BaseAPI):
             ),
         )
 
-    # def delete(
-    #         self,
-    #         file_id: str,
-    #         *,
-    #         extra_headers: Headers | None = None,
-    #         extra_body: Body | None = None,
-    #         timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    # ) -> FileDeleted:
-    #     """
-    #     Delete a file.
-    #
-    #     Args:
-    #       file_id: The ID of the file to delete
-    #       extra_headers: Send extra headers
-    #
-    #       extra_body: Add additional JSON properties to the request
-    #
-    #       timeout: Override the client-level default timeout for this request, in seconds
-    #     """
-    #     if not file_id:
-    #         raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
-    #     return self._delete(
-    #         f"/files/{file_id}",
-    #         options=make_request_options(
-    #             extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
-    #         ),
-    #         cast_type=FileDeleted,
-    #     )
+    def delete(
+            self,
+            file_id: str,
+            *,
+            extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
+            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> FileDeleted:
+        """
+        Delete a file.
+
+        Args:
+          file_id: The ID of the file to delete
+          extra_headers: Send extra headers
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        if not file_id:
+            raise ValueError(f"Expected a non-empty value for `file_id` but received {file_id!r}")
+        return self._delete(
+            f"/files/{file_id}",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
+            ),
+            cast_type=FileDeleted,
+        )
 
     def content(
             self,

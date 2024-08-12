@@ -30,8 +30,8 @@ class Videos(BaseAPI):
     def generations(
             self,
             model: str,
-            prompt: str,
             *,
+            prompt: str = None,
             image_url: str = None,
             request_id: str = None,
             user_id: str = None,
