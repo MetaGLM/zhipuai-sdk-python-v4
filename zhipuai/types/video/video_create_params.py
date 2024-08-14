@@ -6,6 +6,8 @@ from typing_extensions import Literal, Required, TypedDict
 
 __all__ = ["VideoCreateParams"]
 
+from ..sensitive_word_check import SensitiveWordCheckRequest
+
 
 class VideoCreateParams(TypedDict, total=False):
     model: str
@@ -13,6 +15,8 @@ class VideoCreateParams(TypedDict, total=False):
     prompt: str
     """所需视频的文本描述"""
     image_url: str
+    """所需视频的文本描述"""
+    sensitive_word_check: Optional[SensitiveWordCheckRequest]
     """支持 URL 或者 Base64、传入 image 奖进行图生视频
      * 图片格式：
      *   图片大小："""

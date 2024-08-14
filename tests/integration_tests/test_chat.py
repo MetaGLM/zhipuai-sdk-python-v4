@@ -454,5 +454,39 @@ def test_retrieve_completion_result(logging_conf):
         print(err)
 
 
-if __name__ == '__main__':
-    test_completions_temp0()
+def test_completions_sensitive_word_check(logging_conf):
+    logging.config.dictConfig(logging_conf)  # type: ignore
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        # 生成request_id
+        request_id = time.time()
+        print(f"request_id:{request_id}")
+        response = client.chat.completions.create(
+            request_id=request_id,
+            model="glm-4",
+            messages=[
+                {
+                    "role": "user",
+                    "content": "tell me a joke"
+                }
+            ],
+            top_p=1,
+            temperature=0.9,
+            max_tokens=2000,
+            sensitive_word_check={
+                "type": "ALL",
+                "status": "DISABLE"
+            },
+            user_id="12345678"
+        )
+        print(response)
+
+
+
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+

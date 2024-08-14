@@ -8,6 +8,7 @@ from ..core import BaseAPI
 from ..core import NotGiven, NOT_GIVEN, Headers, Body
 from ..core import make_request_options
 from ..types.image import ImagesResponded
+from ..types.sensitive_word_check import SensitiveWordCheckRequest
 
 if TYPE_CHECKING:
     from .._client import ZhipuAI
@@ -27,6 +28,7 @@ class Images(BaseAPI):
             response_format: Optional[str] | NotGiven = NOT_GIVEN,
             size: Optional[str] | NotGiven = NOT_GIVEN,
             style: Optional[str] | NotGiven = NOT_GIVEN,
+            sensitive_word_check: Optional[SensitiveWordCheckRequest] | NotGiven = NOT_GIVEN,
             user: str | NotGiven = NOT_GIVEN,
             request_id: Optional[str] | NotGiven = NOT_GIVEN,
             user_id: Optional[str] | NotGiven = NOT_GIVEN,
@@ -46,6 +48,7 @@ class Images(BaseAPI):
                 "n": n,
                 "quality": quality,
                 "response_format": response_format,
+                "sensitive_word_check": sensitive_word_check,
                 "size": size,
                 "style": style,
                 "user": user,
