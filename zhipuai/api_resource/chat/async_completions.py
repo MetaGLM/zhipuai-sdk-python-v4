@@ -11,6 +11,7 @@ from ...core import NotGiven, NOT_GIVEN, Headers, Body
 from ...core import make_request_options
 from ...types.chat.async_chat_completion import AsyncTaskStatus, AsyncCompletion
 from ...types.chat.code_geex import code_geex_params
+from ...types.sensitive_word_check import SensitiveWordCheckRequest
 
 logger = logging.getLogger(__name__)
 
@@ -35,7 +36,7 @@ class AsyncCompletions(BaseAPI):
             seed: int | NotGiven = NOT_GIVEN,
             messages: Union[str, List[str], List[int], List[List[int]], None],
             stop: Optional[Union[str, List[str], None]] | NotGiven = NOT_GIVEN,
-            sensitive_word_check: Optional[object] | NotGiven = NOT_GIVEN,
+            sensitive_word_check: Optional[SensitiveWordCheckRequest] | NotGiven = NOT_GIVEN,
             tools: Optional[object] | NotGiven = NOT_GIVEN,
             tool_choice: str | NotGiven = NOT_GIVEN,
             meta: Optional[Dict[str, str]] | NotGiven = NOT_GIVEN,

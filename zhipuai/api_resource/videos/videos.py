@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List, Mapping, cast, Optional, Dict
 from typing_extensions import Literal
 
+from ...types.sensitive_word_check import SensitiveWordCheckRequest
 from ...types.video import video_create_params
 from ...types.video import VideoObject
 from ...core import BaseAPI, maybe_transform
@@ -33,6 +34,7 @@ class Videos(BaseAPI):
             *,
             prompt: str = None,
             image_url: str = None,
+            sensitive_word_check: Optional[SensitiveWordCheckRequest] | NotGiven = NOT_GIVEN,
             request_id: str = None,
             user_id: str = None,
             extra_headers: Headers | None = None,
@@ -47,6 +49,7 @@ class Videos(BaseAPI):
                 "model": model,
                 "prompt": prompt,
                 "image_url": image_url,
+                "sensitive_word_check": sensitive_word_check,
                 "request_id": request_id,
                 "user_id": user_id,
             }
