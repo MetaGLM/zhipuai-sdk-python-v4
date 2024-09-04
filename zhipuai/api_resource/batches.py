@@ -20,10 +20,11 @@ class Batches(BaseAPI):
     def create(
             self,
             *,
-            completion_window: Literal["24h"],
+            completion_window: str,
             endpoint: Literal["/v1/chat/completions", "/v1/embeddings"],
             input_file_id: str,
             metadata: Optional[Dict[str, str]] | NotGiven = NOT_GIVEN,
+            auto_delete_input_file: bool = True,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
@@ -36,6 +37,7 @@ class Batches(BaseAPI):
                     "endpoint": endpoint,
                     "input_file_id": input_file_id,
                     "metadata": metadata,
+                    "auto_delete_input_file":auto_delete_input_file
                 },
                 batch_create_params.BatchCreateParams,
             ),

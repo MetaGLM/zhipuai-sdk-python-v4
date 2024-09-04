@@ -7,7 +7,7 @@ __all__ = ["BatchCreateParams"]
 
 
 class BatchCreateParams(TypedDict, total=False):
-    completion_window: Required[Literal["24h"]]
+    completion_window: Required[str]
     """The time frame within which the batch should be processed.
 
     Currently only `24h` is supported.
