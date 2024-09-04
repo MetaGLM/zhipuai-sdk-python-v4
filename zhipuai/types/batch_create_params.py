@@ -32,3 +32,5 @@ class BatchCreateParams(TypedDict, total=False):
 
     metadata: Optional[Dict[str, str]]
     """Optional custom metadata for the batch."""
+
+    auto_delete_input_file: Optional[bool]
