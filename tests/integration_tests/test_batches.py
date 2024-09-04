@@ -37,7 +37,8 @@ def test_batch_create(logging_conf) -> None:
             completion_window="24h",
             metadata={
                 "description": "job test"
-            }
+            },
+            auto_delete_input_file=True
         )
         print(create)
         # Batch(id='batch_1790292763050508288', completion_window='24h', created_at=1715674031399, endpoint='/v4/chat/completions', input_file_id='20240514_ea19d21b-d256-4586-b0df-e80a45e3c286', object='batch', status='validating', cancelled_at=None, cancelling_at=None, completed_at=None, error_file_id=None, errors=None, expired_at=None, expires_at=None, failed_at=None, finalizing_at=None, in_progress_at=None, metadata={'description': 'job test'}, output_file_id=None, request_counts=BatchRequestCounts(completed=None, failed=None, total=None))
