@@ -20,7 +20,7 @@ class Batches(BaseAPI):
     def create(
             self,
             *,
-            completion_window: str,
+            completion_window: str | None = None,
             endpoint: Literal["/v1/chat/completions", "/v1/embeddings"],
             input_file_id: str,
             metadata: Optional[Dict[str, str]] | NotGiven = NOT_GIVEN,
