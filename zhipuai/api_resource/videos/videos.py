@@ -34,6 +34,11 @@ class Videos(BaseAPI):
             *,
             prompt: str = None,
             image_url: str = None,
+            quality: str = None,
+            with_audio: bool = None,
+            size: str = None,
+            duration: int = None,
+            fps: int = None,
             sensitive_word_check: Optional[SensitiveWordCheckRequest] | NotGiven = NOT_GIVEN,
             request_id: str = None,
             user_id: str = None,
@@ -52,6 +57,11 @@ class Videos(BaseAPI):
                 "sensitive_word_check": sensitive_word_check,
                 "request_id": request_id,
                 "user_id": user_id,
+                "quality": quality,
+                "with_audio": with_audio,
+                "size": size,
+                "duration": duration,
+                "fps": fps
             }
         )
         return self._post(
