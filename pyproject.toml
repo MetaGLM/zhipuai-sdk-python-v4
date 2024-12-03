@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zhipuai"
-version = "2.1.5.20230904"
+version = "2.1.5.20241203"
 description = "A SDK library for accessing big model apis from ZhipuAI"
 authors = ["Zhipu AI"]
 readme = "README.md"
