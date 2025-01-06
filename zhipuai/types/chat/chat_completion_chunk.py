@@ -10,6 +10,7 @@ __all__ = [
     "ChoiceDeltaFunctionCall",
     "ChoiceDeltaToolCall",
     "ChoiceDeltaToolCallFunction",
+    "AudioCompletionChunk"
 ]
 
 
@@ -29,11 +30,17 @@ class ChoiceDeltaToolCall(BaseModel):
     function: Optional[ChoiceDeltaToolCallFunction] = None
     type: Optional[str] = None
 
+class AudioCompletionChunk(BaseModel):
+    id: Optional[str] = None
+    data: Optional[str] = None
+    expires_at: Optional[int] = None
+
 
 class ChoiceDelta(BaseModel):
     content: Optional[str] = None
     role: Optional[str] = None
     tool_calls: Optional[List[ChoiceDeltaToolCall]] = None
+    audio: Optional[AudioCompletionChunk] = None
 
 
 class Choice(BaseModel):
