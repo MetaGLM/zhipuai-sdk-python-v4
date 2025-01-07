@@ -3,21 +3,21 @@ import zhipuai
 
 import logging
 import logging.config
+from pathlib import Path
+
 
 def test_audio_speech(logging_conf):
     logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
+        speech_file_path = Path(__file__).parent / "speech.wav"
         response = client.audio.speech(
             model="cogtts",
-            input="智谱ai，你好呀",
+            input="你好呀,欢迎来到智谱开放平台",
             voice="female",
             response_format="wav"
         )
-        print(response)
-        with open("output.wav", "wb") as f:
-            f.write(response.content)
-        print("文件已保存为 output.wav")
+        response.stream_to_file(speech_file_path)
 
     except zhipuai.core._errors.APIRequestFailedError as err:
         print(err)
@@ -31,17 +31,15 @@ def test_audio_customization(logging_conf):
     client = ZhipuAI()  # 填写您自己的APIKey
     with open('/Users/jhy/Desktop/tts/test_case_8s.wav', 'rb') as file:
         try:
+            speech_file_path = Path(__file__).parent / "customization.wav"
             response = client.audio.customization(
                 model="cogtts",
-                input="智谱ai，你好呀",
+                input="你好呀,欢迎来到智谱开放平台",
                 voice_text="这是一条测试用例",
                 voice_data=file,
                 response_format="wav"
             )
-            print(response)
-            with open("output.wav", "wb") as f:
-                f.write(response.content)
-            print("文件已保存为 output.wav")
+            response.stream_to_file(speech_file_path)
 
         except zhipuai.core._errors.APIRequestFailedError as err:
             print(err)
