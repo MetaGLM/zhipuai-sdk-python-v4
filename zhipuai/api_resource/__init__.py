@@ -34,6 +34,10 @@ from .assistant import (
     Assistant,
 )
 
+from .audio import (
+    Audio
+)
+
 __all__ = [
     'Videos',
     'AsyncCompletions',
@@ -48,5 +52,5 @@ __all__ = [
     'Knowledge',
     'Tools',
     'Assistant',
-
+    'Audio'
 ]

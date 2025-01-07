@@ -10,7 +10,7 @@ def test_videos(logging_conf):
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
         response = client.videos.generations(
-            model="cogvideo",
+            model="cogvideox",
             prompt="一个开船的人",
 
             user_id="1212222"
