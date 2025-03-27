@@ -3,7 +3,7 @@ import logging
 import logging.config
 import zhipuai
 from zhipuai import ZhipuAI
-
+import json
 
 def test_assistant(logging_conf) -> None:
     logging.config.dictConfig(logging_conf)  # type: ignore
@@ -67,6 +67,43 @@ def test_assistant_query_conversation_usage(logging_conf) -> None:
             user_id="12345678"
         )
         print(response)
+    except zhipuai.core._errors.APIRequestFailedError as err:
+        print(err)
+    except zhipuai.core._errors.APIInternalError as err:
+        print(err)
+    except zhipuai.core._errors.APIStatusError as err:
+        print(err)
+
+
+def test_translate_api(logging_conf) -> None:
+    logging.config.dictConfig(logging_conf)  # type: ignore
+    client = ZhipuAI()  # 填写您自己的APIKey
+    try:
+        generate = client.assistant.conversation(
+            assistant_id="9996ijk789lmn012o345p999",
+            model="glm-4-assistant",
+            messages=[
+                {
+                    "role": "user",
+                    "content": [{
+                        "type": "text",
+                        "text": "你好呀"
+                    }]
+                }
+            ],
+            stream=False,
+            attachments=None,
+            metadata=None,
+            request_id="request_1790291013237211136",
+            user_id="12345678",
+            extra_parameters = {
+                "translate": {
+                    "from": "zh",
+                    "to": "en"
+                }
+            }
+        )
+        print(generate)
     except zhipuai.core._errors.APIRequestFailedError as err:
         print(err)
     except zhipuai.core._errors.APIInternalError as err:
