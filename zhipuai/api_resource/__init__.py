@@ -33,6 +33,9 @@ from .videos import (
 from .assistant import (
     Assistant,
 )
+from .audio import (
+    Audio
+)
 
 __all__ = [
     'Videos',
@@ -48,5 +51,5 @@ __all__ = [
     'Knowledge',
     'Tools',
     'Assistant',
-
+    'Audio'
 ]
