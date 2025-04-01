@@ -1,4 +1,3 @@
-import os
 import logging
 import logging.config
 import zhipuai
@@ -12,7 +11,6 @@ def test_assistant(logging_conf) -> None:
 
         generate = client.assistant.conversation(
             assistant_id="659e54b1b8006379b4b2abd6",
-            model="glm-4-assistant",
             messages=[
                 {
                     "role": "user",
@@ -81,7 +79,6 @@ def test_translate_api(logging_conf) -> None:
     try:
         translate_response = client.assistant.conversation(
             assistant_id="9996ijk789lmn012o345p999",
-            model="glm-4-assistant",
             messages=[
                 {
                     "role": "user",

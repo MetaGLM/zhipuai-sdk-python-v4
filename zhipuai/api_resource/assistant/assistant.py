@@ -33,7 +33,6 @@ class Assistant(BaseAPI):
     def conversation(
             self,
             assistant_id: str,
-            model: str,
             messages: List[assistant_create_params.ConversationMessage],
             *,
             stream: Optional[Literal[False]] | Literal[True] | NotGiven = NOT_GIVEN,
@@ -50,7 +49,6 @@ class Assistant(BaseAPI):
         body = deepcopy_minimal(
             {
                 "assistant_id": assistant_id,
-                "model": model,
                 "messages": messages,
                 "stream": stream,
                 "conversation_id": conversation_id,
