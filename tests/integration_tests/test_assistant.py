@@ -79,7 +79,7 @@ def test_translate_api(logging_conf) -> None:
     logging.config.dictConfig(logging_conf)  # type: ignore
     client = ZhipuAI()  # 填写您自己的APIKey
     try:
-        generate = client.assistant.conversation(
+        translate_response = client.assistant.conversation(
             assistant_id="9996ijk789lmn012o345p999",
             model="glm-4-assistant",
             messages=[
@@ -103,7 +103,7 @@ def test_translate_api(logging_conf) -> None:
                 }
             }
         )
-        print(generate)
+        print(translate_response)
     except zhipuai.core._errors.APIRequestFailedError as err:
         print(err)
     except zhipuai.core._errors.APIInternalError as err:
