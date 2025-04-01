@@ -34,6 +34,7 @@ class Assistant(BaseAPI):
             self,
             assistant_id: str,
             messages: List[assistant_create_params.ConversationMessage],
+            model: str = None,
             *,
             stream: Optional[Literal[False]] | Literal[True] | NotGiven = NOT_GIVEN,
             conversation_id: Optional[str] = None,
