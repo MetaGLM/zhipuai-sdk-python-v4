@@ -88,7 +88,7 @@ def test_translate_api(logging_conf) -> None:
                     }]
                 }
             ],
-            stream=False,
+            stream=True,
             attachments=None,
             metadata=None,
             request_id="request_1790291013237211136",
@@ -100,7 +100,9 @@ def test_translate_api(logging_conf) -> None:
                 }
             }
         )
-        print(translate_response)
+        for chunk in translate_response:
+            print(chunk.choices[0].delta)
+        #print(translate_response)
     except zhipuai.core._errors.APIRequestFailedError as err:
         print(err)
     except zhipuai.core._errors.APIInternalError as err:
