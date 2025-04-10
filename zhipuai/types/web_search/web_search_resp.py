@@ -37,6 +37,6 @@ class WebSearchResp(BaseModel):
     created: Optional[int] = None
     request_id: Optional[str] = None
     id: Optional[str] = None
-    search_intents: Optional[SearchIntentResp]
-    search_results: Optional[SearchResultResp]
+    search_intent: Optional[SearchIntentResp]
+    search_result: Optional[SearchResultResp]
 
