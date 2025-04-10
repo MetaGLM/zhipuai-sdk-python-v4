@@ -28,3 +28,11 @@ class AssistantParameters(TypedDict, total=False):
     messages: List[ConversationMessage]  # 会话消息体
     attachments: Optional[List[AssistantAttachments]]  # 会话指定的文件，非必填
     metadata: Optional[dict]  # 元信息，拓展字段，非必填
+
+class TranslateParameters(TypedDict, total=False):
+    from_language: str
+    to_language: str
+
+class ExtraParameters(TypedDict, total=False):
+    translate: TranslateParameters
+

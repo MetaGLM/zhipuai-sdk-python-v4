@@ -33,23 +33,23 @@ class Assistant(BaseAPI):
     def conversation(
             self,
             assistant_id: str,
-            model: str,
             messages: List[assistant_create_params.ConversationMessage],
+            model: str = None,
             *,
-            stream: bool = True,
+            stream: Optional[Literal[False]] | Literal[True] | NotGiven = NOT_GIVEN,
             conversation_id: Optional[str] = None,
             attachments: Optional[List[assistant_create_params.AssistantAttachments]] = None,
             metadata: dict | None = None,
             request_id: str = None,
             user_id: str = None,
+            extra_parameters: Optional[assistant_create_params.ExtraParameters] = None,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> StreamResponse[AssistantCompletion]:
+    ) -> AssistantCompletion | StreamResponse[AssistantCompletion]:
         body = deepcopy_minimal(
             {
                 "assistant_id": assistant_id,
-                "model": model,
                 "messages": messages,
                 "stream": stream,
                 "conversation_id": conversation_id,
@@ -57,6 +57,7 @@ class Assistant(BaseAPI):
                 "metadata": metadata,
                 "request_id": request_id,
                 "user_id": user_id,
+                "extra_parameters": extra_parameters
             }
         )
         return self._post(
@@ -66,7 +67,7 @@ class Assistant(BaseAPI):
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
             cast_type=AssistantCompletion,
-            stream=stream or True,
+            stream=stream or False,
             stream_cls=StreamResponse[AssistantCompletion],
         )
 
