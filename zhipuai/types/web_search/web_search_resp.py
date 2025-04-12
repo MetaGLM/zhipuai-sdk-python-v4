@@ -18,8 +18,6 @@ class SearchIntentResp(BaseModel):
 
 
 class SearchResultResp(BaseModel):
-    index: int
-    # 搜索轮次，默认为 0
     title: str
     # 标题
     link: str
