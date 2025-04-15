@@ -34,6 +34,10 @@ from .assistant import (
     Assistant,
 )
 
+from .web_search import (
+    WebSearchApi
+)
+
 __all__ = [
     'Videos',
     'AsyncCompletions',
