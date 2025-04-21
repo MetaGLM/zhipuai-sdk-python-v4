@@ -37,6 +37,10 @@ from .audio import (
     Audio
 )
 
+from .web_search import (
+    WebSearchApi
+)
+
 __all__ = [
     'Videos',
     'AsyncCompletions',
