@@ -33,6 +33,9 @@ from .videos import (
 from .assistant import (
     Assistant,
 )
+from .audio import (
+    Audio
+)
 
 from .web_search import (
     WebSearchApi
@@ -52,5 +55,5 @@ __all__ = [
     'Knowledge',
     'Tools',
     'Assistant',
-
+    'Audio'
 ]
