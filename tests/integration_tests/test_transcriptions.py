@@ -1,5 +1,3 @@
-from zhipuai.types.chat.chat_completion import Completion
-
 from zhipuai import ZhipuAI
 import zhipuai
 

@@ -8,6 +8,6 @@ from .transcriptions import (
 
 
 __all__ = [
-    'Audio'
+    'Audio',
     'Transcriptions'
 ]
