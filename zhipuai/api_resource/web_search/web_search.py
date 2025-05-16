@@ -34,6 +34,10 @@ class WebSearchApi(BaseAPI):
             search_query: Optional[str] | NotGiven = NOT_GIVEN,
             user_id: Optional[str] | NotGiven = NOT_GIVEN,
             sensitive_word_check: Optional[SensitiveWordCheckRequest] | NotGiven = NOT_GIVEN,
+            count: Optional[int] | NotGiven = NOT_GIVEN,
+            search_domain_filter: Optional[str] | NotGiven = NOT_GIVEN,
+            search_recency_filter: Optional[str] | NotGiven = NOT_GIVEN,
+            content_size: Optional[str] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
@@ -45,7 +49,11 @@ class WebSearchApi(BaseAPI):
                 "search_engine": search_engine,
                 "search_query": search_query,
                 "user_id": user_id,
-                "sensitive_word_check": sensitive_word_check
+                "sensitive_word_check": sensitive_word_check,
+                "count":count,
+                "search_domain_filter": search_domain_filter,
+                "search_recency_filter": search_recency_filter,
+                "content_size": content_size,
             })
         return self._post(
             "/web_search",
