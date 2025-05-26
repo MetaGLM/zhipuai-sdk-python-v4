@@ -16,7 +16,7 @@ on:
         description: "From which folder this pipeline executes"
 env:
   PYTHON_VERSION: "3.8"
-  POETRY_VERSION: "1.8.2"
+  POETRY_VERSION: "1.7.1"
 
 jobs:
   build:
