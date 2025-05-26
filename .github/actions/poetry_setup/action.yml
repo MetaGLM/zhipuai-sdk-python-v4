@@ -32,7 +32,7 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
 
-    - uses: actions/cache@v4
+#    - uses: actions/cache@v4
 #      id: cache-bin-poetry
 #      name: Cache Poetry binary - Python ${{ inputs.python-version }}
 #      env:
