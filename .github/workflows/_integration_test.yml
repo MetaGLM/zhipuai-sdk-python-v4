@@ -10,6 +10,7 @@ on:
         description: "From which folder this pipeline executes"
 
 env:
+  PYTHON_VERSION: "3.9"
   POETRY_VERSION: "1.7.1"
 
 jobs:
