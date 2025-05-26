@@ -36,10 +36,14 @@ jobs:
           uses: "./.github/actions/poetry_setup"
           with:
             python-version: ${{ matrix.python-version }}
-            poetry-version: ${{ env.POETRY_VERSION }}
-            working-directory: ${{ inputs.working-directory }}
-            cache-key: core
-
+#            poetry-version: ${{ env.POETRY_VERSION }}
+#            working-directory: ${{ inputs.working-directory }}
+#            cache-key: core
+        
+        - name: Install Poetry
+          uses: snok/install-poetry@v1
+          with:
+            version: ${{ env.POETRY_VERSION }}
 
         - name: Import test dependencies
           run: poetry install --with test
