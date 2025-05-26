@@ -30,6 +30,8 @@ class SearchResultResp(BaseModel):
     # 来源媒体
     refer: str
     # 角标序号 [ref_1]
+    publish_date:  str
+    # 发布时间
 
 class WebSearchResp(BaseModel):
     created: Optional[int] = None
