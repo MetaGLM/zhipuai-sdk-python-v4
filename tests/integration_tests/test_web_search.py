@@ -11,7 +11,11 @@
 #     try:
 #         response = client.web_search.web_search(
 #             search_engine="search-std",
-#             search_query="2025特朗普向中国加征了多少关税"
+#             search_query="2025特朗普向中国加征了多少关税",
+#             count=50,
+#             search_domain_filter="finance.sina.com.cn",
+#             search_recency_filter="oneYear",
+#             content_size="high"
 #         )
 #         print(response)
 #
