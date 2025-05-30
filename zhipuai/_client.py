@@ -18,6 +18,7 @@ class ZhipuAI(HttpClient):
     chat: api_resource.chat.Chat
     api_key: str
     _disable_token_cache: bool = True
+    source_channel: str
 
     def __init__(
             self,
@@ -30,12 +31,14 @@ class ZhipuAI(HttpClient):
             custom_headers: Mapping[str, str] | None = None,
             disable_token_cache: bool = True,
             _strict_response_validation: bool = False,
+            source_channel: str | None = None
     ) -> None:
         if api_key is None:
             api_key = os.environ.get("ZHIPUAI_API_KEY")
         if api_key is None:
             raise ZhipuAIError("未提供api_key，请通过参数或环境变量提供")
         self.api_key = api_key
+        self.source_channel = source_channel
         self._disable_token_cache = disable_token_cache
 
         if base_url is None:
@@ -69,10 +72,11 @@ class ZhipuAI(HttpClient):
     @override
     def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
+        source_channel = self.source_channel or "python-sdk"
         if self._disable_token_cache:
-            return {"Authorization": f"Bearer {api_key}"}
+            return {"Authorization": f"Bearer {api_key}","x-source-channel": source_channel}
         else:
-            return {"Authorization": f"Bearer {_jwt_token.generate_token(api_key)}"}
+            return {"Authorization": f"Bearer {_jwt_token.generate_token(api_key)}","x-source-channel": source_channel}
 
     def __del__(self) -> None:
         if (not hasattr(self, "_has_custom_http_client")
