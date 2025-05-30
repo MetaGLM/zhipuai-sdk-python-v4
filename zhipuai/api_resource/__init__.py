@@ -37,6 +37,10 @@ from .audio import (
     Audio
 )
 
+from .moderation import (
+    Moderation
+)
+
 from .web_search import (
     WebSearchApi
 )
@@ -55,5 +59,6 @@ __all__ = [
     'Knowledge',
     'Tools',
     'Assistant',
-    'Audio'
+    'Audio',
+    'Moderation'
 ]
