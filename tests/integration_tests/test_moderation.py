@@ -16,7 +16,7 @@ def test_completions_temp0(logging_conf):
         request_id = time.time()
         print(f"request_id:{request_id}")
         response = client.moderation.moderations.create(
-            model="moderations",
+            model="moderation",
             input={
                 "type": "text",
                 "text": "hello world "
