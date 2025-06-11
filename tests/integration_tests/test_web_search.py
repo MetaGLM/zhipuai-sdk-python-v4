@@ -15,7 +15,8 @@ def test_web_search(logging_conf):
             count=50,
             search_domain_filter="finance.sina.com.cn",
             search_recency_filter="oneYear",
-            content_size="high"
+            content_size="high",
+            search_intent=True,
         )
         print(response)
 
