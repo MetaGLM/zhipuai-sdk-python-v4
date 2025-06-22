@@ -68,6 +68,7 @@ class ZhipuAI(HttpClient):
         self.web_search = api_resource.WebSearchApi(self)
         self.audio = api_resource.audio.Audio(self)
         self.moderation = api_resource.moderation.Moderation(self)
+        self.agents = api_resource.agents.Agents(self)
 
     @property
     @override
