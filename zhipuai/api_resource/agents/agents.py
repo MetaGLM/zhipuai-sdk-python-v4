@@ -59,3 +59,27 @@ class Agents(BaseAPI):
             stream_cls=StreamResponse[AgentsCompletionChunk],
         )
 
+    def async_result(
+            self,
+            agent_id: Optional[str] | NotGiven = NOT_GIVEN,
+            async_id: Optional[str] | NotGiven = NOT_GIVEN,
+            conversation_id: Optional[str] | NotGiven = NOT_GIVEN,
+            custom_variables: object = NOT_GIVEN,
+            extra_headers: Headers | None = None,
+            extra_body: Body | None = None,
+            timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+    ) -> AgentsCompletion:
+        body = deepcopy_minimal({
+            "agent_id": agent_id,
+            "async_id": async_id,
+            "conversation_id": conversation_id,
+            "custom_variables": custom_variables
+        })
+        return self._post(
+            "/v1/agents/async-result",
+            body=body,
+            options=make_request_options(
+                extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
+            ),
+            cast_type=AgentsCompletion,
+        )
