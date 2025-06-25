@@ -26,10 +26,15 @@ class AgentsCompletionUsage(BaseModel):
     completion_tokens: int
     total_tokens: int
 
+class AgentsError:
+    code: Optional[str] = None
+    message: Optional[str] = None
+
 
 class AgentsCompletionChunk(BaseModel):
     agent_id: Optional[str] = None
+    conversation_id: Optional[str] = None
     id: Optional[str] = None
     choices: List[AgentsChoice]
-    created: Optional[int] = None
     usage: Optional[AgentsCompletionUsage] = None
+    error: Optional[AgentsError] = None

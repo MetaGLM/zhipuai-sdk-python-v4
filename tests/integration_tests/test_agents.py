@@ -17,7 +17,7 @@ def test_completions_sync(logging_conf):
         print(f"request_id:{request_id}")
         response = client.agents.invoke(
             request_id=request_id,
-            agent_id="TranslateAgent",
+            agent_id="general_translation",
             messages=[
                 {
                     "role": "user",
@@ -44,7 +44,7 @@ def test_completions_stream(logging_conf):
         print(f"request_id:{request_id}")
         response = client.agents.invoke(
             request_id=request_id,
-            agent_id="TranslateAgent",
+            agent_id="general_translation",
             messages=[
                 {
                     "role": "user",

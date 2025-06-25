@@ -19,12 +19,18 @@ class AgentsCompletionChoice(BaseModel):
     finish_reason: str
     message: AgentsCompletionMessage
 
+class AgentsError:
+    code: Optional[str] = None
+    message: Optional[str] = None
+
 
 class AgentsCompletion(BaseModel):
     agent_id: Optional[str] = None
-    created: Optional[int] = None
+    conversation_id: Optional[str] = None
+    status: Optional[str] = None
     choices: List[AgentsCompletionChoice]
     request_id: Optional[str] = None
     id: Optional[str] = None
-    usage: AgentsCompletionUsage
+    usage: Optional[AgentsCompletionUsage] = None
+    error: Optional[AgentsError] = None
 
