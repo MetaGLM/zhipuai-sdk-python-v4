@@ -49,6 +49,10 @@ from .agents import (
     Agents
 )
 
+from .audio import (
+    Audio
+)
+
 __all__ = [
     'Videos',
     'AsyncCompletions',
