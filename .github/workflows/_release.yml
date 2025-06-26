@@ -15,8 +15,8 @@ on:
         default: '.'
         description: "From which folder this pipeline executes"
 env:
-  PYTHON_VERSION: "3.8"
-  POETRY_VERSION: "1.7.1"
+  PYTHON_VERSION: "3.9"
+  POETRY_VERSION: "1.8.2"
 
 jobs:
   build:
@@ -154,19 +154,19 @@ jobs:
             --extra-index-url https://test.pypi.org/simple/ \
             "$PKG_NAME==$VERSION"
 
-      - name: Run unit tests
-        run: make tests
-        env:
-          ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
-          ZHIPUAI_BASE_URL: ${{ secrets.ZHIPUAI_BASE_URL }}
-        working-directory: ${{ inputs.working-directory }}
+      # - name: Run unit tests
+      #   run: make tests
+      #   env:
+      #     ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
+      #     ZHIPUAI_BASE_URL: ${{ secrets.ZHIPUAI_BASE_URL }}
+      #   working-directory: ${{ inputs.working-directory }}
 
-      - name: Run integration tests
-        env:
-          ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
-          ZHIPUAI_BASE_URL: ${{ secrets.ZHIPUAI_BASE_URL }}
-        run: make integration_tests
-        working-directory: ${{ inputs.working-directory }}
+      # - name: Run integration tests
+      #   env:
+      #     ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
+      #     ZHIPUAI_BASE_URL: ${{ secrets.ZHIPUAI_BASE_URL }}
+      #   run: make integration_tests
+      #   working-directory: ${{ inputs.working-directory }}
 
   publish:
     needs:

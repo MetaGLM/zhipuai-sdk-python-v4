@@ -33,6 +33,21 @@ from .videos import (
 from .assistant import (
     Assistant,
 )
+from .audio import (
+    Audio
+)
+
+from .moderation import (
+    Moderation
+)
+
+from .web_search import (
+    WebSearchApi
+)
+
+from .agents import (
+    Agents
+)
 
 from .audio import (
     Audio
@@ -52,5 +67,6 @@ __all__ = [
     'Knowledge',
     'Tools',
     'Assistant',
-    'Audio'
+    'Audio',
+    'Moderation'
 ]

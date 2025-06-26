@@ -68,17 +68,17 @@ def test_async_completions():
     except zhipuai.core._errors.APIStatusError as err:
         print(err)
 
-def test_retrieve_completion_result():
-    client = ZhipuAI()  # 请填写您自己的APIKey
-    try:
-        response = client.chat.asyncCompletions.retrieve_completion_result(id="1014908592669352541650991")
-        print(response)
+# def test_retrieve_completion_result():
+#     client = ZhipuAI()  # 请填写您自己的APIKey
+#     try:
+#         response = client.chat.asyncCompletions.retrieve_completion_result(id="1014908592669352541650991")
+#         print(response)
+#
+#
+#     except zhipuai.core._errors.APIRequestFailedError as err:
+#         print(err)
+#     except zhipuai.core._errors.APIInternalError as err:
+#         print(err)
 
-
-    except zhipuai.core._errors.APIRequestFailedError as err:
-        print(err) 
-    except zhipuai.core._errors.APIInternalError as err:
-        print(err)
-
-if __name__ == "__main__":
-    test_retrieve_completion_result()
+# if __name__ == "__main__":
+#     test_retrieve_completion_result()

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, List, Mapping, cast, Optional, Dict
+from .transcriptions import Transcriptions
 
 from zhipuai.core._utils import extract_files
 
@@ -13,6 +14,7 @@ from zhipuai.core import NOT_GIVEN, Body, Headers, NotGiven, FileTypes
 from zhipuai.core import _legacy_response
 
 import httpx
+from ...core import BaseAPI, cached_property
 
 from zhipuai.core import (
     make_request_options,
@@ -26,6 +28,10 @@ __all__ = ["Audio"]
 
 
 class Audio(BaseAPI):
+
+    @cached_property
+    def transcriptions(self) -> Transcriptions:
+        return Transcriptions(self._client)
 
     def __init__(self, client: "ZhipuAI") -> None:
         super().__init__(client)

@@ -1,5 +1,13 @@
-from zhipuai.api_resource.audio.audio import Audio
+from .audio import (
+    Audio
+)
 
-__all__= [
-    "Audio"
+from .transcriptions import (
+    Transcriptions
+)
+
+
+__all__ = [
+    'Audio',
+    'Transcriptions'
 ]

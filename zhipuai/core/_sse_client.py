@@ -50,9 +50,11 @@ class StreamResponse(Generic[ResponseT]):
         for sse in iterator:
             if sse.data.startswith("[DONE]"):
                 break
-
             if sse.event is None:
                 data = sse.json_data()
+                if isinstance(data, Mapping) and data.get("agent_id"):
+                    yield self._data_process_func(data=data, cast_type=self._cast_type, response=self.response)
+                    break
                 if isinstance(data, Mapping) and data.get("error"):
                     raise APIResponseError(
                         message="An error occurred during streaming",
