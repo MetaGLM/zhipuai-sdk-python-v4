@@ -39,6 +39,7 @@ class AudioCompletionChunk(BaseModel):
 class ChoiceDelta(BaseModel):
     content: Optional[str] = None
     role: Optional[str] = None
+    reasoning_content: Optional[str] = None
     tool_calls: Optional[List[ChoiceDeltaToolCall]] = None
     audio: Optional[AudioCompletionChunk] = None
 

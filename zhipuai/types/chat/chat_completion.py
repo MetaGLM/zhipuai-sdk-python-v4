@@ -19,6 +19,7 @@ class CompletionMessageToolCall(BaseModel):
 class CompletionMessage(BaseModel):
     content: Optional[str] = None
     role: str
+    reasoning_content: Optional[str] = None
     tool_calls: Optional[List[CompletionMessageToolCall]] = None
 
 
