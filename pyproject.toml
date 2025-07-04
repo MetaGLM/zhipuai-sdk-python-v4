@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zhipuai"
-version = "2.1.5.20250626"
+version = "2.1.5.20250701"
 description = "A SDK library for accessing big model apis from ZhipuAI"
 authors = ["Zhipu AI"]
 readme = "README.md"
@@ -57,6 +57,13 @@ select = [
     "T201", # print
 ]
 
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true
 
 [tool.coverage.run]
 omit = [
