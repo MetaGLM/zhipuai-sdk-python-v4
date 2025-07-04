@@ -69,22 +69,15 @@ runs:
         /opt/pipx/venvs/poetry/bin/python --version
         /opt/pipx_bin/poetry --version
 
-    - name: Fix pip and upgrade pipx
-      if: steps.cache-bin-poetry.outputs.cache-hit != 'true'
-      shell: bash
-      run: |
-        python -m pip install --upgrade "pip<25"
-        python -m pip install --upgrade pipx
-        pipx --version
-
-    - name: Install poetry
+    - name: Install poetry via pip
       if: steps.cache-bin-poetry.outputs.cache-hit != 'true'
       shell: bash
       env:
         POETRY_VERSION: ${{ inputs.poetry-version }}
-        PYTHON_VERSION: ${{ inputs.python-version }}
-      # Install poetry using the python version installed by setup-python step.
-      run: pipx install "poetry==$POETRY_VERSION" --python '${{ steps.setup-python.outputs.python-path }}' --verbose
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install "poetry==$POETRY_VERSION"
+        poetry --version
 
     - name: Restore pip and poetry cached dependencies
       uses: actions/cache@v4
