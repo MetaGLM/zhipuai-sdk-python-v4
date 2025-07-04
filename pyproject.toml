@@ -57,6 +57,13 @@ select = [
     "T201", # print
 ]
 
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.format]
+quote-style = "single"
+indent-style = "tab"
+docstring-code-format = true
 
 [tool.coverage.run]
 omit = [
