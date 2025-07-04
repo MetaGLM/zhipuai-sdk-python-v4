@@ -8,6 +8,12 @@ on:
         type: string
         default: '.'
         description: "From which folder this pipeline executes"
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - 'action*'
 
 env:
   POETRY_VERSION: "1.8.2"
