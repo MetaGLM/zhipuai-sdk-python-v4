@@ -8,6 +8,12 @@ on:
         type: string
         default: '.'
         description: "From which folder this pipeline executes"
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - 'action*'
 
 env:
   POETRY_VERSION: "1.8.2"
@@ -16,7 +22,7 @@ jobs:
   build:
     defaults:
       run:
-        working-directory: ${{ inputs.working-directory }}
+        working-directory: ${{ inputs.working-directory || '.' }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -35,13 +41,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           poetry-version: ${{ env.POETRY_VERSION }}
-          working-directory: ${{ inputs.working-directory }}
+          working-directory: ${{ inputs.working-directory || '.' }}
           cache-key: core
 
 
       - name: Import test dependencies
         run: poetry install --with test
-        working-directory: ${{ inputs.working-directory }}
+        working-directory: ${{ inputs.working-directory || '.' }}
 
       - name: Run core tests
         shell: bash
