@@ -205,7 +205,7 @@ from zhipuai import ZhipuAI
 client = ZhipuAI()  # 请填写您自己的APIKey
 
 response = client.assistant.conversation(
-    assistant_id="your_assistant_id",  # 智能体ID
+    assistant_id="your_assistant_id",  # 智能体ID，可用 65940acff94777010aa6b796 进行测试
     model="glm-4-assistant",
     messages=[
         {
@@ -232,14 +232,20 @@ for chunk in response:
 ```python
 from zhipuai import ZhipuAI
 
-client = ZhipuAI()  # 请填写您自己的APIKey
-
+client = ZhipuAI(api_key="your-api-key")
 response = client.videos.generations(
-    model="cogvideo",
-    prompt="一个美丽的日落海滩场景",
+    model="cogvideox-2",
+    prompt="一个美丽的日落海滩场景",   # 生成内容的提示词
+    quality="quality",          # 输出模式：'quality' 表示质量优先，'speed' 表示速度优先
+    with_audio=True,            # 生成带背景音频的视频
+    size="1920x1080",           # 视频分辨率（最高支持 4K，例如 "3840x2160"）
+    fps=30,                     # 帧率（可选 30 或 60）
     user_id="user_12345"
 )
-print(response)
+
+# 生成过程可能需要一些时间
+result = client.videos.retrieve_videos_result(id=response.id)
+print(result)
 ```
 
 ## 🚨 异常处理
