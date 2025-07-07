@@ -211,7 +211,7 @@ from zhipuai import ZhipuAI
 
 client = ZhipuAI(api_key="your-api-key")
 response = client.assistant.conversation(
-    assistant_id="your_assistant_id",
+    assistant_id="your_assistant_id", # You can use 65940acff94777010aa6b796 for testing
     model="glm-4-assistant",
     messages=[
         {
@@ -240,11 +240,18 @@ from zhipuai import ZhipuAI
 
 client = ZhipuAI(api_key="your-api-key")
 response = client.videos.generations(
-    model="cogvideo",
+    model="cogvideox-2",
     prompt="A beautiful sunset beach scene",
+    quality="quality",          # Output mode: use "quality" for higher quality, "speed" for faster generation
+    with_audio=True,            # Generate video with background audio
+    size="1920x1080",           # Video resolution (up to 4K, e.g. "3840x2160")
+    fps=30,                     # Frames per second (choose 30 fps or 60 fps)
     user_id="user_12345"
 )
-print(response)
+
+# Generation may take some time
+result = client.videos.retrieve_videos_result(id=response.id)
+print(result)
 ```
 
 ## 🚨 Error Handling
