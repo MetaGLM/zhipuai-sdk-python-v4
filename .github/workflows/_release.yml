@@ -218,11 +218,11 @@ jobs:
       - publish
     environment: Scheduled testing publish
     runs-on: ubuntu-latest
-    # permissions:
-    #   # This permission is needed by `ncipollo/release-action` to
-    #   # create the GitHub release.
-    #   contents: write
-    #   id-token: none
+    permissions:
+      # This permission is needed by `ncipollo/release-action` to
+      # create the GitHub release.
+      contents: write
+      id-token: none
 
     defaults:
       run:
