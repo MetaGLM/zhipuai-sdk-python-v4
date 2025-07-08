@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from ..._client import ZhipuAI
 
-
+__all__ = ["Moderations"]
 class Moderations(BaseAPI):
     def __init__(self, client: "ZhipuAI") -> None:
         super().__init__(client)
