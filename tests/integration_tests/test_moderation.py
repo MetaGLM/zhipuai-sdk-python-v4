@@ -13,8 +13,8 @@ def test_completions_temp0(logging_conf):
 		# 生成request_id
 		request_id = time.time()
 		print(f'request_id:{request_id}')
-		response = client.moderation.moderations.create(
-			model='moderation', input={'type': 'text', 'text': 'hello world '}
+		response = client.moderations.create(
+			model='moderations', input={'type': 'text', 'text': 'hello world '}
 		)
 		print(response)
 

@@ -1,7 +1,7 @@
-from .moderation import (
-    Moderation
+from .moderations import (
+    Moderations
 )
 
 __all__ = [
-    'Moderation'
+    'Moderations'
 ]
