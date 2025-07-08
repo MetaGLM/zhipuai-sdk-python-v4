@@ -38,7 +38,7 @@ from .audio import (
 )
 
 from .moderation import (
-    Moderation
+    Moderations
 )
 
 from .web_search import (
