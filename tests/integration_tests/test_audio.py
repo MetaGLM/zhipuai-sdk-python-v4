@@ -15,6 +15,7 @@ def test_audio_speech(logging_conf):
 			model='cogtts',
 			input='你好呀,欢迎来到智谱开放平台',
 			voice='female',
+			stream=False,
 			response_format='wav',
 		)
 		response.stream_to_file(speech_file_path)
