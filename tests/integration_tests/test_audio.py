@@ -14,11 +14,32 @@ def test_audio_speech(logging_conf):
 		response = client.audio.speech(
 			model='cogtts',
 			input='你好呀,欢迎来到智谱开放平台',
-			voice='female',
+			voice='tongtong',
 			stream=False,
 			response_format='wav',
 		)
 		response.stream_to_file(speech_file_path)
+
+	except zhipuai.core._errors.APIRequestFailedError as err:
+		print(err)
+	except zhipuai.core._errors.APIInternalError as err:
+		print(err)
+	except zhipuai.core._errors.APIStatusError as err:
+		print(err)
+
+def test_audio_speech_streaming(logging_conf):
+	logging.config.dictConfig(logging_conf)  # type: ignore
+	client = ZhipuAI()  # 填写您自己的APIKey
+	try:
+		response = client.audio.speech(
+			model='cogtts',
+			input='你好呀,欢迎来到智谱开放平台',
+			voice='tongtong',
+			stream=True,
+			response_format='wav',
+		)
+		for item in response:
+			print(item)
 
 	except zhipuai.core._errors.APIRequestFailedError as err:
 		print(err)
