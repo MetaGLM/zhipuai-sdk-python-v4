@@ -84,7 +84,7 @@ build-backend = "poetry.core.masonry.api"
 #
 # https://github.com/tophat/syrupy
 # --snapshot-warn-unused    Prints a warning on unused snapshots rather than fail the test suite.
-addopts = "--strict-markers --strict-config --durations=5 -svv"
+addopts = "--strict-markers --strict-config --durations=5 --snapshot-warn-unused -svv"
 # Registering custom markers.
 # https://docs.pytest.org/en/7.1.x/example/markers.html#registering-markers
 markers = [
@@ -92,7 +92,7 @@ markers = [
     "scheduled: mark tests to run in scheduled testing",
     "compile: mark placeholder test used to compile integration tests without running them"
 ]
-# asyncio_mode = "auto"
+asyncio_mode = "auto"
 
 
 # https://python-poetry.org/docs/repositories/
