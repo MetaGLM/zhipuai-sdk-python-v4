@@ -33,7 +33,7 @@ class Videos(BaseAPI):
             model: str,
             *,
             prompt: str = None,
-            image_url: str = None,
+            image_url: object = None,
             quality: str = None,
             with_audio: bool = None,
             size: str = None,
