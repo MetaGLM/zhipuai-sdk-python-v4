@@ -8,7 +8,7 @@ class TTSApi:
         self.api_key = api_key
 
     def list_voices(self) -> VoiceListResponse:
-        url = f"{self.base_url}/v4/voice/list"
+        url = f"{self.base_url}/voice/list"
         headers = {}
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
@@ -18,7 +18,7 @@ class TTSApi:
         return VoiceListResponse.parse_obj(resp.json())
 
     def add_voice(self, voice_name: str, voice_text: str, file_path: str) -> VoiceAddResponse:
-        url = f"{self.base_url}/v4/voice/add"
+        url = f"{self.base_url}/voice/add"
         headers = {}
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
