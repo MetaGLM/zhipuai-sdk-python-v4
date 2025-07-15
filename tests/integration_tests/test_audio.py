@@ -1,3 +1,5 @@
+import base64
+import json
 import logging
 import logging.config
 from pathlib import Path
@@ -38,8 +40,14 @@ def test_audio_speech_streaming(logging_conf):
 			stream=True,
 			response_format='wav',
 		)
-		for item in response:
-			print(item)
+		with open("output.pcm", "wb") as f:
+			for item in response:
+				info_dict = json.loads(item)
+				index = info_dict.get('sequence')
+				is_finished = info_dict.get('is_finished')
+				audio_delta = info_dict.get('audio')
+				f.write(base64.b64decode(audio_delta))
+				print(f"{index}.is_finished = {is_finished}, audio_delta = {len(audio_delta)}")
 
 	except zhipuai.core._errors.APIRequestFailedError as err:
 		print(err)
