@@ -45,7 +45,7 @@ def test_audio_speech_streaming(logging_conf):
 				choice = item.choices[0]
 				index = choice.index
 				finish_reason = choice.finish_reason
-				audio_delta = item.choices[0].delta.content
+				audio_delta = choice.delta.content
 				if finish_reason is not None:
 					break
 				f.write(base64.b64decode(audio_delta))
