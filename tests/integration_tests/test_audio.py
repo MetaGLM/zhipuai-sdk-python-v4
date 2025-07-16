@@ -42,12 +42,14 @@ def test_audio_speech_streaming(logging_conf):
 		)
 		with open("output.pcm", "wb") as f:
 			for item in response:
-				info_dict = json.loads(item)
-				index = info_dict.get('sequence')
-				is_finished = info_dict.get('is_finished')
-				audio_delta = info_dict.get('audio')
+				choice = item.choices[0]
+				index = choice.index
+				finish_reason = choice.finish_reason
+				audio_delta = item.choices[0].delta.content
+				if finish_reason is not None:
+					break
 				f.write(base64.b64decode(audio_delta))
-				print(f"{index}.is_finished = {is_finished}, audio_delta = {len(audio_delta)}")
+				print(f"{index}.finish_reason = {finish_reason}, audio_delta = {len(audio_delta)}")
 
 	except zhipuai.core._errors.APIRequestFailedError as err:
 		print(err)
@@ -55,6 +57,8 @@ def test_audio_speech_streaming(logging_conf):
 		print(err)
 	except zhipuai.core._errors.APIStatusError as err:
 		print(err)
+	except Exception as e:
+		print(e)
 
 
 def test_audio_customization(logging_conf):
