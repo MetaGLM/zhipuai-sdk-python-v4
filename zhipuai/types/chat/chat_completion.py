@@ -15,7 +15,6 @@ class CompletionMessageToolCall(BaseModel):
     function: Function
     type: str
 
-
 class CompletionMessage(BaseModel):
     content: Optional[str] = None
     role: str
@@ -27,6 +26,8 @@ class CompletionUsage(BaseModel):
     prompt_tokens: int
     completion_tokens: int
     total_tokens: int
+    type: str
+    seconds: float
 
 
 class CompletionChoice(BaseModel):
