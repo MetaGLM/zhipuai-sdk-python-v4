@@ -9,7 +9,7 @@ from zhipuai.types.sensitive_word_check import SensitiveWordCheckRequest
 from zhipuai.types.audio import AudioSpeechParams
 from ...types.audio import audio_customization_param
 
-from zhipuai.core import BaseAPI, maybe_transform, StreamResponse
+from zhipuai.core import BaseAPI, maybe_transform
 from zhipuai.core import NOT_GIVEN, Body, Headers, NotGiven, FileTypes
 from zhipuai.core import _legacy_response
 
@@ -20,7 +20,6 @@ from zhipuai.core import (
     make_request_options,
 )
 from zhipuai.core import deepcopy_minimal
-from ...types.audio.audio_speech_chunk import AudioSpeechChunk
 
 if TYPE_CHECKING:
     from zhipuai._client import ZhipuAI
@@ -47,17 +46,15 @@ class Audio(BaseAPI):
             sensitive_word_check: Optional[SensitiveWordCheckRequest] | NotGiven = NOT_GIVEN,
             request_id: str = None,
             user_id: str = None,
-            stream: bool = False,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-    ) -> _legacy_response.HttpxBinaryResponseContent | StreamResponse[AudioSpeechChunk]:
+    ) -> _legacy_response.HttpxBinaryResponseContent:
         body = deepcopy_minimal(
             {
                 "model": model,
                 "input": input,
                 "voice": voice,
-                "stream": stream,
                 "response_format": response_format,
                 "sensitive_word_check": sensitive_word_check,
                 "request_id": request_id,
@@ -66,13 +63,11 @@ class Audio(BaseAPI):
         )
         return self._post(
             "/audio/speech",
-            body=body,
+            body=maybe_transform(body, AudioSpeechParams),
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
-            cast_type=_legacy_response.HttpxBinaryResponseContent,
-            stream= stream or False,
-            stream_cls=StreamResponse[AudioSpeechChunk]
+            cast_type=_legacy_response.HttpxBinaryResponseContent
         )
 
     def customization(
