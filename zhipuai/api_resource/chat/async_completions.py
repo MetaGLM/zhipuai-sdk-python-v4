@@ -44,6 +44,8 @@ class AsyncCompletions(BaseAPI):
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+            response_format: object | None = None,
+            thinking: object | None = None,
     ) -> AsyncTaskStatus:
         _cast_type = AsyncTaskStatus
         logger.debug(f"temperature:{temperature}, top_p:{top_p}")
@@ -87,6 +89,8 @@ class AsyncCompletions(BaseAPI):
             "tool_choice": tool_choice,
             "meta": meta,
             "extra": maybe_transform(extra, code_geex_params.CodeGeexExtra),
+            "response_format": response_format,
+            "thinking": thinking
         }
         return self._post(
             "/async/chat/completions",

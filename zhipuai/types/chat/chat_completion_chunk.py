@@ -49,12 +49,18 @@ class Choice(BaseModel):
     finish_reason: Optional[str] = None
     index: int
 
+class PromptTokensDetails(BaseModel):
+    cached_tokens: int
+
+class CompletionTokensDetails(BaseModel):
+    reasoning_tokens: int
 
 class CompletionUsage(BaseModel):
     prompt_tokens: int
+    prompt_tokens_details: Optional[PromptTokensDetails] = None
     completion_tokens: int
+    completion_tokens_details: Optional[CompletionTokensDetails] = None
     total_tokens: int
-
 
 class ChatCompletionChunk(BaseModel):
     id: Optional[str] = None
