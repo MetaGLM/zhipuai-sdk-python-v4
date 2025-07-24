@@ -90,7 +90,9 @@ def test_correction_result(image_id,uuids,trace_id):
 	print(response)
  
 def main():
-    test_correction()
+    test_completions_sync()
+    test_completions_stream()
+    # test_correction()
 	# test_correction_result(image_id,uuids,trace_id)
 
 if __name__ == "__main__":
