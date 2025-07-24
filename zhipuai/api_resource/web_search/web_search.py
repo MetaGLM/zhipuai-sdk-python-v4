@@ -39,6 +39,7 @@ class WebSearchApi(BaseAPI):
             search_recency_filter: Optional[str] | NotGiven = NOT_GIVEN,
             content_size: Optional[str] | NotGiven = NOT_GIVEN,
             search_intent: Optional[bool] | NotGiven = NOT_GIVEN,
+            location: Optional[str] | NotGiven = NOT_GIVEN,
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
@@ -56,6 +57,7 @@ class WebSearchApi(BaseAPI):
                 "search_recency_filter": search_recency_filter,
                 "content_size": content_size,
                 "search_intent": search_intent,
+                "location": location
             })
         return self._post(
             "/web_search",
