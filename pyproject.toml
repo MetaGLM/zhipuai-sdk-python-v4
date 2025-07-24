@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zhipuai"
-version = "2.1.5.20250716"
+version = "2.1.5.20250724"
 description = "A SDK library for accessing big model apis from ZhipuAI"
 authors = ["Zhipu AI"]
 readme = "README.md"
@@ -45,15 +45,13 @@ cli = ["typer"]
 # An extra used to be able to add extended testing.
 # Please use new-line on formatting to make it easier to add new packages without
 # merge-conflicts
-extended_testing = [
-    "langchain",
-]
+extended_testing = ["langchain"]
 
 [tool.ruff.lint]
 select = [
-    "E", # pycodestyle
-    "F", # pyflakes
-    "I", # isort
+    "E",    # pycodestyle
+    "F",    # pyflakes
+    "I",    # isort
     "T201", # print
 ]
 
@@ -66,9 +64,7 @@ indent-style = "tab"
 docstring-code-format = true
 
 [tool.coverage.run]
-omit = [
-    "tests/*",
-]
+omit = ["tests/*"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0", "poetry-plugin-pypi-mirror==0.4.2"]

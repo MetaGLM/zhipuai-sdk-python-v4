@@ -52,3 +52,46 @@ def test_completions_stream(logging_conf):
 		print(err)
 	except zhipuai.core._errors.APIStatusError as err:
 		print(err)
+
+def test_correction():
+	client = ZhipuAI()  # 请替换为实际API密钥
+
+	response = client.agents.invoke(
+		agent_id="intelligent_education_correction_agent",
+		messages=[
+				{
+					"role": "user",
+					"content": [
+						{
+							"type": "image_url",
+							"image_url": "https://b0.bdstatic.com/e24937f1f6b9c0ff6895e1012c981515.jpg"
+						}
+					]
+				}
+			]
+		)
+	print(response)
+ 
+def test_correction_result(image_id,uuids,trace_id):
+	client = ZhipuAI()
+
+	response = client.agents.async_result(
+		agent_id="intelligent_education_correction_polling",
+		custom_variables={
+				"images": [
+					{
+						"image_id": image_id,
+						"uuids": uuids
+					}
+				],
+				"trace_id": trace_id
+		}
+	)
+	print(response)
+ 
+def main():
+    test_correction()
+	# test_correction_result(image_id,uuids,trace_id)
+
+if __name__ == "__main__":
+	main()
