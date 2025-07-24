@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "zhipuai"
-version = "2.1.5.20250717"
+version = "2.1.5.20250724"
 description = "A SDK library for accessing big model apis from ZhipuAI"
 authors = ["Zhipu AI"]
 readme = "README.md"
@@ -51,9 +51,9 @@ extended_testing = [
 
 [tool.ruff.lint]
 select = [
-    "E", # pycodestyle
-    "F", # pyflakes
-    "I", # isort
+    "E",    # pycodestyle
+    "F",    # pyflakes
+    "I",    # isort
     "T201", # print
 ]
 

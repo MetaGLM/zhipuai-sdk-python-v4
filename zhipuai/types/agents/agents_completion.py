@@ -19,7 +19,7 @@ class AgentsCompletionChoice(BaseModel):
     finish_reason: str
     message: AgentsCompletionMessage
 
-class AgentsError:
+class AgentsError(BaseModel):
     code: Optional[str] = None
     message: Optional[str] = None
 

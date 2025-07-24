@@ -26,7 +26,7 @@ class AgentsCompletionUsage(BaseModel):
     completion_tokens: int
     total_tokens: int
 
-class AgentsError:
+class AgentsError(BaseModel):
     code: Optional[str] = None
     message: Optional[str] = None
 
