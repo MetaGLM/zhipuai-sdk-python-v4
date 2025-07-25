@@ -20,7 +20,7 @@ class AudioSpeechChoice(BaseModel):
     finish_reason: Optional[str] = None
     index: int
 
-class AudioError:
+class AudioError(BaseModel):
     code: Optional[str] = None
     message: Optional[str] = None
 
