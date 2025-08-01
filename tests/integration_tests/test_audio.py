@@ -39,7 +39,7 @@ def test_audio_speech_streaming(logging_conf):
 			voice='tongtong',
 			stream=True,
 			response_format='mp3',
-			encode_format='hex'
+			encode_format='base64'
 		)
 		with open("output.pcm", "wb") as f:
 			for item in response:
