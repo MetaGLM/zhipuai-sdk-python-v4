@@ -38,7 +38,8 @@ def test_audio_speech_streaming(logging_conf):
 			input='你好呀,欢迎来到智谱开放平台',
 			voice='tongtong',
 			stream=True,
-			response_format='wav',
+			response_format='mp3',
+			encode_format='hex'
 		)
 		with open("output.pcm", "wb") as f:
 			for item in response:

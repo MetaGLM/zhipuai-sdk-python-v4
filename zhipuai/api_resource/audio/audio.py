@@ -51,6 +51,7 @@ class Audio(BaseAPI):
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
+            encode_format: str,
     ) -> _legacy_response.HttpxBinaryResponseContent | StreamResponse[AudioSpeechChunk]:
         body = deepcopy_minimal(
             {
@@ -61,7 +62,8 @@ class Audio(BaseAPI):
                 "response_format": response_format,
                 "sensitive_word_check": sensitive_word_check,
                 "request_id": request_id,
-                "user_id": user_id
+                "user_id": user_id,
+                "encode_format": encode_format
             }
         )
         return self._post(
