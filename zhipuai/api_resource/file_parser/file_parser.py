@@ -57,7 +57,7 @@ class FileParser(BaseAPI):
             # multipart/form-data; boundary=---abc--
             extra_headers = {"Content-Type": "multipart/form-data", **(extra_headers or {})}
         return self._post(
-            "/fileParse/create",
+            "/files/parser/create",
             body=maybe_transform(body, FileParserCreateParams),
             files=files,
             options=make_request_options(
@@ -89,7 +89,7 @@ class FileParser(BaseAPI):
             raise ValueError(f"Expected a non-empty value for `task_id` but received {task_id!r}")
         extra_headers = {"Accept": "application/binary", **(extra_headers or {})}
         return self._get(
-            f"/fileParse/getResult/{task_id}/{format_type}",
+            f"/files/parser/getResult/{task_id}/{format_type}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
