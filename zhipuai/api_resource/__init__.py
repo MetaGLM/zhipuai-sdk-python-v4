@@ -53,6 +53,10 @@ from .audio import (
     Audio
 )
 
+from .file_parser import (
+    FileParser
+)
+
 __all__ = [
     'Videos',
     'AsyncCompletions',
@@ -68,5 +72,6 @@ __all__ = [
     'Tools',
     'Assistant',
     'Audio',
-    'Moderation'
+    'Moderation',
+    'FileParser'
 ]
