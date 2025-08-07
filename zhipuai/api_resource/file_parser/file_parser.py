@@ -1,22 +1,20 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, Mapping, cast
 
-from typing import TYPE_CHECKING, List, Mapping, cast
+import httpx
 from typing_extensions import Literal
 
 from ...core import BaseAPI, maybe_transform
 from ...core import NOT_GIVEN, Body, Headers, NotGiven, FileTypes
-
-import httpx
-
+from ...core import _legacy_binary_response
+from ...core import _legacy_response
+from ...core import deepcopy_minimal, extract_files
 from ...core import (
     make_request_options,
 )
-from ...core import deepcopy_minimal, extract_files
 from ...types.file_parser.file_parser_create_params import FileParserCreateParams
 from ...types.file_parser.file_parser_resp import FileParserTaskCreateResp
-from ...core import _legacy_binary_response
-from ...core import _legacy_response
 
 if TYPE_CHECKING:
     from ..._client import ZhipuAI
@@ -89,7 +87,7 @@ class FileParser(BaseAPI):
             raise ValueError(f"Expected a non-empty value for `task_id` but received {task_id!r}")
         extra_headers = {"Accept": "application/binary", **(extra_headers or {})}
         return self._get(
-            f"/files/parser/getResult/{task_id}/{format_type}",
+            f"/files/parser/result/{task_id}/{format_type}",
             options=make_request_options(
                 extra_headers=extra_headers, extra_body=extra_body, timeout=timeout
             ),
