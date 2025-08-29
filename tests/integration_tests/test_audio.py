@@ -39,7 +39,9 @@ def test_audio_speech_streaming(logging_conf):
           voice='tongtong',
           stream=True,
           response_format='mp3',
-          encode_format='hex'
+          encode_format='hex',
+		  speed=1.0,
+		  volume=1.0
        )
        with open("output.mp3", "wb") as f:
           for item in response:

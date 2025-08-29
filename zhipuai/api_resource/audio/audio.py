@@ -51,7 +51,9 @@ class Audio(BaseAPI):
             extra_headers: Headers | None = None,
             extra_body: Body | None = None,
             timeout: float | httpx.Timeout | None | NotGiven = NOT_GIVEN,
-            encode_format: str,
+            encode_format: str | None = None,
+            volume: float | 1.0,
+            speed: float | 1.0
     ) -> _legacy_response.HttpxBinaryResponseContent | StreamResponse[AudioSpeechChunk]:
         body = deepcopy_minimal(
             {
