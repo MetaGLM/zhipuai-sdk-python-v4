@@ -65,7 +65,9 @@ class Audio(BaseAPI):
                 "sensitive_word_check": sensitive_word_check,
                 "request_id": request_id,
                 "user_id": user_id,
-                "encode_format": encode_format
+                "encode_format": encode_format,
+                "volume": volume,
+                "speed": speed
             }
         )
         return self._post(
