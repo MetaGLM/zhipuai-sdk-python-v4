@@ -1,3 +1,6 @@
+Z.AI 和 智谱AI 的 [全新 Python SDK](https://github.com/zai-org/z-ai-sdk-python) 已经发布：[z-ai-sdk-python](https://github.com/zai-org/z-ai-sdk-python)！推荐使用此 SDK，以获得更好、更快的长期支持。
+
+
 # 智谱AI开放平台 Python SDK
 
 [![PyPI version](https://img.shields.io/pypi/v/zhipuai.svg)](https://pypi.org/project/zhipuai/)
