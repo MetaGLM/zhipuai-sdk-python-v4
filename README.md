@@ -1,3 +1,6 @@
+**The [New Python SDK](https://github.com/zai-org/z-ai-sdk-python) for Z.AI and ZhipuAI has released: [z-ai-sdk-python](https://github.com/zai-org/z-ai-sdk-python)!** It is recommended to use this SDK for better, faster, and long-term support.
+
+
 # ZhipuAI Open Platform Python SDK
 
 [![PyPI version](https://img.shields.io/pypi/v/zhipuai.svg)](https://pypi.org/project/zhipuai/)
